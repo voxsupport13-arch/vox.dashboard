@@ -94,11 +94,43 @@ passport.use('premium', new DiscordStrategy({
     return done(null, profile);
 }));
 
-// ==== Middleware: بيانات مشتركة ====
-app.use((req, res, next) => {
+// ==== تتبع المستخدمين ====
+async function trackUser(user) {
+    try {
+        const db = mongoose.connection.db;
+        if (!db) return;
+
+        await db.collection('vox_users').updateOne(
+            { userId: user.id },
+            {
+                $set: {
+                    userId: user.id,
+                    username: user.username,
+                    avatar: user.avatar || null,
+                    lastSeen: new Date()
+                },
+                $setOnInsert: {
+                    firstSeen: new Date()
+                }
+            },
+            { upsert: true }
+        );
+    } catch (err) {
+        console.error('Track user error:', err.message);
+    }
+}
+
+// ==== Middleware: بيانات مشتركة + تتبع ====
+app.use(async (req, res, next) => {
     const ownerIds = getOwnerIds();
     res.locals.user = req.user || null;
     res.locals.isOwner = req.user && ownerIds.includes(req.user.id);
+
+    // ==== تتبع المستخدم النشط ====
+    if (req.user && req.user.id) {
+        trackUser(req.user).catch(() => {});
+    }
+
     next();
 });
 
@@ -117,7 +149,7 @@ function ensureAuth(req, res, next) {
     });
 }
 
-// ==== Middleware: الأونر بس (يدعم أكتر من أونر) ====
+// ==== Middleware: الأونر بس ====
 function ensureOwner(req, res, next) {
     const ownerIds = getOwnerIds();
 
@@ -192,7 +224,8 @@ app.get('/auth/free', passport.authenticate('free'));
 
 app.get('/auth/free/callback',
     passport.authenticate('free', { failureRedirect: '/' }),
-    (req, res) => {
+    async (req, res) => {
+        await trackUser(req.user);
         req.session.save(() => res.redirect('/dashboard'));
     }
 );
@@ -201,7 +234,8 @@ app.get('/auth/premium', passport.authenticate('premium'));
 
 app.get('/auth/premium/callback',
     passport.authenticate('premium', { failureRedirect: '/' }),
-    (req, res) => {
+    async (req, res) => {
+        await trackUser(req.user);
         req.session.save(() => res.redirect('/dashboard'));
     }
 );
