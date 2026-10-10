@@ -17,6 +17,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// ==== قائمة الأونرز ====
+function getOwnerIds() {
+    return (process.env.OWNER_ID || '').split(',').map(id => id.trim()).filter(Boolean);
+}
+
 // ==== MongoDB Connection ====
 let isConnected = false;
 
@@ -24,7 +29,11 @@ async function connectDB() {
     if (isConnected) return;
     try {
         await mongoose.connect(process.env.MONGO_URI, {
-            serverSelectionTimeoutMS: 10000
+            serverSelectionTimeoutMS: 30000,
+            socketTimeoutMS: 60000,
+            connectTimeoutMS: 30000,
+            heartbeatFrequencyMS: 10000,
+            retryWrites: true
         });
         isConnected = true;
         console.log('✅ تم الاتصال بـ MongoDB');
@@ -65,7 +74,6 @@ app.use(passport.session());
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((obj, done) => done(null, obj));
 
-// ==== استراتيجية المجاني ====
 passport.use('free', new DiscordStrategy({
     clientID: process.env.FREE_CLIENT_ID,
     clientSecret: process.env.FREE_CLIENT_SECRET,
@@ -76,7 +84,6 @@ passport.use('free', new DiscordStrategy({
     return done(null, profile);
 }));
 
-// ==== استراتيجية البريميم ====
 passport.use('premium', new DiscordStrategy({
     clientID: process.env.PREMIUM_CLIENT_ID,
     clientSecret: process.env.PREMIUM_CLIENT_SECRET,
@@ -87,10 +94,11 @@ passport.use('premium', new DiscordStrategy({
     return done(null, profile);
 }));
 
-// ==== Middleware: تمرير بيانات مشتركة ====
+// ==== Middleware: بيانات مشتركة ====
 app.use((req, res, next) => {
+    const ownerIds = getOwnerIds();
     res.locals.user = req.user || null;
-    res.locals.isOwner = req.user && req.user.id === process.env.OWNER_ID;
+    res.locals.isOwner = req.user && ownerIds.includes(req.user.id);
     next();
 });
 
@@ -109,9 +117,13 @@ function ensureAuth(req, res, next) {
     });
 }
 
-// ==== Middleware: الأونر بس ====
+// ==== Middleware: الأونر بس (يدعم أكتر من أونر) ====
 function ensureOwner(req, res, next) {
-    if (req.isAuthenticated() && req.user.id === process.env.OWNER_ID) return next();
+    const ownerIds = getOwnerIds();
+
+    if (req.isAuthenticated() && ownerIds.includes(req.user.id)) {
+        return next();
+    }
 
     if (req.path.startsWith('/api/')) {
         return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
@@ -246,24 +258,30 @@ app.get('/owner', ensureAuth, ensureOwner, (req, res) => {
 });
 
 // ==== API Routes ====
-const dashboardRoutes = require('./routes/dashboard');
-const ownerRoutes = require('./routes/owner');
-const reportsRoutes = require('./routes/reports');
-const couponsRoutes = require('./routes/coupons');
-const purchaseRoutes = require('./routes/purchase');
-const newsRoutes = require('./routes/news');
+try {
+    const dashboardRoutes = require('./routes/dashboard');
+    const ownerRoutes = require('./routes/owner');
+    const reportsRoutes = require('./routes/reports');
+    const couponsRoutes = require('./routes/coupons');
+    const purchaseRoutes = require('./routes/purchase');
+    const newsRoutes = require('./routes/news');
 
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/owner', ownerRoutes);
-app.use('/api/reports', reportsRoutes);
-app.use('/api/coupons', couponsRoutes);
-app.use('/api/purchase', purchaseRoutes);
-app.use('/api/news', newsRoutes);
+    app.use('/api/dashboard', dashboardRoutes);
+    app.use('/api/owner', ownerRoutes);
+    app.use('/api/reports', reportsRoutes);
+    app.use('/api/coupons', couponsRoutes);
+    app.use('/api/purchase', purchaseRoutes);
+    app.use('/api/news', newsRoutes);
+
+    console.log('✅ Routes loaded');
+} catch (err) {
+    console.error('❌ Routes error:', err.message);
+}
 
 // ==== Vercel Export ====
 module.exports = app;
 
-// ==== Local Run (بيشتغل بس لما تشغل مباشرة) ====
+// ==== Local Run ====
 if (require.main === module) {
     const PORT = process.env.PORT || 10000;
     connectDB().then(() => {
