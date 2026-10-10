@@ -1,0 +1,77 @@
+<%- include('partials/header', { user, title: 'الإبلاغ' }) %>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>
+            <span class="ar-text">🚨 الإبلاغ عن مشكلة</span>
+            <span class="en-text" style="display:none">🚨 Report a Problem</span>
+        </h1>
+        <p>
+            <span class="ar-text">ساعدنا نحسن الخدمة — أبلغنا عن أي مشكلة</span>
+            <span class="en-text" style="display:none">Help us improve — report any issue</span>
+        </p>
+    </div>
+
+    <div class="card report-form-card">
+        <form id="reportForm" class="report-form">
+            <div class="form-group">
+                <label>
+                    <span class="ar-text">نوع المشكلة</span>
+                    <span class="en-text" style="display:none">Problem Type</span>
+                </label>
+                <select name="type" required>
+                    <option value="bug">🐛 خطأ تقني</option>
+                    <option value="ticket">🎫 مشكلة في التذاكر</option>
+                    <option value="application">📝 مشكلة في التقديم</option>
+                    <option value="payment">💰 مشكلة في الدفع</option>
+                    <option value="other">📌 أخرى</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span class="ar-text">عنوان المشكلة</span>
+                    <span class="en-text" style="display:none">Problem Title</span>
+                </label>
+                <input type="text" name="title" placeholder="اكتب عنوان مختصر..." required maxlength="100">
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span class="ar-text">تفاصيل المشكلة</span>
+                    <span class="en-text" style="display:none">Problem Details</span>
+                </label>
+                <textarea name="description" rows="6" placeholder="اشرح المشكلة بالتفصيل..." required maxlength="2000"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>
+                    <span class="ar-text">صور (اختياري - رابط Imgur)</span>
+                    <span class="en-text" style="display:none">Images (optional - Imgur link)</span>
+                </label>
+                <input type="url" name="imageUrl" placeholder="https://i.imgur.com/...">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-full">
+                <span class="ar-text">🚨 إرسال الإبلاغ</span>
+                <span class="en-text" style="display:none">🚨 Send Report</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h3>
+            <span class="ar-text">📋 إبلاغاتك السابقة</span>
+            <span class="en-text" style="display:none">📋 Your Previous Reports</span>
+        </h3>
+        <div id="myReports" class="my-reports">
+            <p class="loading">
+                <span class="ar-text">⏳ جاري التحميل...</span>
+                <span class="en-text" style="display:none">⏳ Loading...</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="/js/reports.js"></script>
+<%- include('partials/footer') %>

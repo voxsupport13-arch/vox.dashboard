@@ -1,0 +1,310 @@
+<%- include('partials/header', { user, title: 'لوحة التحكم' }) %>
+
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>
+                <span class="ar-text">لوحة التحكم</span>
+                <span class="en-text" style="display:none">Dashboard</span>
+            </h3>
+
+            <% if (hasPremium) { %>
+            <div class="bot-type-switcher">
+                <label>
+                    <span class="ar-text">🤖 البوت:</span>
+                    <span class="en-text" style="display:none">🤖 Bot:</span>
+                </label>
+                <select id="botTypeSwitcher" onchange="switchBotType()">
+                    <option value="free" <%= botType === 'free' ? 'selected' : '' %>>🆓 المجاني</option>
+                    <option value="premium" <%= botType === 'premium' ? 'selected' : '' %>>💎 البريميم</option>
+                </select>
+            </div>
+            <% } else { %>
+            <span class="bot-badge free">🆓 مجاني</span>
+            <% } %>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="#overview" class="sidebar-link active" onclick="switchTab(event, 'overview')">
+                <span class="icon">📊</span>
+                <span class="ar-text">نظرة عامة</span>
+                <span class="en-text" style="display:none">Overview</span>
+            </a>
+            <a href="#servers" class="sidebar-link" onclick="switchTab(event, 'servers')">
+                <span class="icon">🌐</span>
+                <span class="ar-text">السيرفرات</span>
+                <span class="en-text" style="display:none">Servers</span>
+            </a>
+            <a href="#tickets" class="sidebar-link" onclick="switchTab(event, 'tickets')">
+                <span class="icon">🎫</span>
+                <span class="ar-text">التذاكر</span>
+                <span class="en-text" style="display:none">Tickets</span>
+            </a>
+            <a href="#setupPanel" class="sidebar-link" onclick="switchTab(event, 'setupPanel')">
+                <span class="icon">⚙️</span>
+                <span class="ar-text">تسطيب البانل</span>
+                <span class="en-text" style="display:none">Setup Panel</span>
+            </a>
+            <a href="#setupApp" class="sidebar-link" onclick="switchTab(event, 'setupApp')">
+                <span class="icon">📝</span>
+                <span class="ar-text">تسطيب التقديم</span>
+                <span class="en-text" style="display:none">Setup Application</span>
+            </a>
+            <% if (botType === 'premium') { %>
+            <a href="#subscription" class="sidebar-link" onclick="switchTab(event, 'subscription')">
+                <span class="icon">💎</span>
+                <span class="ar-text">الاشتراك</span>
+                <span class="en-text" style="display:none">Subscription</span>
+            </a>
+            <% } %>
+            <a href="/reports" class="sidebar-link">
+                <span class="icon">🚨</span>
+                <span class="ar-text">الإبلاغ</span>
+                <span class="en-text" style="display:none">Reports</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <!-- ==== نظرة عامة ==== -->
+        <div id="overview" class="tab-content active">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📊 نظرة عامة</span>
+                <span class="en-text" style="display:none">📊 Overview</span>
+            </h1>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="userServers">-</div>
+                    <div class="stat-label"><span class="ar-text">سيرفراتك</span><span class="en-text" style="display:none">Your Servers</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="botServers">-</div>
+                    <div class="stat-label"><span class="ar-text">السيرفرات المشتركة</span><span class="en-text" style="display:none">Bot Servers</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="openTickets">-</div>
+                    <div class="stat-label"><span class="ar-text">تذاكر مفتوحة</span><span class="en-text" style="display:none">Open Tickets</span></div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="closedTickets">-</div>
+                    <div class="stat-label"><span class="ar-text">تذاكر مغلقة</span><span class="en-text" style="display:none">Closed Tickets</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==== السيرفرات ==== -->
+        <div id="servers" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🌐 سيرفراتك</span>
+                <span class="en-text" style="display:none">🌐 Your Servers</span>
+            </h1>
+            <div id="serversList" class="servers-list"><p class="loading">⏳ جاري التحميل...</p></div>
+        </div>
+
+        <!-- ==== التذاكر ==== -->
+        <div id="tickets" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🎫 التذاكر النشطة</span>
+                <span class="en-text" style="display:none">🎫 Active Tickets</span>
+            </h1>
+            <div id="ticketsList" class="tickets-list"><p class="loading">⏳ جاري التحميل...</p></div>
+        </div>
+
+        <!-- ==== تسطيب البانل ==== -->
+        <div id="setupPanel" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">⚙️ تسطيب البانل</span>
+                <span class="en-text" style="display:none">⚙️ Setup Panel</span>
+            </h1>
+
+            <div class="card">
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">🌐 اختر السيرفر</span>
+                        <span class="en-text" style="display:none">🌐 Choose Server</span>
+                    </label>
+                    <select id="setupGuildSelect" onchange="loadGuildData()" required>
+                        <option value="">-- اختر السيرفر --</option>
+                    </select>
+                    <input type="hidden" id="setupGuildName">
+                    <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">⚠️ لازم تكون <strong>Admin</strong></small>
+                </div>
+            </div>
+
+            <div id="setupBotTypeGroup" class="card" style="display:none;">
+                <h3>🤖 اختر البوت</h3>
+                <div class="form-group">
+                    <label>البوت اللي هينشر البانل</label>
+                    <select id="setupBotType" required>
+                        <option value="free">🆓 البوت المجاني</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="setupPanelStep1" class="card" style="display:none;">
+                <h3>📋 معلومات البانل</h3>
+                <div class="form-group"><label>اسم البانل</label><input type="text" id="setupTitle" placeholder="مثال: تذاكر الدعم الفني" required></div>
+                <div class="form-group"><label>وصف البانل</label><textarea id="setupDescription" rows="3" placeholder="وصف مختصر للبانل..." required></textarea></div>
+                <div class="form-group"><label>رابط صورة البانر (اختياري)</label><input type="url" id="setupBannerImage" placeholder="https://i.imgur.com/..."></div>
+                <div class="form-group"><label>رابط الصورة المصغرة (اختياري)</label><input type="url" id="setupImage" placeholder="https://i.imgur.com/..."></div>
+                <div class="form-group">
+                    <label>روم البانل</label>
+                    <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupTargetChannel', this.value)">
+                    <select id="setupTargetChannel" required><option value="">-- اختر روم البانل --</option></select>
+                </div>
+                <div class="form-group">
+                    <label>روم اللوق (اختياري)</label>
+                    <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupLogChannel', this.value)">
+                    <select id="setupLogChannel"><option value="">-- اختر روم اللوق --</option></select>
+                </div>
+                <div class="form-group">
+                    <label>روم التقييمات (اختياري)</label>
+                    <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupRatingChannel', this.value)">
+                    <select id="setupRatingChannel"><option value="">-- اختر روم التقييمات --</option></select>
+                </div>
+                <button type="button" class="btn btn-primary btn-full" onclick="goToStep2()">التالي: الأقسام ➡️</button>
+            </div>
+
+            <div id="setupPanelStep2" class="card" style="display:none;">
+                <h3>📁 عدد الأقسام</h3>
+                <div class="form-group"><label>اختر عدد الأقسام (1-10)</label><input type="number" id="categoriesCountInput" min="1" max="10" value="1" required></div>
+                <button type="button" class="btn btn-primary btn-full" onclick="startCategories()">تأكيد ومتابعة ➡️</button>
+            </div>
+
+            <div id="setupPanelStep3" style="display:none;">
+                <h3 class="dashboard-title">📁 إعداد الأقسام</h3>
+                <div id="categoriesFormContainer"></div>
+                <button type="button" id="setupSubmitBtn" class="btn btn-primary btn-full" onclick="submitPanel()">🚀 حفظ ونشر البانل</button>
+            </div>
+        </div>
+
+        <!-- ==== تسطيب التقديم ==== -->
+        <div id="setupApp" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📝 تسطيب التقديم الإداري</span>
+                <span class="en-text" style="display:none">📝 Setup Staff Application</span>
+                <span id="appBotBadge" class="bot-badge free" style="margin-right:0.5rem;">🆓 مجاني</span>
+            </h1>
+
+            <div class="card">
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">🌐 اختر السيرفر</span>
+                        <span class="en-text" style="display:none">🌐 Choose Server</span>
+                    </label>
+                    <select id="appGuildSelect" onchange="loadAppGuildData()" required>
+                        <option value="">-- اختر السيرفر --</option>
+                    </select>
+                    <input type="hidden" id="appGuildName">
+                    <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">⚠️ لازم تكون <strong>Admin</strong></small>
+                </div>
+            </div>
+
+            <div id="appStep1" style="display:none;">
+                <div class="card">
+                    <h3>📋 معلومات التقديم</h3>
+                    <div class="form-group">
+                        <label>اسم التقديم</label>
+                        <input type="text" id="appName" placeholder="مثال: تقديم إداري" required>
+                    </div>
+                    <div class="form-group">
+                        <label>وصف التقديم (اختياري)</label>
+                        <textarea id="appDescription" rows="2" placeholder="وصف مختصر..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>رابط صورة البانر (اختياري)</label>
+                        <input type="url" id="appBannerImage" placeholder="https://i.imgur.com/...">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>📢 القنوات والرتب</h3>
+                    <div class="form-group">
+                        <label>قناة البانل</label>
+                        <select id="appPanelChannel" required>
+                            <option value="">-- اختر قناة البانل --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>قناة الإجابات (اللوق)</label>
+                        <select id="appLogChannel" required>
+                            <option value="">-- اختر قناة الإجابات --</option>
+                        </select>
+                    </div>
+
+                    <!-- ==== Premium Only ==== -->
+                    <div class="form-group premium-only" style="display:none;">
+                        <label>قناة لوق المراجعة (اختياري - بريميم)</label>
+                        <select id="appReviewLogChannel">
+                            <option value="">-- بدون قناة --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>رتبة مسؤولة</label>
+                        <select id="appRoleSelect" required>
+                            <option value="">-- اختر رتبة مسؤولة --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>رول القبول (يُعطى عند قبول العضو)</label>
+                        <select id="appAcceptRoleSelect" required>
+                            <option value="">-- اختر رول القبول --</option>
+                        </select>
+                    </div>
+
+                    <!-- ==== Premium Only ==== -->
+                    <div class="form-group premium-only" style="display:none;">
+                        <label>رول الرفض (اختياري - بريميم)</label>
+                        <select id="appRejectRoleSelect">
+                            <option value="">-- بدون رول --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>رسالة القبول (اختياري)</label>
+                        <textarea id="appAcceptMessage" rows="2" placeholder="🎉 مبروك! تم قبولك..."></textarea>
+                    </div>
+
+                    <!-- ==== Premium Only ==== -->
+                    <div class="form-group premium-only" style="display:none;">
+                        <label>رسالة الرفض (اختياري - بريميم)</label>
+                        <textarea id="appRejectMessage" rows="2" placeholder="😔 نأسف، لم يتم قبولك..."></textarea>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>❓ الأسئلة <span id="appQuestionsHint">(1-5)</span></h3>
+                    <div id="appQuestionsContainer"></div>
+                    <button type="button" class="btn btn-secondary btn-full" onclick="addQuestion()" style="margin-top:1rem;">
+                        ➕ إضافة سؤال
+                    </button>
+                </div>
+
+                <button type="button" id="appSubmitBtn" class="btn btn-primary btn-full" onclick="submitApp()">
+                    🚀 حفظ ونشر التقديم
+                </button>
+            </div>
+        </div>
+
+        <!-- ==== الاشتراك ==== -->
+        <% if (botType === 'premium') { %>
+        <div id="subscription" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">💎 الاشتراك</span>
+                <span class="en-text" style="display:none">💎 Subscription</span>
+            </h1>
+            <div class="card">
+                <p>
+                    <span class="ar-text">استخدم الأمر <code>/my-subscription</code> في البوت لعرض اشتراكك.</span>
+                    <span class="en-text" style="display:none">Use <code>/my-subscription</code> in the bot.</span>
+                </p>
+            </div>
+        </div>
+        <% } %>
+    </main>
+</div>
+
+<script src="/js/dashboard.js"></script>
+<%- include('partials/footer') %>

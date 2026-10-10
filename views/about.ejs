@@ -1,0 +1,123 @@
+<%- include('partials/header', { user, title: 'عن البوت' }) %>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>
+            <span class="ar-text">📖 عن البوت</span>
+            <span class="en-text" style="display:none">📖 About the Bot</span>
+        </h1>
+        <p>
+            <span class="ar-text">تعرف على VOX - نظام التذاكر الاحترافي</span>
+            <span class="en-text" style="display:none">Learn about VOX - Professional Ticket System</span>
+        </p>
+    </div>
+
+    <!-- ==== المجاني ==== -->
+    <div class="info-section">
+        <h2 class="section-subtitle">
+            <span class="ar-text">🆓 النسخة المجانية</span>
+            <span class="en-text" style="display:none">🆓 Free Version</span>
+        </h2>
+
+        <div class="about-grid">
+            <div class="about-card">
+                <h3>
+                    <span class="ar-text">🎫 نظام تذاكر كامل</span>
+                    <span class="en-text" style="display:none">🎫 Complete Ticket System</span>
+                </h3>
+                <ul>
+                    <li><span class="ar-text">فتح تذاكر بأكثر من قسم</span><span class="en-text" style="display:none">Multi-category tickets</span></li>
+                    <li><span class="ar-text">لوحات تذاكر تفاعلية</span><span class="en-text" style="display:none">Interactive panels</span></li>
+                    <li><span class="ar-text">استلام وإغلاق التذاكر</span><span class="en-text" style="display:none">Claim & close tickets</span></li>
+                    <li><span class="ar-text">ترانسكريبت HTML</span><span class="en-text" style="display:none">HTML transcript</span></li>
+                </ul>
+            </div>
+
+            <div class="about-card">
+                <h2>
+                    <span class="ar-text">💎 النسخة البريميم</span>
+                    <span class="en-text" style="display:none">💎 Premium Version</span>
+                </h2>
+                <ul>
+                    <li><span class="ar-text">كل مميزات المجاني</span><span class="en-text" style="display:none">All free features</span></li>
+                    <li><span class="ar-text">نظام تقييمات كامل</span><span class="en-text" style="display:none">Full rating system</span></li>
+                    <li><span class="ar-text">نظام تقديمات إدارية</span><span class="en-text" style="display:none">Staff applications</span></li>
+                    <li><span class="ar-text">إحصائيات وترتيب موظفين</span><span class="en-text" style="display:none">Stats & leaderboard</span></li>
+                    <li><span class="ar-text">حماية ضد السبام</span><span class="en-text" style="display:none">Anti-spam protection</span></li>
+                    <li><span class="ar-text">رسالة وداع مخصصة</span><span class="en-text" style="display:none">Custom farewell</span></li>
+                    <li><span class="ar-text">عدد أقسام أكثر (10)</span><span class="en-text" style="display:none">More categories (10)</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==== طريقة الاستخدام ==== -->
+    <div class="info-section">
+        <h2 class="section-subtitle">
+            <span class="ar-text">📚 طريقة الاستخدام</span>
+            <span class="en-text" style="display:none">📚 How to Use</span>
+        </h2>
+
+        <div class="steps-container">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>
+                    <span class="ar-text">أضف البوت</span>
+                    <span class="en-text" style="display:none">Add the Bot</span>
+                </h3>
+                <p>
+                    <span class="ar-text">اضغط على زر "إضافة البوت" واختر سيرفرك.</span>
+                    <span class="en-text" style="display:none">Click "Add Bot" and choose your server.</span>
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>
+                    <span class="ar-text">أنشئ لوحة تذاكر</span>
+                    <span class="en-text" style="display:none">Create Ticket Panel</span>
+                </h3>
+                <p>
+                    <span class="ar-text">استخدم الأمر <code>/setup-ticket</code> لعمل لوحة تذاكر.</span>
+                    <span class="en-text" style="display:none">Use <code>/setup-ticket</code> to create a panel.</span>
+                </p>
+            </div>
+
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>
+                    <span class="ar-text">ابدأ الإدارة</span>
+                    <span class="en-text" style="display:none">Start Managing</span>
+                </h3>
+                <p>
+                    <span class="ar-text">الأعضاء يفتحوا تذاكر والفريق يستقبلها ويغلقها.</span>
+                    <span class="en-text" style="display:none">Members open tickets and staff manage them.</span>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==== التواصل ==== -->
+    <div class="info-section">
+        <h2 class="section-subtitle">
+            <span class="ar-text">📞 تواصل معنا</span>
+            <span class="en-text" style="display:none">📞 Contact Us</span>
+        </h2>
+
+        <div class="contact-grid">
+            <a href="<%= supportServer %>" target="_blank" class="contact-card">
+                <div class="contact-icon">💬</div>
+                <h3>Discord</h3>
+                <p>VOX Support Server</p>
+            </a>
+
+            <a href="mailto:vox.support13@gmail.com" class="contact-card">
+                <div class="contact-icon">📧</div>
+                <h3>Email</h3>
+                <p>vox.support13@gmail.com</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

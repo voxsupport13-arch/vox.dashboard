@@ -1,0 +1,40 @@
+<div id="newsTicker" class="news-ticker" style="display:none;">
+    <div class="ticker-content">
+        <span class="ticker-icon">📢</span>
+        <span id="tickerText"></span>
+    </div>
+    <button onclick="closeTicker()" class="ticker-close">✖</button>
+</div>
+
+<script>
+async function loadNewsTicker() {
+    try {
+        const res = await fetch('/api/news');
+        const data = await res.json();
+
+        if (data.success && data.data.length > 0) {
+            const news = data.data[0];
+            const ticker = document.getElementById('newsTicker');
+            const tickerText = document.getElementById('tickerText');
+
+            if (ticker && tickerText) {
+                tickerText.textContent = news.content;
+                ticker.className = `news-ticker news-${news.type}`;
+                ticker.style.display = 'flex';
+            }
+        }
+    } catch (err) {
+        console.error('News error:', err);
+    }
+}
+
+function closeTicker() {
+    const ticker = document.getElementById('newsTicker');
+    if (ticker) ticker.style.display = 'none';
+    sessionStorage.setItem('tickerClosed', 'true');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    loadNewsTicker();
+});
+</script>

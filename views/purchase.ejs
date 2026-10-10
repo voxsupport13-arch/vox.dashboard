@@ -1,0 +1,112 @@
+<%- include('partials/header', { user, title: 'شراء البريميم' }) %>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>
+            <span class="ar-text">💎 شراء VOX Premium</span>
+            <span class="en-text" style="display:none">💎 Purchase VOX Premium</span>
+        </h1>
+        <p>
+            <span class="ar-text">أكمل عملية الشراء بالتفاصيل التالية</span>
+            <span class="en-text" style="display:none">Complete your purchase with the following details</span>
+        </p>
+    </div>
+
+    <div class="purchase-container">
+        <div class="purchase-box">
+            <form id="purchaseForm" class="purchase-form">
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">الباقة</span>
+                        <span class="en-text" style="display:none">Plan</span>
+                    </label>
+                    <select name="plan" id="planSelect" required>
+                        <option value="monthly">📅 شهري (30 يوم)</option>
+                        <option value="yearly">📅 سنوي (365 يوم)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">طريقة الدفع</span>
+                        <span class="en-text" style="display:none">Payment Method</span>
+                    </label>
+                    <select name="paymentMethod" id="paymentSelect" required>
+                        <option value="credit">💰 Credit Pro</option>
+                        <option value="adm_cash">💵 ADM Cash</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">السيرفر المستهدف</span>
+                        <span class="en-text" style="display:none">Target Server</span>
+                    </label>
+                    <select name="guildId" id="guildSelect" required>
+                        <option value="">-- اختر السيرفر --</option>
+                    </select>
+                    <input type="hidden" name="guildName" id="guildName">
+                </div>
+
+                <!-- ==== زر "هل تملك كود خصم؟" ==== -->
+                <div class="form-group">
+                    <button type="button" id="hasCouponBtn" class="btn btn-secondary btn-full" onclick="showCouponInput()">
+                        <span class="ar-text">🎟️ هل تملك كود خصم؟</span>
+                        <span class="en-text" style="display:none">🎟️ Do you have a coupon?</span>
+                    </button>
+                </div>
+
+                <!-- ==== حقل الكود (مخفي افتراضيًا) ==== -->
+                <div class="form-group" id="couponBox" style="display:none;">
+                    <label>
+                        <span class="ar-text">كود الخصم</span>
+                        <span class="en-text" style="display:none">Coupon Code</span>
+                    </label>
+                    <div style="display:flex;gap:0.5rem;">
+                        <input type="text" name="couponCode" id="couponInput" placeholder="VOX50" style="flex:1;">
+                        <button type="button" onclick="validateCoupon()" class="btn btn-primary">
+                            <span class="ar-text">تطبيق</span>
+                            <span class="en-text" style="display:none">Apply</span>
+                        </button>
+                    </div>
+                    <div id="couponResult"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">يوزر التحويل (ADM/ Credit)</span>
+                        <span class="en-text" style="display:none">Transfer User (ADM/Credit)</span>
+                    </label>
+                    <input type="text" name="transferUser" placeholder="اكتب اليوزر اللي حولت له" required>
+                    <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">
+                        <span class="ar-text">⚠️ يجب أن يكون التحويل على: <code>abd8</code></span>
+                        <span class="en-text" style="display:none">⚠️ Transfer must be to: <code>abd8</code></span>
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label>
+                        <span class="ar-text">رابط صورة الإثبات (اختياري)</span>
+                        <span class="en-text" style="display:none">Proof Image URL (Optional)</span>
+                    </label>
+                    <input type="url" name="proofImage" placeholder="https://i.imgur.com/...">
+                </div>
+
+                <div class="payment-note" style="margin-bottom:1.5rem;">
+                    <p>
+                        ⚠️ <span class="ar-text">بعد الدفع، اكتب اليوزر اللي حولت له. سيتم مراجعة الطلب وإرسال المفتاح لك بعد الموافقة.</span>
+                        <span class="en-text" style="display:none">After payment, enter the transfer user. Your request will be reviewed and the key sent after approval.</span>
+                    </p>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span class="ar-text">💳 إرسال طلب الشراء</span>
+                    <span class="en-text" style="display:none">💳 Submit Purchase Request</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/js/purchase.js"></script>
+<%- include('partials/footer') %>

@@ -1,0 +1,28 @@
+<%- include('partials/header', { user, title: 'يجب التسجيل' }) %>
+
+<div class="container page-content">
+    <div class="login-required-box">
+        <div class="login-icon">🔒</div>
+        <h1>
+            <span class="ar-text">يجب التسجيل أولاً</span>
+            <span class="en-text" style="display:none">Login Required</span>
+        </h1>
+        <p>
+            <span class="ar-text"><%= message || 'يجب تسجيل الدخول أولاً للوصول إلى هذه الصفحة' %></span>
+            <span class="en-text" style="display:none"><%= messageEn || 'You must login first to access this page' %></span>
+        </p>
+
+        <div class="login-buttons">
+            <a href="/auth/free" class="btn btn-primary">
+                <span class="ar-text">🆓 دخول المجاني</span>
+                <span class="en-text" style="display:none">🆓 Free Login</span>
+            </a>
+            <a href="/auth/premium" class="btn btn-secondary">
+                <span class="ar-text">💎 دخول البريميم</span>
+                <span class="en-text" style="display:none">💎 Premium Login</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

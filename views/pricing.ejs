@@ -1,0 +1,137 @@
+<%- include('partials/header', { user, title: 'الأسعار' }) %>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>
+            <span class="ar-text">💎 الأسعار</span>
+            <span class="en-text" style="display:none">💎 Pricing</span>
+        </h1>
+        <p>
+            <span class="ar-text">اختر الباقة المناسبة لك</span>
+            <span class="en-text" style="display:none">Choose the right plan for you</span>
+        </p>
+    </div>
+
+    <div class="pricing-grid">
+        <!-- ==== شهري ==== -->
+        <div class="pricing-card">
+            <div class="pricing-header">
+                <h3>
+                    <span class="ar-text">📅 شهري</span>
+                    <span class="en-text" style="display:none">📅 Monthly</span>
+                </h3>
+                <div class="pricing-price">30 <span class="ar-text">يوم</span><span class="en-text" style="display:none">days</span></div>
+            </div>
+
+            <ul class="pricing-features">
+                <li>✅ <span class="ar-text">كل مميزات البريميم</span><span class="en-text" style="display:none">All premium features</span></li>
+                <li>✅ <span class="ar-text">10 أقسام</span><span class="en-text" style="display:none">10 categories</span></li>
+                <li>✅ <span class="ar-text">تقييمات</span><span class="en-text" style="display:none">Ratings</span></li>
+                <li>✅ <span class="ar-text">تقديمات</span><span class="en-text" style="display:none">Applications</span></li>
+                <li>✅ <span class="ar-text">إحصائيات</span><span class="en-text" style="display:none">Statistics</span></li>
+            </ul>
+
+            <div class="pricing-payment">
+                <div class="payment-option">
+                    <span class="payment-label">Credit</span>
+                    <span class="payment-value">100 <span class="ar-text">مليون</span><span class="en-text" style="display:none">Million</span></span>
+                </div>
+                <div class="payment-option">
+                    <span class="payment-label">ADM Cash</span>
+                    <span class="payment-value">50 <span class="ar-text">مليون</span><span class="en-text" style="display:none">Million</span></span>
+                </div>
+            </div>
+
+            <a href="/auth/premium" class="btn btn-primary btn-full">
+                <span class="ar-text">🚀 اشترك الآن</span>
+                <span class="en-text" style="display:none">🚀 Subscribe Now</span>
+            </a>
+        </div>
+
+        <!-- ==== سنوي ==== -->
+        <div class="pricing-card featured">
+            <div class="featured-badge">
+                <span class="ar-text">🔥 الأكثر توفيراً</span>
+                <span class="en-text" style="display:none">🔥 Best Value</span>
+            </div>
+
+            <div class="pricing-header">
+                <h3>
+                    <span class="ar-text">📅 سنوي</span>
+                    <span class="en-text" style="display:none">📅 Yearly</span>
+                </h3>
+                <div class="pricing-price">365 <span class="ar-text">يوم</span><span class="en-text" style="display:none">days</span></div>
+            </div>
+
+            <ul class="pricing-features">
+                <li>✅ <span class="ar-text">كل مميزات البريميم</span><span class="en-text" style="display:none">All premium features</span></li>
+                <li>✅ <span class="ar-text">10 أقسام</span><span class="en-text" style="display:none">10 categories</span></li>
+                <li>✅ <span class="ar-text">تقييمات</span><span class="en-text" style="display:none">Ratings</span></li>
+                <li>✅ <span class="ar-text">تقديمات</span><span class="en-text" style="display:none">Applications</span></li>
+                <li>✅ <span class="ar-text">إحصائيات</span><span class="en-text" style="display:none">Statistics</span></li>
+                <li>✅ <span class="ar-text">دعم مميز</span><span class="en-text" style="display:none">Priority support</span></li>
+            </ul>
+
+            <div class="pricing-payment">
+                <div class="payment-option">
+                    <span class="payment-label">Credit</span>
+                    <span class="payment-value">1 <span class="ar-text">مليار</span><span class="en-text" style="display:none">Billion</span></span>
+                </div>
+                <div class="payment-option">
+                    <span class="payment-label">ADM Cash</span>
+                    <span class="payment-value">500 <span class="ar-text">مليون</span><span class="en-text" style="display:none">Million</span></span>
+                </div>
+            </div>
+
+            <a href="/auth/premium" class="btn btn-primary btn-full">
+                <span class="ar-text">🚀 اشترك الآن</span>
+                <span class="en-text" style="display:none">🚀 Subscribe Now</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ==== معلومات الدفع ==== -->
+    <div class="payment-info">
+        <h2>
+            <span class="ar-text">💳 طرق الدفع</span>
+            <span class="en-text" style="display:none">💳 Payment Methods</span>
+        </h2>
+
+        <div class="payment-methods">
+            <div class="payment-method">
+                <div class="payment-icon">💰</div>
+                <h3>ADM Cash</h3>
+                <p>
+                    <span class="ar-text">حوّل على حساب:</span>
+                    <span class="en-text" style="display:none">Transfer to:</span>
+                </p>
+                <div class="payment-user-box">
+                    <span class="payment-user" onclick="copyToClipboard('abd8')">abd8</span>
+                    <button onclick="copyToClipboard('abd8')" class="copy-btn">📋</button>
+                </div>
+            </div>
+
+            <div class="payment-method">
+                <div class="payment-icon">🏦</div>
+                <h3>Credit Pro Bot</h3>
+                <p>
+                    <span class="ar-text">حوّل على حساب:</span>
+                    <span class="en-text" style="display:none">Transfer to:</span>
+                </p>
+                <div class="payment-user-box">
+                    <span class="payment-user" onclick="copyToClipboard('abd8')">abd8</span>
+                    <button onclick="copyToClipboard('abd8')" class="copy-btn">📋</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-note">
+            <p>
+                ⚠️ <span class="ar-text">بعد الدفع، ارفع صورة الإثبات في الداشبورد. أي تحويل لحساب خاطئ لا نتحمل مسؤوليته.</span>
+                <span class="en-text" style="display:none">After payment, upload proof in the dashboard. Wrong transfers are not our responsibility.</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
