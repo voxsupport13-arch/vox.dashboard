@@ -174,4 +174,198 @@
         <!-- ==== الإبلاغات ==== -->
         <div id="ownerReports" class="tab-content">
             <h1 class="dashboard-title">
-               
+                <span class="ar-text">🚨 الإبلاغات</span>
+                <span class="en-text" style="display:none">🚨 Reports</span>
+            </h1>
+            <div id="reportsList" class="reports-list">
+                <p class="loading">⏳ جاري التحميل...</p>
+            </div>
+        </div>
+
+        <!-- ==== طلبات الشراء ==== -->
+        <div id="ownerPurchases" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">💰 طلبات الشراء</span>
+                <span class="en-text" style="display:none">💰 Purchase Requests</span>
+            </h1>
+            <div id="purchasesList" class="purchases-list">
+                <p class="loading">⏳ جاري التحميل...</p>
+            </div>
+        </div>
+
+        <!-- ==== لوج الرفض ==== -->
+        <div id="ownerPurchaseLogs" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📋 لوج رفض الشراء</span>
+                <span class="en-text" style="display:none">📋 Purchase Reject Logs</span>
+            </h1>
+            <div id="purchaseLogsList" class="purchases-list">
+                <p class="loading">⏳ جاري التحميل...</p>
+            </div>
+        </div>
+
+        <!-- ==== الأكواد ==== -->
+        <div id="ownerCoupons" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🎟️ أكواد الخصم</span>
+                <span class="en-text" style="display:none">🎟️ Coupons</span>
+            </h1>
+
+            <div class="card">
+                <h3>
+                    <span class="ar-text">➕ إنشاء كود جديد</span>
+                    <span class="en-text" style="display:none">➕ Create New Coupon</span>
+                </h3>
+
+                <form id="createCouponForm" class="coupon-form">
+                    <div class="form-group">
+                        <label>الكود</label>
+                        <input type="text" name="code" placeholder="VOX50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>نسبة الخصم (%)</label>
+                        <input type="number" name="discount" min="1" max="100" placeholder="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الاستخدامات</label>
+                        <input type="number" name="maxUses" min="1" placeholder="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ البدء</label>
+                        <input type="date" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ الانتهاء</label>
+                        <input type="date" name="endDate" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🎟️ إنشاء الكود</button>
+                </form>
+            </div>
+
+            <div id="couponsList" class="coupons-list"></div>
+        </div>
+
+        <!-- ==== الأخبار ==== -->
+        <div id="ownerNews" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📢 الأخبار</span>
+                <span class="en-text" style="display:none">📢 News</span>
+            </h1>
+
+            <div class="card">
+                <h3>
+                    <span class="ar-text">➕ إرسال خبر جديد</span>
+                    <span class="en-text" style="display:none">➕ Send New News</span>
+                </h3>
+
+                <form id="createNewsForm" class="news-form">
+                    <div class="form-group">
+                        <label>الخبر</label>
+                        <textarea name="content" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>المدة (بالساعات)</label>
+                        <input type="number" name="duration" min="1" max="720" placeholder="24" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">📢 نشر الخبر</button>
+                </form>
+            </div>
+
+            <div id="newsList" class="news-list"></div>
+        </div>
+
+        <!-- ==== المفاتيح ==== -->
+        <div id="ownerKeys" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🔑 إدارة المفاتيح</span>
+                <span class="en-text" style="display:none">🔑 Keys Management</span>
+            </h1>
+
+            <!-- ==== إنشاء مفتاح ==== -->
+            <div class="card">
+                <h3>
+                    <span class="ar-text">➕ إنشاء مفتاح جديد</span>
+                    <span class="en-text" style="display:none">➕ Create New Key</span>
+                </h3>
+
+                <form id="createKeyForm" class="coupon-form">
+                    <div class="form-group">
+                        <label>اسم المفتاح</label>
+                        <input type="text" name="key" placeholder="FIRST_SERVER" required>
+                    </div>
+                    <div class="form-group">
+                        <label>النوع</label>
+                        <select name="type" required>
+                            <option value="monthly">📅 شهري</option>
+                            <option value="yearly">📅 سنوي</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المدة (بالأيام)</label>
+                        <input type="number" name="duration" min="1" placeholder="30" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🔑 إنشاء المفتاح</button>
+                </form>
+            </div>
+
+            <!-- ==== الفلتر ==== -->
+            <div class="card" style="margin-top:1rem;">
+                <div class="form-group">
+                    <label>🔍 فلتر المفاتيح</label>
+                    <input type="text" id="keysFilter" placeholder="اكتب للبحث..." oninput="filterKeys(this.value)">
+                </div>
+            </div>
+
+            <div id="keysList" class="coupons-list" style="margin-top:1rem;"></div>
+        </div>
+    </main>
+</div>
+
+<!-- ==== Modal تعديل الأخبار ==== -->
+<div id="editNewsModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--gold);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+        <h3 style="color:var(--gold);margin-bottom:1rem;">
+            <span class="ar-text">✏️ تعديل الخبر</span>
+            <span class="en-text" style="display:none">✏️ Edit News</span>
+        </h3>
+        <form id="editNewsForm">
+            <input type="hidden" id="editNewsId">
+            <div class="form-group">
+                <label>الخبر</label>
+                <textarea id="editNewsContent" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>المدة (بالساعات)</label>
+                <input type="number" id="editNewsDuration" min="1" max="720" required>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">💾 حفظ</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditNews()" style="flex:1;">❌ إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ==== Modal سبب رفض الشراء ==== -->
+<div id="rejectPurchaseModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--gold);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+        <h3 style="color:var(--danger);margin-bottom:1rem;">
+            <span class="ar-text">❌ سبب رفض الشراء</span>
+            <span class="en-text" style="display:none">❌ Reject Reason</span>
+        </h3>
+        <form id="rejectPurchaseForm">
+            <input type="hidden" id="rejectPurchaseId">
+            <div class="form-group">
+                <label>سبب الرفض</label>
+                <textarea id="rejectPurchaseReason" rows="3" placeholder="اكتب سبب الرفض..." required></textarea>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                <button type="submit" class="btn btn-danger" style="flex:1;">❌ رفض</button>
+                <button type="button" class="btn btn-secondary" onclick="closeRejectPurchase()" style="flex:1;">إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/owner.js"></script>
+<%- include('partials/footer') %>
