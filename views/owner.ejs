@@ -1,76 +1,403 @@
-<!-- ==== المفاتيح ==== -->
-<div id="ownerKeys" class="tab-content">
-    <h1 class="dashboard-title">
-        <span class="ar-text">🔑 إدارة المفاتيح</span>
-        <span class="en-text" style="display:none">🔑 Keys Management</span>
-    </h1>
+<%- include('partials/header', { user, title: 'لوحة الأونر' }) %>
 
-    <!-- ==== إحصائيات المفاتيح ==== -->
-    <div class="stats-grid" style="margin-bottom:2rem;">
-        <div class="stat-card gold">
-            <div class="stat-value" id="monthlyAvailable">-</div>
-            <div class="stat-label">
-                <span class="ar-text">مفاتيح شهرية متاحة</span>
-                <span class="en-text" style="display:none">Monthly Available</span>
-            </div>
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h3>
+                <span class="ar-text">👑 لوحة الأونر</span>
+                <span class="en-text" style="display:none">👑 Owner Panel</span>
+            </h3>
+            <span class="bot-badge owner">OWNER</span>
         </div>
-        <div class="stat-card gold">
-            <div class="stat-value" id="monthlyUsed">-</div>
-            <div class="stat-label">
-                <span class="ar-text">مفاتيح شهرية مستخدمة</span>
-                <span class="en-text" style="display:none">Monthly Used</span>
-            </div>
-        </div>
-        <div class="stat-card gold">
-            <div class="stat-value" id="yearlyAvailable">-</div>
-            <div class="stat-label">
-                <span class="ar-text">مفاتيح سنوية متاحة</span>
-                <span class="en-text" style="display:none">Yearly Available</span>
-            </div>
-        </div>
-        <div class="stat-card gold">
-            <div class="stat-value" id="yearlyUsed">-</div>
-            <div class="stat-label">
-                <span class="ar-text">مفاتيح سنوية مستخدمة</span>
-                <span class="en-text" style="display:none">Yearly Used</span>
-            </div>
-        </div>
-    </div>
 
-    <!-- ==== إنشاء مفتاح ==== -->
-    <div class="card">
-        <h3>
-            <span class="ar-text">➕ إنشاء مفتاح جديد</span>
-            <span class="en-text" style="display:none">➕ Create New Key</span>
+        <nav class="sidebar-nav">
+            <a href="#ownerOverview" class="sidebar-link active" onclick="switchTab(event, 'ownerOverview')">
+                <span class="icon">📊</span>
+                <span class="ar-text">إحصائيات البوت</span>
+                <span class="en-text" style="display:none">Bot Stats</span>
+            </a>
+            <a href="#ownerSiteStats" class="sidebar-link" onclick="switchTab(event, 'ownerSiteStats')">
+                <span class="icon">🌐</span>
+                <span class="ar-text">إحصائيات الموقع</span>
+                <span class="en-text" style="display:none">Site Stats</span>
+            </a>
+            <a href="#ownerReports" class="sidebar-link" onclick="switchTab(event, 'ownerReports')">
+                <span class="icon">🚨</span>
+                <span class="ar-text">الإبلاغات</span>
+                <span class="en-text" style="display:none">Reports</span>
+            </a>
+            <a href="#ownerPurchases" class="sidebar-link" onclick="switchTab(event, 'ownerPurchases')">
+                <span class="icon">💰</span>
+                <span class="ar-text">طلبات الشراء</span>
+                <span class="en-text" style="display:none">Purchases</span>
+            </a>
+            <a href="#ownerPurchaseLogs" class="sidebar-link" onclick="switchTab(event, 'ownerPurchaseLogs')">
+                <span class="icon">📋</span>
+                <span class="ar-text">لوج الرفض</span>
+                <span class="en-text" style="display:none">Reject Logs</span>
+            </a>
+            <a href="#ownerCoupons" class="sidebar-link" onclick="switchTab(event, 'ownerCoupons')">
+                <span class="icon">🎟️</span>
+                <span class="ar-text">الأكواد</span>
+                <span class="en-text" style="display:none">Coupons</span>
+            </a>
+            <a href="#ownerNews" class="sidebar-link" onclick="switchTab(event, 'ownerNews')">
+                <span class="icon">📢</span>
+                <span class="ar-text">الأخبار</span>
+                <span class="en-text" style="display:none">News</span>
+            </a>
+            <a href="#ownerKeys" class="sidebar-link" onclick="switchTab(event, 'ownerKeys')">
+                <span class="icon">🔑</span>
+                <span class="ar-text">المفاتيح</span>
+                <span class="en-text" style="display:none">Keys</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="dashboard-main">
+        <!-- ==== إحصائيات البوت ==== -->
+        <div id="ownerOverview" class="tab-content active">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📊 إحصائيات البوت</span>
+                <span class="en-text" style="display:none">📊 Bot Statistics</span>
+            </h1>
+
+            <div class="stats-grid">
+                <div class="stat-card gold">
+                    <div class="stat-value" id="totalServers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">إجمالي السيرفرات</span>
+                        <span class="en-text" style="display:none">Total Servers</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="freeServers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">سيرفرات المجاني</span>
+                        <span class="en-text" style="display:none">Free Servers</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="premiumServers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">سيرفرات البريميم</span>
+                        <span class="en-text" style="display:none">Premium Servers</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="totalMembers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">إجمالي الأعضاء</span>
+                        <span class="en-text" style="display:none">Total Members</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="allOpenTickets">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">تذاكر مفتوحة</span>
+                        <span class="en-text" style="display:none">Open Tickets</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="allClosedTickets">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">تذاكر مغلقة</span>
+                        <span class="en-text" style="display:none">Closed Tickets</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="totalPurchases">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">عمليات شراء</span>
+                        <span class="en-text" style="display:none">Purchases</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="pendingReports">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">إبلاغات معلقة</span>
+                        <span class="en-text" style="display:none">Pending Reports</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==== إحصائيات الموقع ==== -->
+        <div id="ownerSiteStats" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🌐 إحصائيات الموقع</span>
+                <span class="en-text" style="display:none">🌐 Site Statistics</span>
+            </h1>
+
+            <div class="stats-grid">
+                <div class="stat-card gold">
+                    <div class="stat-value" id="totalUsers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">إجمالي المستخدمين</span>
+                        <span class="en-text" style="display:none">Total Users</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="onlineUsers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">أونلاين حاليًا</span>
+                        <span class="en-text" style="display:none">Online Now</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="todayUsers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">دخلوا اليوم</span>
+                        <span class="en-text" style="display:none">Today's Visits</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="weekUsers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">دخلوا آخر أسبوع</span>
+                        <span class="en-text" style="display:none">This Week</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:2rem;">
+                <h3>
+                    <span class="ar-text">📋 آخر المستخدمين</span>
+                    <span class="en-text" style="display:none">📋 Recent Users</span>
+                </h3>
+                <div id="recentUsers" class="users-list">
+                    <p class="loading">⏳ جاري التحميل...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==== الإبلاغات ==== -->
+        <div id="ownerReports" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🚨 الإبلاغات</span>
+                <span class="en-text" style="display:none">🚨 Reports</span>
+            </h1>
+            <div id="reportsList" class="reports-list">
+                <p class="loading">⏳ جاري التحميل...</p>
+            </div>
+        </div>
+
+        <!-- ==== طلبات الشراء ==== -->
+        <div id="ownerPurchases" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">💰 طلبات الشراء</span>
+                <span class="en-text" style="display:none">💰 Purchase Requests</span>
+            </h1>
+            <div id="purchasesList" class="purchases-list">
+                <p class="loading">⏳ جاري التحميل...</p>
+            </div>
+        </div>
+
+        <!-- ==== لوج الرفض ==== -->
+        <div id="ownerPurchaseLogs" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📋 لوج رفض الشراء</span>
+                <span class="en-text" style="display:none">📋 Purchase Reject Logs</span>
+            </h1>
+            <div id="purchaseLogsList" class="purchases-list">
+                <p class="loading">⏳ جاري التحميل...</p>
+            </div>
+        </div>
+
+        <!-- ==== الأكواد ==== -->
+        <div id="ownerCoupons" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🎟️ أكواد الخصم</span>
+                <span class="en-text" style="display:none">🎟️ Coupons</span>
+            </h1>
+
+            <div class="card">
+                <h3>
+                    <span class="ar-text">➕ إنشاء كود جديد</span>
+                    <span class="en-text" style="display:none">➕ Create New Coupon</span>
+                </h3>
+
+                <form id="createCouponForm" class="coupon-form">
+                    <div class="form-group">
+                        <label>الكود</label>
+                        <input type="text" name="code" placeholder="VOX50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>نسبة الخصم (%)</label>
+                        <input type="number" name="discount" min="1" max="100" placeholder="50" required>
+                    </div>
+                    <div class="form-group">
+                        <label>عدد الاستخدامات</label>
+                        <input type="number" name="maxUses" min="1" placeholder="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ البدء</label>
+                        <input type="date" name="startDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>تاريخ الانتهاء</label>
+                        <input type="date" name="endDate" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🎟️ إنشاء الكود</button>
+                </form>
+            </div>
+
+            <div id="couponsList" class="coupons-list"></div>
+        </div>
+
+        <!-- ==== الأخبار ==== -->
+        <div id="ownerNews" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">📢 الأخبار</span>
+                <span class="en-text" style="display:none">📢 News</span>
+            </h1>
+
+            <div class="card">
+                <h3>
+                    <span class="ar-text">➕ إرسال خبر جديد</span>
+                    <span class="en-text" style="display:none">➕ Send New News</span>
+                </h3>
+
+                <form id="createNewsForm" class="news-form">
+                    <div class="form-group">
+                        <label>الخبر</label>
+                        <textarea name="content" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>المدة (بالساعات)</label>
+                        <input type="number" name="duration" min="1" max="720" placeholder="24" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">📢 نشر الخبر</button>
+                </form>
+            </div>
+
+            <div id="newsList" class="news-list"></div>
+        </div>
+
+        <!-- ==== المفاتيح ==== -->
+        <div id="ownerKeys" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🔑 إدارة المفاتيح</span>
+                <span class="en-text" style="display:none">🔑 Keys Management</span>
+            </h1>
+
+            <!-- ==== إحصائيات المفاتيح ==== -->
+            <div class="stats-grid" style="margin-bottom:2rem;">
+                <div class="stat-card gold">
+                    <div class="stat-value" id="monthlyAvailable">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">مفاتيح شهرية متاحة</span>
+                        <span class="en-text" style="display:none">Monthly Available</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="monthlyUsed">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">مفاتيح شهرية مستخدمة</span>
+                        <span class="en-text" style="display:none">Monthly Used</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="yearlyAvailable">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">مفاتيح سنوية متاحة</span>
+                        <span class="en-text" style="display:none">Yearly Available</span>
+                    </div>
+                </div>
+                <div class="stat-card gold">
+                    <div class="stat-value" id="yearlyUsed">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">مفاتيح سنوية مستخدمة</span>
+                        <span class="en-text" style="display:none">Yearly Used</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ==== إنشاء مفتاح ==== -->
+            <div class="card">
+                <h3>
+                    <span class="ar-text">➕ إنشاء مفتاح جديد</span>
+                    <span class="en-text" style="display:none">➕ Create New Key</span>
+                </h3>
+
+                <form id="createKeyForm" class="coupon-form">
+                    <div class="form-group">
+                        <label>اسم المفتاح</label>
+                        <input type="text" name="key" placeholder="FIRST_SERVER" required>
+                    </div>
+                    <div class="form-group">
+                        <label>النوع</label>
+                        <select name="type" required>
+                            <option value="monthly">📅 شهري</option>
+                            <option value="yearly">📅 سنوي</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>المدة (بالأيام)</label>
+                        <input type="number" name="duration" min="1" placeholder="30" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">🔑 إنشاء المفتاح</button>
+                </form>
+            </div>
+
+            <!-- ==== الفلتر ==== -->
+            <div class="card" style="margin-top:1rem;">
+                <div class="form-group">
+                    <label>🔍 فلتر المفاتيح</label>
+                    <input type="text" id="keysFilter" placeholder="اكتب للبحث..." oninput="filterKeys(this.value)">
+                </div>
+            </div>
+
+            <div id="keysList" class="coupons-list" style="margin-top:1rem;"></div>
+        </div>
+    </main>
+</div>
+
+<!-- ==== Modal تعديل الأخبار ==== -->
+<div id="editNewsModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--gold);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+        <h3 style="color:var(--gold);margin-bottom:1rem;">
+            <span class="ar-text">✏️ تعديل الخبر</span>
+            <span class="en-text" style="display:none">✏️ Edit News</span>
         </h3>
-
-        <form id="createKeyForm" class="coupon-form">
+        <form id="editNewsForm">
+            <input type="hidden" id="editNewsId">
             <div class="form-group">
-                <label>اسم المفتاح</label>
-                <input type="text" name="key" placeholder="FIRST_SERVER" required>
+                <label>الخبر</label>
+                <textarea id="editNewsContent" rows="4" required></textarea>
             </div>
             <div class="form-group">
-                <label>النوع</label>
-                <select name="type" required>
-                    <option value="monthly">📅 شهري</option>
-                    <option value="yearly">📅 سنوي</option>
-                </select>
+                <label>المدة (بالساعات)</label>
+                <input type="number" id="editNewsDuration" min="1" max="720" required>
             </div>
-            <div class="form-group">
-                <label>المدة (بالأيام)</label>
-                <input type="number" name="duration" min="1" placeholder="30" required>
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">💾 حفظ</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditNews()" style="flex:1;">❌ إلغاء</button>
             </div>
-            <button type="submit" class="btn btn-primary">🔑 إنشاء المفتاح</button>
         </form>
     </div>
-
-    <!-- ==== الفلتر ==== -->
-    <div class="card" style="margin-top:1rem;">
-        <div class="form-group">
-            <label>🔍 فلتر المفاتيح</label>
-            <input type="text" id="keysFilter" placeholder="اكتب للبحث..." oninput="filterKeys(this.value)">
-        </div>
-    </div>
-
-    <div id="keysList" class="coupons-list" style="margin-top:1rem;"></div>
 </div>
+
+<!-- ==== Modal سبب رفض الشراء ==== -->
+<div id="rejectPurchaseModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--danger);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+        <h3 style="color:var(--danger);margin-bottom:1rem;">
+            <span class="ar-text">❌ سبب رفض الشراء</span>
+            <span class="en-text" style="display:none">❌ Reject Reason</span>
+        </h3>
+        <form id="rejectPurchaseForm">
+            <input type="hidden" id="rejectPurchaseId">
+            <div class="form-group">
+                <label>سبب الرفض</label>
+                <textarea id="rejectPurchaseReason" rows="3" placeholder="اكتب سبب الرفض..." required></textarea>
+            </div>
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                <button type="submit" class="btn btn-danger" style="flex:1;">❌ رفض</button>
+                <button type="button" class="btn btn-secondary" onclick="closeRejectPurchase()" style="flex:1;">إلغاء</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/js/owner.js"></script>
+<%- include('partials/footer') %>
