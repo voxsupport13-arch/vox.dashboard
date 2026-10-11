@@ -376,9 +376,19 @@ async function loadKeys() {
         const data = await res.json();
         if (!data.success) return;
 
+        const monthly = data.data.monthly || [];
+        const yearly = data.data.yearly || [];
+
+        // ==== الإحصائيات ====
+        setText('monthlyAvailable', monthly.filter(k => !k.used).length);
+        setText('monthlyUsed', monthly.filter(k => k.used).length);
+        setText('yearlyAvailable', yearly.filter(k => !k.used).length);
+        setText('yearlyUsed', yearly.filter(k => k.used).length);
+
+        // ==== كل المفاتيح ====
         allKeys = [
-            ...(data.data.monthly || []).map(k => ({ ...k, type: 'monthly' })),
-            ...(data.data.yearly || []).map(k => ({ ...k, type: 'yearly' }))
+            ...monthly.map(k => ({ ...k, type: 'monthly' })),
+            ...yearly.map(k => ({ ...k, type: 'yearly' }))
         ];
 
         renderKeys();
