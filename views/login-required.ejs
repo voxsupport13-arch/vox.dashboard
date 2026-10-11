@@ -13,38 +13,12 @@
         </p>
 
         <div class="login-buttons">
-            <button onclick="loginWithTurnstile()" class="btn btn-primary" id="loginBtn">
+            <a href="/auth/free" class="btn btn-primary">
                 <span class="ar-text">تسجيل دخول</span>
                 <span class="en-text" style="display:none">Login</span>
-            </button>
+            </a>
         </div>
     </div>
 </div>
-
-<!-- Turnstile Widget (hidden) -->
-<div id="turnstile-container" style="display:none;">
-    <div class="cf-turnstile" data-sitekey="<%= turnstileSiteKey %>" data-callback="onTurnstileSuccess"></div>
-</div>
-
-<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-<script>
-function loginWithTurnstile() {
-    // اعرض الـ Turnstile
-    document.getElementById('turnstile-container').style.display = 'block';
-    document.getElementById('loginBtn').disabled = true;
-    document.getElementById('loginBtn').innerHTML = '⏳ جاري التحقق...';
-
-    // لو الـ widget اتحمل، هيعمل callback
-    if (typeof turnstile !== 'undefined') {
-        turnstile.render('#turnstile-container .cf-turnstile');
-    }
-}
-
-// Callback لما Turnstile ينجح
-function onTurnstileSuccess(token) {
-    // ابعت التوكن للـ /auth/free
-    window.location.href = '/auth/free?cf-turnstile-response=' + encodeURIComponent(token);
-}
-</script>
 
 <%- include('partials/footer') %>
