@@ -112,6 +112,21 @@ async function loadGuildsForTicket() {
             option.dataset.name = g.name;
             select.appendChild(option);
         });
+
+        // ==== لو فيه سيرفر محفوظ في sessionStorage ====
+        const savedGuildId = sessionStorage.getItem('setupGuildId');
+        if (savedGuildId) {
+            const savedGuild = data.data.find(g => g.id === savedGuildId);
+            if (savedGuild) {
+                select.value = savedGuildId;
+                // شيلها من sessionStorage بعد الاستخدام
+                sessionStorage.removeItem('setupGuildId');
+                sessionStorage.removeItem('setupGuildName');
+                sessionStorage.removeItem('setupType');
+                // حمّل البيانات تلقائيًا
+                await loadGuildData();
+            }
+        }
     } catch (err) {
         console.error('Load guilds error:', err);
     }
@@ -382,6 +397,19 @@ async function loadGuildsForApp() {
             option.dataset.name = g.name;
             select.appendChild(option);
         });
+
+        // ==== لو فيه سيرفر محفوظ في sessionStorage ====
+        const savedGuildId = sessionStorage.getItem('setupGuildId');
+        if (savedGuildId) {
+            const savedGuild = data.data.find(g => g.id === savedGuildId);
+            if (savedGuild) {
+                select.value = savedGuildId;
+                sessionStorage.removeItem('setupGuildId');
+                sessionStorage.removeItem('setupGuildName');
+                sessionStorage.removeItem('setupType');
+                await loadAppGuildData();
+            }
+        }
     } catch (err) {
         console.error('Setup app error:', err);
     }
@@ -591,12 +619,10 @@ async function submitApp() {
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
-    // ==== Ticket Setup ====
     if (document.getElementById('setupGuildSelect')) {
         loadGuildsForTicket();
     }
 
-    // ==== Application Setup ====
     if (document.getElementById('appGuildSelect')) {
         loadGuildsForApp();
     }
