@@ -74,6 +74,38 @@ router.get('/servers', async (req, res) => {
     }
 });
 
+// ==== السيرفرات المفعّلة بريميم ====
+router.get('/premium-guilds', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+
+        const userGuilds = req.user.guilds || [];
+        const adminGuilds = userGuilds.filter(g => {
+            const perms = BigInt(g.permissions);
+            return (perms & 0x8n) === 0x8n;
+        });
+
+        const guildIds = adminGuilds.map(g => g.id);
+
+        // ==== السيرفرات اللي فيها بريميم فعّال ====
+        const premiumDocs = await db.collection('kv_store').find({
+            key: { $regex: '^guild_premium_' }
+        }).toArray();
+
+        const premiumGuilds = premiumDocs
+            .filter(doc => {
+                const guildId = doc.key.replace('guild_premium_', '');
+                return guildIds.includes(guildId) && doc.value?.active === true;
+            })
+            .map(doc => doc.key.replace('guild_premium_', ''));
+
+        res.json({ success: true, data: premiumGuilds });
+    } catch (err) {
+        console.error('Premium guilds error:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
 // ==== التذاكر ====
 router.get('/tickets', async (req, res) => {
     try {
@@ -92,7 +124,7 @@ router.get('/tickets', async (req, res) => {
     }
 });
 
-// ==== بيانات السيرفر (قنوات ورتب) ====
+// ==== جلب القنوات والرتب ====
 router.get('/guild/:guildId/data', async (req, res) => {
     try {
         const { guildId } = req.params;
@@ -101,20 +133,29 @@ router.get('/guild/:guildId/data', async (req, res) => {
         const userGuilds = req.user.guilds || [];
         const guild = userGuilds.find(g => g.id === guildId);
 
-        if (!guild) return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
+        if (!guild) {
+            return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
+        }
 
         const perms = BigInt(guild.permissions);
-        if ((perms & 0x8n) !== 0x8n) return res.status(403).json({ success: false, error: 'لازم تكون أدمن' });
+        if ((perms & 0x8n) !== 0x8n) {
+            return res.status(403).json({ success: false, error: 'لازم تكون أدمن' });
+        }
 
+        // ==== تحقق من الكاش ====
         const cacheKey = `guild_data_${guildId}_${botType}`;
         const cached = getCache(cacheKey);
-        if (cached) return res.json({ success: true, data: cached, cached: true });
+        if (cached) {
+            return res.json({ success: true, data: cached, cached: true });
+        }
 
         const botToken = botType === 'premium'
             ? process.env.PREMIUM_BOT_TOKEN
             : process.env.FREE_BOT_TOKEN;
 
-        if (!botToken) return res.status(500).json({ success: false, error: `التوكن بتاع ${botType} مش موجود` });
+        if (!botToken) {
+            return res.status(500).json({ success: false, error: `التوكن بتاع البوت ${botType} مش موجود` });
+        }
 
         const [channelsRes, rolesRes] = await Promise.all([
             fetch(`https://discord.com/api/v10/guilds/${guildId}/channels`, {
@@ -129,15 +170,27 @@ router.get('/guild/:guildId/data', async (req, res) => {
         const roles = await rolesRes.json();
 
         if (!Array.isArray(channels)) {
-            return res.status(500).json({ success: false, error: 'فشل جلب القنوات: ' + (channels.message || '') });
+            return res.status(500).json({
+                success: false,
+                error: 'فشل جلب القنوات. تأكد إن البوت في السيرفر. ' + (channels.message || '')
+            });
         }
+
         if (!Array.isArray(roles)) {
             return res.status(500).json({ success: false, error: 'فشل جلب الرتب' });
         }
 
-        const textChannels = channels.filter(c => c.type === 0).map(c => ({ id: c.id, name: c.name, position: c.position }));
-        const categories = channels.filter(c => c.type === 4).map(c => ({ id: c.id, name: c.name, position: c.position }));
-        const rolesList = roles.filter(r => r.name !== '@everyone').map(r => ({ id: r.id, name: r.name, color: r.color, position: r.position }));
+        const textChannels = channels.filter(c => c.type === 0).map(c => ({
+            id: c.id, name: c.name, position: c.position
+        }));
+
+        const categories = channels.filter(c => c.type === 4).map(c => ({
+            id: c.id, name: c.name, position: c.position
+        }));
+
+        const rolesList = roles.filter(r => r.name !== '@everyone').map(r => ({
+            id: r.id, name: r.name, color: r.color, position: r.position
+        }));
 
         const data = { textChannels, categories, roles: rolesList };
         setCache(cacheKey, data);
@@ -149,7 +202,7 @@ router.get('/guild/:guildId/data', async (req, res) => {
     }
 });
 
-// ==== حفظ البانل ====
+// ==== حفظ إعدادات البانل ====
 router.post('/setup-panel', async (req, res) => {
     try {
         const db = mongoose.connection.db;
@@ -209,7 +262,7 @@ router.post('/setup-panel', async (req, res) => {
     }
 });
 
-// ==== check-bots ====
+// ==== التحقق من البوتات ====
 router.get('/guild/:guildId/check-bots', async (req, res) => {
     try {
         const { guildId } = req.params;
@@ -217,30 +270,43 @@ router.get('/guild/:guildId/check-bots', async (req, res) => {
 
         const userGuilds = req.user.guilds || [];
         const guild = userGuilds.find(g => g.id === guildId);
-        if (!guild) return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
+
+        if (!guild) {
+            return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
+        }
 
         const perms = BigInt(guild.permissions);
-        if ((perms & 0x8n) !== 0x8n) return res.status(403).json({ success: false, error: 'لازم تكون أدمن' });
+        if ((perms & 0x8n) !== 0x8n) {
+            return res.status(403).json({ success: false, error: 'لازم تكون أدمن' });
+        }
 
+        // ==== تحقق من الكاش ====
         const cacheKey = `check_bots_${guildId}`;
         const cached = getCache(cacheKey);
-        if (cached) return res.json({ success: true, data: cached, cached: true });
+        if (cached) {
+            return res.json({ success: true, data: cached, cached: true });
+        }
 
         const freeBotToken = process.env.FREE_BOT_TOKEN;
         const premiumBotToken = process.env.PREMIUM_BOT_TOKEN;
 
         const [freeRes, premiumRes] = await Promise.all([
             freeBotToken
-                ? fetch(`https://discord.com/api/v10/guilds/${guildId}`, { headers: { 'Authorization': `Bot ${freeBotToken}` } }).catch(() => ({ ok: false }))
+                ? fetch(`https://discord.com/api/v10/guilds/${guildId}`, {
+                    headers: { 'Authorization': `Bot ${freeBotToken}` }
+                }).catch(() => ({ ok: false }))
                 : Promise.resolve({ ok: false }),
             premiumBotToken
-                ? fetch(`https://discord.com/api/v10/guilds/${guildId}`, { headers: { 'Authorization': `Bot ${premiumBotToken}` } }).catch(() => ({ ok: false }))
+                ? fetch(`https://discord.com/api/v10/guilds/${guildId}`, {
+                    headers: { 'Authorization': `Bot ${premiumBotToken}` }
+                }).catch(() => ({ ok: false }))
                 : Promise.resolve({ ok: false })
         ]);
 
         const free = freeRes.ok;
         const premium = premiumRes.ok;
 
+        // ==== التحقق من تفعيل البريميم ====
         const premiumGuild = await db.collection('kv_store').findOne({ key: `guild_premium_${guildId}` });
         const premiumActive = premiumGuild?.value?.active === true;
 
@@ -328,7 +394,7 @@ router.post('/setup-application-premium', async (req, res) => {
             return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
         }
 
-        // التحقق من تفعيل البريميم
+        // ==== التحقق من تفعيل البريميم ====
         const premiumGuild = await db.collection('kv_store').findOne({ key: `guild_premium_${guildId}` });
         if (!premiumGuild?.value?.active) {
             return res.status(403).json({ success: false, error: 'هذا السيرفر مفيش فيه اشتراك بريميم فعّال' });
