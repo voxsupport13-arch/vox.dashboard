@@ -47,7 +47,39 @@
             </button>
 
             <button class="lang-toggle" onclick="toggleLang()" title="Language">
-                <span id="langText">🇺🇸</span>
+                <svg id="langFlagUS" class="flag-icon" viewBox="0 0 640 480" width="24" height="18">
+                    <path fill="#bd3d44" d="M0 0h640v480H0"/>
+                    <path stroke="#fff" stroke-width="37" d="M0 55.4h640M0 129.3h640M0 203.2h640M0 277.1h640M0 351h640M0 424.9h640"/>
+                    <path fill="#192f5d" d="M0 0h364.8v259.4H0"/>
+                    <g fill="#fff">
+                        <g id="us-stars">
+                            <circle cx="30" cy="30" r="6"/>
+                            <circle cx="90" cy="30" r="6"/>
+                            <circle cx="150" cy="30" r="6"/>
+                            <circle cx="210" cy="30" r="6"/>
+                            <circle cx="270" cy="30" r="6"/>
+                            <circle cx="330" cy="30" r="6"/>
+                            <circle cx="60" cy="60" r="6"/>
+                            <circle cx="120" cy="60" r="6"/>
+                            <circle cx="180" cy="60" r="6"/>
+                            <circle cx="240" cy="60" r="6"/>
+                            <circle cx="300" cy="60" r="6"/>
+                        </g>
+                        <use href="#us-stars" y="60"/>
+                        <use href="#us-stars" y="120"/>
+                        <use href="#us-stars" y="180"/>
+                        <use href="#us-stars" y="60"/>
+                        <use href="#us-stars" y="120"/>
+                        <use href="#us-stars" y="180"/>
+                    </g>
+                </svg>
+
+                <svg id="langFlagSA" class="flag-icon" viewBox="0 0 640 480" width="24" height="18" style="display:none;">
+                    <path fill="#006c35" d="M0 0h640v480H0z"/>
+                    <path fill="#fff" d="M110 290c50-20 100-20 150 0s100 20 150 0 100-20 150 0" stroke="#fff" stroke-width="15" fill="none"/>
+                    <path fill="#fff" d="M130 210h380M130 180h380M130 150h380M130 120h380" stroke="#fff" stroke-width="10"/>
+                    <path fill="#fff" d="M400 290c20-15 40-15 60 0s40 15 60 0" stroke="#fff" stroke-width="8" fill="none"/>
+                </svg>
             </button>
 
             <% if (typeof user !== 'undefined' && user) { %>
