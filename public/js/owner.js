@@ -494,4 +494,24 @@ function typeText(type) {
     return map[type] || type;
 }
 
-function show
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${type === 'success' ? '#57F287' : '#ED4245'};
+        color: #000;
+        padding: 1rem 2rem;
+        border-radius: 10px;
+        font-weight: 700;
+        z-index: 9999;
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
+}
