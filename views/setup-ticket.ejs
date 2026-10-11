@@ -1,0 +1,116 @@
+<%- include('partials/header', { user, title: 'تسطيب التكت' }) %>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>
+            <span class="ar-text">🎫 تسطيب التكت</span>
+            <span class="en-text" style="display:none">🎫 Setup Ticket</span>
+        </h1>
+        <p>
+            <span class="ar-text">اختر السيرفر وابدأ التسطيب</span>
+            <span class="en-text" style="display:none">Choose server and start setup</span>
+        </p>
+    </div>
+
+    <!-- Step 1: Choose Server -->
+    <div id="setupPanelStep0" class="card">
+        <h3>🌐 اختر السيرفر</h3>
+        <div class="form-group">
+            <select id="setupGuildSelect" onchange="loadGuildData()" required>
+                <option value="">-- اختر السيرفر --</option>
+            </select>
+            <input type="hidden" id="setupGuildName">
+            <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">
+                ⚠️ لازم تكون <strong>Admin</strong> في السيرفر
+            </small>
+        </div>
+    </div>
+
+    <!-- Step 1.5: Choose Bot Type -->
+    <div id="setupBotTypeGroup" class="card" style="display:none;">
+        <h3>🤖 اختر البوت</h3>
+        <div class="form-group">
+            <label>البوت اللي هينشر البانل</label>
+            <select id="setupBotType" required>
+                <option value="free">🆓 البوت المجاني</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Step 2: Panel Info -->
+    <div id="setupPanelStep1" class="card" style="display:none;">
+        <h3>📋 معلومات البانل</h3>
+
+        <div class="form-group">
+            <label>اسم البانل</label>
+            <input type="text" id="setupTitle" placeholder="مثال: تذاكر الدعم الفني" required>
+        </div>
+
+        <div class="form-group">
+            <label>وصف البانل</label>
+            <textarea id="setupDescription" rows="3" placeholder="وصف مختصر للبانل..." required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>رابط صورة البانر (اختياري)</label>
+            <input type="url" id="setupBannerImage" placeholder="https://i.imgur.com/...">
+        </div>
+
+        <div class="form-group">
+            <label>رابط الصورة المصغرة (اختياري)</label>
+            <input type="url" id="setupImage" placeholder="https://i.imgur.com/...">
+        </div>
+
+        <div class="form-group">
+            <label>روم البانل</label>
+            <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupTargetChannel', this.value)">
+            <select id="setupTargetChannel" required>
+                <option value="">-- اختر روم البانل --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>روم اللوق (اختياري)</label>
+            <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupLogChannel', this.value)">
+            <select id="setupLogChannel">
+                <option value="">-- اختر روم اللوق --</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>روم التقييمات (اختياري)</label>
+            <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupRatingChannel', this.value)">
+            <select id="setupRatingChannel">
+                <option value="">-- اختر روم التقييمات --</option>
+            </select>
+        </div>
+
+        <button type="button" class="btn btn-primary btn-full" onclick="goToStep2()">
+            التالي: الأقسام ➡️
+        </button>
+    </div>
+
+    <!-- Step 3: Categories Count -->
+    <div id="setupPanelStep2" class="card" style="display:none;">
+        <h3>📁 عدد الأقسام</h3>
+        <div class="form-group">
+            <label>اختر عدد الأقسام (1-10)</label>
+            <input type="number" id="categoriesCountInput" min="1" max="10" value="1" required>
+        </div>
+        <button type="button" class="btn btn-primary btn-full" onclick="startCategories()">
+            تأكيد ومتابعة ➡️
+        </button>
+    </div>
+
+    <!-- Step 4: Category Forms -->
+    <div id="setupPanelStep3" style="display:none;">
+        <h3 class="dashboard-title">📁 إعداد الأقسام</h3>
+        <div id="categoriesFormContainer"></div>
+        <button type="button" id="setupSubmitBtn" class="btn btn-primary btn-full" onclick="submitPanel()">
+            🚀 حفظ ونشر البانل
+        </button>
+    </div>
+</div>
+
+<script src="/js/setup.js"></script>
+<%- include('partials/footer') %>
