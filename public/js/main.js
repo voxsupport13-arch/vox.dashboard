@@ -16,7 +16,7 @@ function toggleTheme() {
     }
 })();
 
-// ==== Language Toggle ====
+// ==== Language Toggle (Flags) ====
 function toggleLang() {
     const current = localStorage.getItem('vox-lang') || 'ar';
     const newLang = current === 'ar' ? 'en' : 'ar';
@@ -35,13 +35,13 @@ function applyLang(lang) {
         document.documentElement.setAttribute('dir', 'ltr');
         arTexts.forEach(el => el.style.display = 'none');
         enTexts.forEach(el => el.style.display = 'inline');
-        if (langText) langText.textContent = 'AR';
+        if (langText) langText.textContent = '🇸🇦';
     } else {
         document.documentElement.setAttribute('lang', 'ar');
         document.documentElement.setAttribute('dir', 'rtl');
         arTexts.forEach(el => el.style.display = 'inline');
         enTexts.forEach(el => el.style.display = 'none');
-        if (langText) langText.textContent = 'EN';
+        if (langText) langText.textContent = '🇺🇸';
     }
 }
 
@@ -59,7 +59,6 @@ function toggleUserMenu(event) {
     }
 }
 
-// ==== Close User Menu on Outside Click ====
 document.addEventListener('click', (event) => {
     const dropdown = document.getElementById('userDropdown');
     const userMenu = document.querySelector('.user-menu');
@@ -80,7 +79,7 @@ function copyToClipboard(text) {
     });
 }
 
-// ==== Toast Notification ====
+// ==== Toast ====
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
