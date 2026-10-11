@@ -176,7 +176,6 @@ router.post('/reports/:id/resolve', async (req, res) => {
             { $set: updateData }
         );
 
-        // ==== إرسال DM للعضو ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN || process.env.FREE_BOT_TOKEN;
 
@@ -356,6 +355,15 @@ router.post('/purchases/:id/reject', async (req, res) => {
         const { reason } = req.body;
         const { ObjectId } = require('mongodb');
 
+        if (!reason) {
+            return res.status(400).json({ success: false, error: 'السبب مطلوب' });
+        }
+
+        const purchase = await db.collection('vox_purchases').findOne({ _id: new ObjectId(id) });
+        if (!purchase) {
+            return res.status(404).json({ success: false, error: 'الطلب غير موجود' });
+        }
+
         await db.collection('vox_purchases').updateOne(
             { _id: new ObjectId(id) },
             {
@@ -363,12 +371,81 @@ router.post('/purchases/:id/reject', async (req, res) => {
                     status: 'rejected',
                     reviewedBy: req.user.id,
                     reviewedAt: new Date(),
-                    rejectReason: reason || 'لم يتم التحقق من الدفع'
+                    rejectReason: reason
                 }
             }
         );
 
+        // ==== لوج الرفض ====
+        await db.collection('vox_purchase_logs').insertOne({
+            purchaseId: id,
+            userId: purchase.userId,
+            username: purchase.username,
+            plan: purchase.plan,
+            paymentMethod: purchase.paymentMethod,
+            finalPrice: purchase.finalPrice,
+            transferUser: purchase.transferUser,
+            reason: reason,
+            rejectedBy: req.user.id,
+            rejectedByUsername: req.user.username,
+            createdAt: new Date()
+        });
+
+        // ==== إرسال DM للعضو ====
+        try {
+            const botToken = process.env.PREMIUM_BOT_TOKEN;
+
+            if (botToken) {
+                const dmRes = await fetch('https://discord.com/api/v10/users/@me/channels', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bot ${botToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ recipient_id: purchase.userId })
+                });
+
+                const dmChannel = await dmRes.json();
+
+                if (dmChannel.id) {
+                    const message = `❌ **تم رفض طلب الشراء**\n\n` +
+                        `💎 **الباقة:** ${purchase.plan === 'monthly' ? 'شهري' : 'سنوي'}\n` +
+                        `💰 **السعر:** ${purchase.finalPrice}\n` +
+                        `📝 **سبب الرفض:** ${reason}\n\n` +
+                        `للتواصل: ${process.env.SUPPORT_SERVER}`;
+
+                    await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bot ${botToken}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ content: message })
+                    });
+                }
+            }
+        } catch (dmErr) {
+            console.error('DM error:', dmErr.message);
+        }
+
         res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== لوج الرفض ====
+router.get('/purchase-logs', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+
+        const logs = await db.collection('vox_purchase_logs')
+            .find({})
+            .sort({ createdAt: -1 })
+            .limit(100)
+            .toArray();
+
+        res.json({ success: true, data: logs });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
@@ -469,7 +546,6 @@ router.post('/news', async (req, res) => {
     }
 });
 
-// ==== تعديل خبر ====
 router.put('/news/:id', async (req, res) => {
     try {
         const db = mongoose.connection.db;
@@ -486,7 +562,6 @@ router.put('/news/:id', async (req, res) => {
             return res.status(404).json({ success: false, error: 'الخبر غير موجود' });
         }
 
-        // احسب endDate جديدة من startDate
         const startDate = new Date(news.startDate);
         const endDate = new Date(startDate.getTime() + (parseInt(duration) * 60 * 60 * 1000));
 
@@ -504,7 +579,6 @@ router.put('/news/:id', async (req, res) => {
 
         res.json({ success: true });
     } catch (err) {
-        console.error('Update news error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -520,7 +594,10 @@ router.delete('/news/:id', async (req, res) => {
     }
 });
 
+// ============================================
 // ==== المفاتيح ====
+// ============================================
+
 router.get('/keys', async (req, res) => {
     try {
         const db = mongoose.connection.db;
@@ -528,13 +605,137 @@ router.get('/keys', async (req, res) => {
         const monthly = (await db.collection('kv_store').findOne({ key: 'keys_monthly' }))?.value || {};
         const yearly = (await db.collection('kv_store').findOne({ key: 'keys_yearly' }))?.value || {};
 
-        const monthlyList = Object.entries(monthly).map(([key, data]) => ({ key, ...data }));
-        const yearlyList = Object.entries(yearly).map(([key, data]) => ({ key, ...data }));
+        const monthlyList = Object.entries(monthly).map(([key, data]) => ({ key, type: 'monthly', ...data }));
+        const yearlyList = Object.entries(yearly).map(([key, data]) => ({ key, type: 'yearly', ...data }));
 
         res.json({
             success: true,
-            data: { monthly: monthlyList, yearly: yearlyList }
+            data: {
+                monthly: monthlyList,
+                yearly: yearlyList
+            }
         });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== إنشاء مفتاح ====
+router.post('/keys', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { key, type, duration } = req.body;
+
+        if (!key || !type || !duration) {
+            return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
+        }
+
+        if (type !== 'monthly' && type !== 'yearly') {
+            return res.status(400).json({ success: false, error: 'النوع غير صحيح' });
+        }
+
+        const keyType = type === 'monthly' ? 'keys_monthly' : 'keys_yearly';
+        const keysDoc = await db.collection('kv_store').findOne({ key: keyType });
+        const keys = keysDoc?.value || {};
+
+        if (keys[key]) {
+            return res.status(400).json({ success: false, error: 'هذا المفتاح موجود بالفعل' });
+        }
+
+        keys[key] = {
+            used: false,
+            guildId: null,
+            activatedAt: null,
+            expiresAt: null,
+            duration: parseInt(duration),
+            ownerId: null,
+            warned3Days: false,
+            createdAt: new Date().toISOString()
+        };
+
+        if (keysDoc) {
+            await db.collection('kv_store').updateOne(
+                { key: keyType },
+                { $set: { value: keys, updatedAt: new Date() } }
+            );
+        } else {
+            await db.collection('kv_store').insertOne({
+                key: keyType,
+                value: keys,
+                updatedAt: new Date()
+            });
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== حذف مفتاح ====
+router.delete('/keys/:key', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { key } = req.params;
+        const { type } = req.query;
+
+        if (!type) {
+            return res.status(400).json({ success: false, error: 'النوع مطلوب' });
+        }
+
+        const keyType = type === 'monthly' ? 'keys_monthly' : 'keys_yearly';
+        const keysDoc = await db.collection('kv_store').findOne({ key: keyType });
+        const keys = keysDoc?.value || {};
+
+        if (!keys[key]) {
+            return res.status(404).json({ success: false, error: 'المفتاح غير موجود' });
+        }
+
+        delete keys[key];
+
+        await db.collection('kv_store').updateOne(
+            { key: keyType },
+            { $set: { value: keys, updatedAt: new Date() } }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== إرجاع مفتاح (مستخدم → غير مستخدم) ====
+router.post('/keys/:key/reset', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { key } = req.params;
+        const { type } = req.body;
+
+        if (!type) {
+            return res.status(400).json({ success: false, error: 'النوع مطلوب' });
+        }
+
+        const keyType = type === 'monthly' ? 'keys_monthly' : 'keys_yearly';
+        const keysDoc = await db.collection('kv_store').findOne({ key: keyType });
+        const keys = keysDoc?.value || {};
+
+        if (!keys[key]) {
+            return res.status(404).json({ success: false, error: 'المفتاح غير موجود' });
+        }
+
+        keys[key].used = false;
+        keys[key].guildId = null;
+        keys[key].activatedAt = null;
+        keys[key].expiresAt = null;
+        keys[key].ownerId = null;
+        keys[key].warned3Days = false;
+
+        await db.collection('kv_store').updateOne(
+            { key: keyType },
+            { $set: { value: keys, updatedAt: new Date() } }
+        );
+
+        res.json({ success: true });
     } catch (err) {
         res.status(500).json({ success: false, error: err.message });
     }
