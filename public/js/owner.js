@@ -16,27 +16,17 @@ function switchTab(event, tabId) {
 
 async function loadTabData(tabId) {
     switch (tabId) {
-        case 'ownerOverview':
-            await loadOwnerStats();
-            break;
-        case 'ownerReports':
-            await loadReports();
-            break;
-        case 'ownerPurchases':
-            await loadPurchases();
-            break;
-        case 'ownerCoupons':
-            await loadCoupons();
-            break;
-        case 'ownerNews':
-            await loadNews();
-            break;
-        case 'ownerKeys':
-            await loadKeys();
-            break;
+        case 'ownerOverview': await loadOwnerStats(); break;
+        case 'ownerSiteStats': await loadSiteStats(); break;
+        case 'ownerReports': await loadReports(); break;
+        case 'ownerPurchases': await loadPurchases(); break;
+        case 'ownerCoupons': await loadCoupons(); break;
+        case 'ownerNews': await loadNews(); break;
+        case 'ownerKeys': await loadKeys(); break;
     }
 }
 
+// ==== Bot Stats ====
 async function loadOwnerStats() {
     try {
         const res = await fetch('/api/owner/stats', { credentials: 'include' });
@@ -52,13 +42,51 @@ async function loadOwnerStats() {
         setText('allClosedTickets', d.closedTickets);
         setText('totalPurchases', d.totalPurchases);
         setText('pendingReports', d.pendingReports);
-        setText('totalUsers', d.totalUsers || 0);
-        setText('onlineUsers', d.onlineUsers || 0);
     } catch (err) {
         console.error('Stats error:', err);
     }
 }
 
+// ==== Site Stats ====
+async function loadSiteStats() {
+    try {
+        const res = await fetch('/api/owner/site-stats', { credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) return;
+
+        const d = data.data;
+        setText('totalUsers', d.totalUsers || 0);
+        setText('onlineUsers', d.onlineUsers || 0);
+        setText('todayUsers', d.todayUsers || 0);
+        setText('weekUsers', d.weekUsers || 0);
+
+        // عرض آخر المستخدمين
+        const container = document.getElementById('recentUsers');
+        if (!container) return;
+
+        if (!d.recentUsers || d.recentUsers.length === 0) {
+            container.innerHTML = '<p class="empty-state">لا يوجد مستخدمين</p>';
+            return;
+        }
+
+        container.innerHTML = d.recentUsers.map(u => `
+            <div class="user-item" style="display:flex;align-items:center;gap:1rem;padding:1rem;border-bottom:1px solid var(--border);">
+                <img src="https://cdn.discordapp.com/avatars/${u.userId}/${u.avatar}.png?size=64" style="width:48px;height:48px;border-radius:50%;border:2px solid var(--gold);" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png'">
+                <div style="flex:1;">
+                    <strong style="color:var(--gold);">${escapeHtml(u.username)}</strong>
+                    <div class="item-meta" style="margin-top:0.3rem;">
+                        <span>📅 آخر دخول: ${new Date(u.lastSeen).toLocaleString()}</span>
+                        ${u.firstSeen ? `<span>🆕 أول دخول: ${new Date(u.firstSeen).toLocaleDateString()}</span>` : ''}
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    } catch (err) {
+        console.error('Site stats error:', err);
+    }
+}
+
+// ==== Reports ====
 async function loadReports() {
     try {
         const res = await fetch('/api/owner/reports', { credentials: 'include' });
@@ -74,11 +102,12 @@ async function loadReports() {
 
         container.innerHTML = data.data.map(r => `
             <div class="report-item">
-                <h4>${escapeHtml(r.title)}</h4>
+                <h4>${typeIcon(r.type)} ${escapeHtml(r.title)}</h4>
                 <p>${escapeHtml(r.description)}</p>
                 ${r.imageUrl ? `<a href="${r.imageUrl}" target="_blank" style="color:var(--gold);">📷 عرض الصورة</a>` : ''}
                 <div class="item-meta">
                     <span>👤 ${escapeHtml(r.username)}</span>
+                    <span>📂 ${typeText(r.type)}</span>
                     <span>📅 ${new Date(r.createdAt).toLocaleString()}</span>
                     <span class="status-badge ${r.status}">${statusText(r.status)}</span>
                 </div>
@@ -116,6 +145,7 @@ async function resolveReport(id, status) {
     }
 }
 
+// ==== Purchases ====
 async function loadPurchases() {
     try {
         const res = await fetch('/api/owner/purchases', { credentials: 'include' });
@@ -198,6 +228,7 @@ async function rejectPurchase(id) {
     }
 }
 
+// ==== Coupons ====
 async function loadCoupons() {
     try {
         const res = await fetch('/api/owner/coupons', { credentials: 'include' });
@@ -248,6 +279,7 @@ async function deleteCoupon(id) {
     }
 }
 
+// ==== News ====
 async function loadNews() {
     try {
         const res = await fetch('/api/owner/news', { credentials: 'include' });
@@ -269,6 +301,7 @@ async function loadNews() {
                     <span class="status-badge ${n.active ? 'active' : 'expired'}">${n.active ? 'نشط' : 'منتهي'}</span>
                 </div>
                 <div class="item-actions">
+                    <button class="btn-small success" onclick="openEditNews('${n._id}', '${escapeHtml(n.content).replace(/'/g, "\\'")}', ${n.duration})">✏️ تعديل</button>
                     <button class="btn-small danger" onclick="deleteNews('${n._id}')">🗑️ حذف</button>
                 </div>
             </div>
@@ -296,6 +329,19 @@ async function deleteNews(id) {
     }
 }
 
+// ==== Edit News ====
+function openEditNews(id, content, duration) {
+    document.getElementById('editNewsId').value = id;
+    document.getElementById('editNewsContent').value = content;
+    document.getElementById('editNewsDuration').value = duration;
+    document.getElementById('editNewsModal').style.display = 'flex';
+}
+
+function closeEditNews() {
+    document.getElementById('editNewsModal').style.display = 'none';
+}
+
+// ==== Keys ====
 async function loadKeys() {
     try {
         const res = await fetch('/api/owner/keys', { credentials: 'include' });
@@ -314,6 +360,7 @@ async function loadKeys() {
     }
 }
 
+// ==== Forms ====
 document.addEventListener('DOMContentLoaded', () => {
     const couponForm = document.getElementById('createCouponForm');
     if (couponForm) {
@@ -373,9 +420,41 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const editNewsForm = document.getElementById('editNewsForm');
+    if (editNewsForm) {
+        editNewsForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('editNewsId').value;
+            const content = document.getElementById('editNewsContent').value;
+            const duration = document.getElementById('editNewsDuration').value;
+
+            try {
+                const res = await fetch(`/api/owner/news/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ content, duration })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    showToast('✅ تم تعديل الخبر', 'success');
+                    closeEditNews();
+                    await loadNews();
+                } else {
+                    showToast(`❌ ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast('❌ فشل', 'danger');
+            }
+        });
+    }
+
     loadOwnerStats();
 });
 
+// ==== Helpers ====
 function setText(id, value) {
     const el = document.getElementById(id);
     if (el) el.textContent = value;
@@ -398,24 +477,21 @@ function purchaseStatusText(status) {
     return map[status] || status;
 }
 
-function showToast(message, type = 'success') {
-    const toast = document.createElement('div');
-    toast.textContent = message;
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 30px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: ${type === 'success' ? '#57F287' : '#ED4245'};
-        color: #000;
-        padding: 1rem 2rem;
-        border-radius: 10px;
-        font-weight: 700;
-        z-index: 9999;
-    `;
-    document.body.appendChild(toast);
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
-    }, 3000);
+function typeIcon(type) {
+    const map = { website: '🌐', ticket: '🎫', application: '📝', payment: '💰', other: '📌', bug: '🌐' };
+    return map[type] || '📌';
 }
+
+function typeText(type) {
+    const map = {
+        website: 'مشكلة في الموقع',
+        bug: 'مشكلة في الموقع',
+        ticket: 'مشكلة في التذاكر',
+        application: 'مشكلة في التقديم',
+        payment: 'مشكلة في الدفع',
+        other: 'أخرى'
+    };
+    return map[type] || type;
+}
+
+function show
