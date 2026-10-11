@@ -1,0 +1,114 @@
+<%- include('partials/header', { user, title: 'تسطيب التقديم' }) %>
+
+<div class="container page-content">
+    <div class="page-header">
+        <h1>
+            <span class="ar-text">📝 تسطيب التقديم الإداري</span>
+            <span class="en-text" style="display:none">📝 Setup Staff Application</span>
+        </h1>
+        <p>
+            <span class="ar-text">اختر السيرفر وابدأ التسطيب</span>
+            <span class="en-text" style="display:none">Choose server and start setup</span>
+        </p>
+    </div>
+
+    <!-- Step 1: Choose Server -->
+    <div id="appStep0" class="card">
+        <h3>🌐 اختر السيرفر</h3>
+        <div class="form-group">
+            <select id="appGuildSelect" onchange="loadAppGuildData()" required>
+                <option value="">-- اختر السيرفر --</option>
+            </select>
+            <input type="hidden" id="appGuildName">
+            <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">
+                ⚠️ لازم تكون <strong>Admin</strong>
+            </small>
+        </div>
+    </div>
+
+    <div id="appStep1" style="display:none;">
+        <div class="card">
+            <h3>📋 معلومات التقديم</h3>
+            <div class="form-group">
+                <label>اسم التقديم</label>
+                <input type="text" id="appName" placeholder="مثال: تقديم إداري" required>
+            </div>
+            <div class="form-group">
+                <label>وصف التقديم (اختياري)</label>
+                <textarea id="appDescription" rows="2" placeholder="وصف مختصر..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>رابط صورة البانر (اختياري)</label>
+                <input type="url" id="appBannerImage" placeholder="https://i.imgur.com/...">
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>📢 القنوات والرتب</h3>
+            <div class="form-group">
+                <label>قناة البانل</label>
+                <select id="appPanelChannel" required>
+                    <option value="">-- اختر قناة البانل --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>قناة الإجابات (اللوق)</label>
+                <select id="appLogChannel" required>
+                    <option value="">-- اختر قناة الإجابات --</option>
+                </select>
+            </div>
+
+            <div class="form-group premium-only" style="display:none;">
+                <label>قناة لوق المراجعة (اختياري - بريميم)</label>
+                <select id="appReviewLogChannel">
+                    <option value="">-- بدون قناة --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>رتبة مسؤولة</label>
+                <select id="appRoleSelect" required>
+                    <option value="">-- اختر رتبة مسؤولة --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>رول القبول</label>
+                <select id="appAcceptRoleSelect" required>
+                    <option value="">-- اختر رول القبول --</option>
+                </select>
+            </div>
+
+            <div class="form-group premium-only" style="display:none;">
+                <label>رول الرفض (اختياري - بريميم)</label>
+                <select id="appRejectRoleSelect">
+                    <option value="">-- بدون رول --</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>رسالة القبول (اختياري)</label>
+                <textarea id="appAcceptMessage" rows="2" placeholder="🎉 مبروك! تم قبولك..."></textarea>
+            </div>
+
+            <div class="form-group premium-only" style="display:none;">
+                <label>رسالة الرفض (اختياري - بريميم)</label>
+                <textarea id="appRejectMessage" rows="2" placeholder="😔 نأسف، لم يتم قبولك..."></textarea>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>❓ الأسئلة <span id="appQuestionsHint">(1-5)</span></h3>
+            <div id="appQuestionsContainer"></div>
+            <button type="button" class="btn btn-secondary btn-full" onclick="addQuestion()" style="margin-top:1rem;">
+                ➕ إضافة سؤال
+            </button>
+        </div>
+
+        <button type="button" id="appSubmitBtn" class="btn btn-primary btn-full" onclick="submitApp()">
+            🚀 حفظ ونشر التقديم
+        </button>
+    </div>
+</div>
+
+<script src="/js/setup.js"></script>
+<%- include('partials/footer') %>
