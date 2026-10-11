@@ -16,7 +16,7 @@ function toggleTheme() {
     }
 })();
 
-// ==== Language Toggle (Flags) ====
+// ==== Language Toggle (SVG Flags) ====
 function toggleLang() {
     const current = localStorage.getItem('vox-lang') || 'ar';
     const newLang = current === 'ar' ? 'en' : 'ar';
@@ -28,20 +28,23 @@ function toggleLang() {
 function applyLang(lang) {
     const arTexts = document.querySelectorAll('.ar-text');
     const enTexts = document.querySelectorAll('.en-text');
-    const langText = document.getElementById('langText');
+    const flagUS = document.getElementById('langFlagUS');
+    const flagSA = document.getElementById('langFlagSA');
 
     if (lang === 'en') {
         document.documentElement.setAttribute('lang', 'en');
         document.documentElement.setAttribute('dir', 'ltr');
         arTexts.forEach(el => el.style.display = 'none');
         enTexts.forEach(el => el.style.display = 'inline');
-        if (langText) langText.textContent = '🇸🇦';
+        if (flagUS) flagUS.style.display = 'none';
+        if (flagSA) flagSA.style.display = 'inline';
     } else {
         document.documentElement.setAttribute('lang', 'ar');
         document.documentElement.setAttribute('dir', 'rtl');
         arTexts.forEach(el => el.style.display = 'inline');
         enTexts.forEach(el => el.style.display = 'none');
-        if (langText) langText.textContent = '🇺🇸';
+        if (flagUS) flagUS.style.display = 'inline';
+        if (flagSA) flagSA.style.display = 'none';
     }
 }
 
