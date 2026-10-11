@@ -22,7 +22,7 @@ function getOwnerIds() {
     return (process.env.OWNER_ID || '').split(',').map(id => id.trim()).filter(Boolean);
 }
 
-// ==== MongoDB Connection ====
+// ==== MongoDB ====
 let isConnected = false;
 
 async function connectDB() {
@@ -42,11 +42,8 @@ async function connectDB() {
     }
 }
 
-// ==== Middleware: تأكد من الاتصال قبل أي request ====
 app.use(async (req, res, next) => {
-    if (!isConnected) {
-        await connectDB();
-    }
+    if (!isConnected) await connectDB();
     next();
 });
 
@@ -126,7 +123,6 @@ app.use(async (req, res, next) => {
     res.locals.user = req.user || null;
     res.locals.isOwner = req.user && ownerIds.includes(req.user.id);
 
-    // ==== تتبع المستخدم النشط ====
     if (req.user && req.user.id) {
         trackUser(req.user).catch(() => {});
     }
@@ -185,7 +181,6 @@ async function checkPremiumAccess(req) {
         }
         return false;
     } catch (err) {
-        console.error('Check premium error:', err);
         return false;
     }
 }
@@ -253,7 +248,6 @@ app.get('/dashboard', ensureAuth, async (req, res) => {
         if (hasPremium) return res.redirect('/dashboard/premium');
         return res.redirect('/dashboard/free');
     } catch (err) {
-        console.error('Dashboard redirect error:', err);
         return res.redirect('/dashboard/free');
     }
 });
@@ -291,6 +285,26 @@ app.get('/owner', ensureAuth, ensureOwner, (req, res) => {
     res.render('owner', { supportServer: process.env.SUPPORT_SERVER });
 });
 
+// ==== صفحة تسطيب التكت ====
+app.get('/setup/ticket', ensureAuth, async (req, res) => {
+    const hasPremium = await checkPremiumAccess(req);
+    res.render('setup-ticket', {
+        botType: hasPremium ? 'premium' : 'free',
+        hasPremium: hasPremium,
+        supportServer: process.env.SUPPORT_SERVER
+    });
+});
+
+// ==== صفحة تسطيب التقديم ====
+app.get('/setup/application', ensureAuth, async (req, res) => {
+    const hasPremium = await checkPremiumAccess(req);
+    res.render('setup-application', {
+        botType: hasPremium ? 'premium' : 'free',
+        hasPremium: hasPremium,
+        supportServer: process.env.SUPPORT_SERVER
+    });
+});
+
 // ==== API Routes ====
 try {
     const dashboardRoutes = require('./routes/dashboard');
@@ -312,7 +326,6 @@ try {
     console.error('❌ Routes error:', err.message);
 }
 
-// ==== Vercel Export ====
 module.exports = app;
 
 // ==== Local Run ====
