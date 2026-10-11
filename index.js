@@ -91,6 +91,26 @@ passport.use('premium', new DiscordStrategy({
     return done(null, profile);
 }));
 
+// ==== Turnstile Verification ====
+async function verifyTurnstile(token, ip) {
+    try {
+        const res = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                secret: process.env.TURNSTILE_SECRET,
+                response: token,
+                remoteip: ip
+            })
+        });
+        const data = await res.json();
+        return data.success === true;
+    } catch (err) {
+        console.error('Turnstile verify error:', err.message);
+        return false;
+    }
+}
+
 // ==== تتبع المستخدمين ====
 async function trackUser(user) {
     try {
@@ -106,9 +126,7 @@ async function trackUser(user) {
                     avatar: user.avatar || null,
                     lastSeen: new Date()
                 },
-                $setOnInsert: {
-                    firstSeen: new Date()
-                }
+                $setOnInsert: { firstSeen: new Date() }
             },
             { upsert: true }
         );
@@ -122,6 +140,7 @@ app.use(async (req, res, next) => {
     const ownerIds = getOwnerIds();
     res.locals.user = req.user || null;
     res.locals.isOwner = req.user && ownerIds.includes(req.user.id);
+    res.locals.turnstileSiteKey = process.env.TURNSTILE_SITE_KEY || '';
 
     if (req.user && req.user.id) {
         trackUser(req.user).catch(() => {});
@@ -214,8 +233,22 @@ app.get('/pricing', (req, res) => {
     });
 });
 
-// ==== Auth ====
-app.get('/auth/free', passport.authenticate('free'));
+// ==== Auth (مع Turnstile) ====
+app.get('/auth/free', async (req, res, next) => {
+    const token = req.query['cf-turnstile-response'];
+
+    if (!token) {
+        return res.status(400).send('❌ التحقق مطلوب. جرب تاني.');
+    }
+
+    const isValid = await verifyTurnstile(token, req.ip);
+
+    if (!isValid) {
+        return res.status(400).send('❌ فشل التحقق. أنت بوت أو حصل خطأ.');
+    }
+
+    passport.authenticate('free')(req, res, next);
+});
 
 app.get('/auth/free/callback',
     passport.authenticate('free', { failureRedirect: '/' }),
@@ -225,7 +258,21 @@ app.get('/auth/free/callback',
     }
 );
 
-app.get('/auth/premium', passport.authenticate('premium'));
+app.get('/auth/premium', async (req, res, next) => {
+    const token = req.query['cf-turnstile-response'];
+
+    if (!token) {
+        return res.status(400).send('❌ التحقق مطلوب. جرب تاني.');
+    }
+
+    const isValid = await verifyTurnstile(token, req.ip);
+
+    if (!isValid) {
+        return res.status(400).send('❌ فشل التحقق. أنت بوت أو حصل خطأ.');
+    }
+
+    passport.authenticate('premium')(req, res, next);
+});
 
 app.get('/auth/premium/callback',
     passport.authenticate('premium', { failureRedirect: '/' }),
@@ -285,7 +332,6 @@ app.get('/owner', ensureAuth, ensureOwner, (req, res) => {
     res.render('owner', { supportServer: process.env.SUPPORT_SERVER });
 });
 
-// ==== صفحة تسطيب التكت ====
 app.get('/setup/ticket', ensureAuth, async (req, res) => {
     const hasPremium = await checkPremiumAccess(req);
     res.render('setup-ticket', {
@@ -295,7 +341,6 @@ app.get('/setup/ticket', ensureAuth, async (req, res) => {
     });
 });
 
-// ==== صفحة تسطيب التقديم ====
 app.get('/setup/application', ensureAuth, async (req, res) => {
     const hasPremium = await checkPremiumAccess(req);
     res.render('setup-application', {
