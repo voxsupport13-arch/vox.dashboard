@@ -56,14 +56,6 @@ router.get('/stats', async (req, res) => {
             if (g.value?.memberCount) totalMembers += g.value.memberCount;
         });
 
-        // ==== إحصائيات المستخدمين ====
-        const totalUsers = await db.collection('vox_users').countDocuments();
-
-        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-        const onlineUsers = await db.collection('vox_users').countDocuments({
-            lastSeen: { $gte: fiveMinutesAgo }
-        });
-
         res.json({
             success: true,
             data: {
@@ -80,13 +72,56 @@ router.get('/stats', async (req, res) => {
                 monthlyAvailable,
                 monthlyUsed,
                 yearlyAvailable,
-                yearlyUsed,
-                totalUsers,
-                onlineUsers
+                yearlyUsed
             }
         });
     } catch (err) {
         console.error('Owner stats error:', err);
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== إحصائيات الموقع ====
+router.get('/site-stats', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+
+        const totalUsers = await db.collection('vox_users').countDocuments();
+
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const onlineUsers = await db.collection('vox_users').countDocuments({
+            lastSeen: { $gte: fiveMinutesAgo }
+        });
+
+        const todayStart = new Date();
+        todayStart.setHours(0, 0, 0, 0);
+        const todayUsers = await db.collection('vox_users').countDocuments({
+            lastSeen: { $gte: todayStart }
+        });
+
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const weekUsers = await db.collection('vox_users').countDocuments({
+            lastSeen: { $gte: weekAgo }
+        });
+
+        const recentUsers = await db.collection('vox_users')
+            .find({})
+            .sort({ lastSeen: -1 })
+            .limit(10)
+            .toArray();
+
+        res.json({
+            success: true,
+            data: {
+                totalUsers,
+                onlineUsers,
+                todayUsers,
+                weekUsers,
+                recentUsers
+            }
+        });
+    } catch (err) {
+        console.error('Site stats error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
@@ -141,6 +176,7 @@ router.post('/reports/:id/resolve', async (req, res) => {
             { $set: updateData }
         );
 
+        // ==== إرسال DM للعضو ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN || process.env.FREE_BOT_TOKEN;
 
@@ -157,9 +193,19 @@ router.post('/reports/:id/resolve', async (req, res) => {
                 const dmChannel = await dmRes.json();
 
                 if (dmChannel.id) {
+                    const typeMap = {
+                        website: 'مشكلة في الموقع',
+                        bug: 'مشكلة في الموقع',
+                        ticket: 'مشكلة في التذاكر',
+                        application: 'مشكلة في التقديم',
+                        payment: 'مشكلة في الدفع',
+                        other: 'أخرى'
+                    };
+                    const typeText = typeMap[report.type] || 'أخرى';
+
                     const message = status === 'resolved'
-                        ? `✅ **تم حل مشكلتك!**\n\n**العنوان:** ${report.title}\n\nشكرًا لتواصلك معنا.`
-                        : `❌ **لم يتم حل مشكلتك**\n\n**العنوان:** ${report.title}\n${reason ? `**السبب:** ${reason}` : ''}\n\nتواصل مع الدعم لمزيد من التفاصيل.`;
+                        ? `✅ **تم حل مشكلتك!**\n\n**العنوان:** ${report.title}\n**القسم:** ${typeText}\n\nشكرًا لتواصلك معنا.`
+                        : `❌ **لم يتم حل مشكلتك**\n\n**العنوان:** ${report.title}\n**القسم:** ${typeText}\n${reason ? `**السبب:** ${reason}` : ''}\n\nتواصل مع الدعم لمزيد من التفاصيل.`;
 
                     await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
                         method: 'POST',
@@ -419,6 +465,46 @@ router.post('/news', async (req, res) => {
 
         res.json({ success: true });
     } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== تعديل خبر ====
+router.put('/news/:id', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { id } = req.params;
+        const { content, duration } = req.body;
+        const { ObjectId } = require('mongodb');
+
+        if (!content || !duration) {
+            return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
+        }
+
+        const news = await db.collection('vox_news').findOne({ _id: new ObjectId(id) });
+        if (!news) {
+            return res.status(404).json({ success: false, error: 'الخبر غير موجود' });
+        }
+
+        // احسب endDate جديدة من startDate
+        const startDate = new Date(news.startDate);
+        const endDate = new Date(startDate.getTime() + (parseInt(duration) * 60 * 60 * 1000));
+
+        await db.collection('vox_news').updateOne(
+            { _id: new ObjectId(id) },
+            {
+                $set: {
+                    content,
+                    duration: parseInt(duration),
+                    endDate,
+                    updatedAt: new Date()
+                }
+            }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        console.error('Update news error:', err);
         res.status(500).json({ success: false, error: err.message });
     }
 });
