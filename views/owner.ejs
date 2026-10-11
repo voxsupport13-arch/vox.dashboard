@@ -16,6 +16,11 @@
                 <span class="ar-text">إحصائيات البوت</span>
                 <span class="en-text" style="display:none">Bot Stats</span>
             </a>
+            <a href="#ownerSiteStats" class="sidebar-link" onclick="switchTab(event, 'ownerSiteStats')">
+                <span class="icon">🌐</span>
+                <span class="ar-text">إحصائيات الموقع</span>
+                <span class="en-text" style="display:none">Site Stats</span>
+            </a>
             <a href="#ownerReports" class="sidebar-link" onclick="switchTab(event, 'ownerReports')">
                 <span class="icon">🚨</span>
                 <span class="ar-text">الإبلاغات</span>
@@ -116,7 +121,17 @@
                         <span class="en-text" style="display:none">Pending Reports</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
+        <!-- ==== إحصائيات الموقع ==== -->
+        <div id="ownerSiteStats" class="tab-content">
+            <h1 class="dashboard-title">
+                <span class="ar-text">🌐 إحصائيات الموقع</span>
+                <span class="en-text" style="display:none">🌐 Site Statistics</span>
+            </h1>
+
+            <div class="stats-grid">
                 <div class="stat-card gold">
                     <div class="stat-value" id="totalUsers">-</div>
                     <div class="stat-label">
@@ -131,6 +146,32 @@
                         <span class="ar-text">أونلاين حاليًا</span>
                         <span class="en-text" style="display:none">Online Now</span>
                     </div>
+                </div>
+
+                <div class="stat-card gold">
+                    <div class="stat-value" id="todayUsers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">دخلوا اليوم</span>
+                        <span class="en-text" style="display:none">Today's Visits</span>
+                    </div>
+                </div>
+
+                <div class="stat-card gold">
+                    <div class="stat-value" id="weekUsers">-</div>
+                    <div class="stat-label">
+                        <span class="ar-text">دخلوا آخر أسبوع</span>
+                        <span class="en-text" style="display:none">This Week</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" style="margin-top:2rem;">
+                <h3>
+                    <span class="ar-text">📋 آخر المستخدمين</span>
+                    <span class="en-text" style="display:none">📋 Recent Users</span>
+                </h3>
+                <div id="recentUsers" class="users-list">
+                    <p class="loading">⏳ جاري التحميل...</p>
                 </div>
             </div>
         </div>
@@ -180,49 +221,26 @@
 
                 <form id="createCouponForm" class="coupon-form">
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">الكود</span>
-                            <span class="en-text" style="display:none">Code</span>
-                        </label>
+                        <label>الكود</label>
                         <input type="text" name="code" placeholder="VOX50" required>
                     </div>
-
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">نسبة الخصم (%)</span>
-                            <span class="en-text" style="display:none">Discount (%)</span>
-                        </label>
+                        <label>نسبة الخصم (%)</label>
                         <input type="number" name="discount" min="1" max="100" placeholder="50" required>
                     </div>
-
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">عدد الاستخدامات</span>
-                            <span class="en-text" style="display:none">Max Uses</span>
-                        </label>
+                        <label>عدد الاستخدامات</label>
                         <input type="number" name="maxUses" min="1" placeholder="10" required>
                     </div>
-
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">تاريخ البدء</span>
-                            <span class="en-text" style="display:none">Start Date</span>
-                        </label>
+                        <label>تاريخ البدء</label>
                         <input type="date" name="startDate" required>
                     </div>
-
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">تاريخ الانتهاء</span>
-                            <span class="en-text" style="display:none">End Date</span>
-                        </label>
+                        <label>تاريخ الانتهاء</label>
                         <input type="date" name="endDate" required>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <span class="ar-text">🎟️ إنشاء الكود</span>
-                        <span class="en-text" style="display:none">🎟️ Create Coupon</span>
-                    </button>
+                    <button type="submit" class="btn btn-primary">🎟️ إنشاء الكود</button>
                 </form>
             </div>
 
@@ -244,25 +262,14 @@
 
                 <form id="createNewsForm" class="news-form">
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">الخبر</span>
-                            <span class="en-text" style="display:none">News</span>
-                        </label>
+                        <label>الخبر</label>
                         <textarea name="content" rows="4" required></textarea>
                     </div>
-
                     <div class="form-group">
-                        <label>
-                            <span class="ar-text">المدة (بالساعات)</span>
-                            <span class="en-text" style="display:none">Duration (hours)</span>
-                        </label>
+                        <label>المدة (بالساعات)</label>
                         <input type="number" name="duration" min="1" max="720" placeholder="24" required>
                     </div>
-
-                    <button type="submit" class="btn btn-primary">
-                        <span class="ar-text">📢 نشر الخبر</span>
-                        <span class="en-text" style="display:none">📢 Publish News</span>
-                    </button>
+                    <button type="submit" class="btn btn-primary">📢 نشر الخبر</button>
                 </form>
             </div>
 
@@ -284,7 +291,6 @@
                         <span class="en-text" style="display:none">Monthly Available</span>
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-value" id="monthlyUsed">-</div>
                     <div class="stat-label">
@@ -292,7 +298,6 @@
                         <span class="en-text" style="display:none">Monthly Used</span>
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-value" id="yearlyAvailable">-</div>
                     <div class="stat-label">
@@ -300,7 +305,6 @@
                         <span class="en-text" style="display:none">Yearly Available</span>
                     </div>
                 </div>
-
                 <div class="stat-card">
                     <div class="stat-value" id="yearlyUsed">-</div>
                     <div class="stat-label">
@@ -311,6 +315,35 @@
             </div>
         </div>
     </main>
+</div>
+
+<!-- ==== Modal تعديل الأخبار ==== -->
+<div id="editNewsModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
+    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--gold);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+        <h3 style="color:var(--gold);margin-bottom:1rem;">
+            <span class="ar-text">✏️ تعديل الخبر</span>
+            <span class="en-text" style="display:none">✏️ Edit News</span>
+        </h3>
+
+        <form id="editNewsForm">
+            <input type="hidden" id="editNewsId">
+
+            <div class="form-group">
+                <label>الخبر</label>
+                <textarea id="editNewsContent" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>المدة (بالساعات)</label>
+                <input type="number" id="editNewsDuration" min="1" max="720" required>
+            </div>
+
+            <div style="display:flex;gap:0.5rem;margin-top:1rem;">
+                <button type="submit" class="btn btn-primary" style="flex:1;">💾 حفظ</button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditNews()" style="flex:1;">❌ إلغاء</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="/js/owner.js"></script>
