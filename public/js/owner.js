@@ -20,6 +20,7 @@ async function loadTabData(tabId) {
         case 'ownerSiteStats': await loadSiteStats(); break;
         case 'ownerReports': await loadReports(); break;
         case 'ownerPurchases': await loadPurchases(); break;
+        case 'ownerPurchaseLogs': await loadPurchaseLogs(); break;
         case 'ownerCoupons': await loadCoupons(); break;
         case 'ownerNews': await loadNews(); break;
         case 'ownerKeys': await loadKeys(); break;
@@ -60,7 +61,6 @@ async function loadSiteStats() {
         setText('todayUsers', d.todayUsers || 0);
         setText('weekUsers', d.weekUsers || 0);
 
-        // عرض آخر المستخدمين
         const container = document.getElementById('recentUsers');
         if (!container) return;
 
@@ -173,10 +173,11 @@ async function loadPurchases() {
                 ${p.status === 'pending' ? `
                     <div class="item-actions">
                         <button class="btn-small success" onclick="approvePurchase('${p._id}')">✅ موافقة</button>
-                        <button class="btn-small danger" onclick="rejectPurchase('${p._id}')">❌ رفض</button>
+                        <button class="btn-small danger" onclick="openRejectPurchase('${p._id}')">❌ رفض</button>
                     </div>
                 ` : ''}
                 ${p.keySent ? `<p style="margin-top:0.5rem;"><strong>🔑 المفتاح:</strong> <code style="color:var(--gold);">${p.keySent}</code></p>` : ''}
+                ${p.rejectReason ? `<p style="margin-top:0.5rem;color:var(--danger);"><strong>❌ سبب الرفض:</strong> ${escapeHtml(p.rejectReason)}</p>` : ''}
             </div>
         `).join('');
     } catch (err) {
@@ -206,25 +207,51 @@ async function approvePurchase(id) {
     }
 }
 
-async function rejectPurchase(id) {
-    const reason = prompt('سبب الرفض:');
-    if (!reason) return;
+// ==== Reject Purchase (Modal) ====
+function openRejectPurchase(id) {
+    document.getElementById('rejectPurchaseId').value = id;
+    document.getElementById('rejectPurchaseReason').value = '';
+    document.getElementById('rejectPurchaseModal').style.display = 'flex';
+}
 
+function closeRejectPurchase() {
+    document.getElementById('rejectPurchaseModal').style.display = 'none';
+}
+
+// ==== Purchase Logs ====
+async function loadPurchaseLogs() {
     try {
-        const res = await fetch(`/api/owner/purchases/${id}/reject`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ reason })
-        });
-
+        const res = await fetch('/api/owner/purchase-logs', { credentials: 'include' });
         const data = await res.json();
-        if (data.success) {
-            showToast('✅ تم الرفض', 'success');
-            await loadPurchases();
+
+        const container = document.getElementById('purchaseLogsList');
+        if (!container) return;
+
+        if (!data.success || data.data.length === 0) {
+            container.innerHTML = '<p class="empty-state">لا توجد لوجات رفض</p>';
+            return;
         }
+
+        container.innerHTML = data.data.map(log => `
+            <div class="purchase-item" style="border-color:var(--danger);">
+                <h4>❌ رفض طلب شراء</h4>
+                <div class="item-meta">
+                    <span>👤 ${escapeHtml(log.username)}</span>
+                    <span>💎 ${log.plan === 'monthly' ? 'شهري' : 'سنوي'}</span>
+                    <span>💰 ${log.finalPrice}</span>
+                    <span>💳 تحويل: ${escapeHtml(log.transferUser)}</span>
+                </div>
+                <p style="margin-top:0.8rem;padding:0.8rem;background:rgba(237,66,69,0.1);border-radius:8px;border:1px solid var(--danger);">
+                    <strong>📝 السبب:</strong> ${escapeHtml(log.reason)}
+                </p>
+                <div class="item-meta" style="margin-top:0.5rem;">
+                    <span>👨‍💻 رفض بواسطة: ${escapeHtml(log.rejectedByUsername || log.rejectedBy)}</span>
+                    <span>📅 ${new Date(log.createdAt).toLocaleString()}</span>
+                </div>
+            </div>
+        `).join('');
     } catch (err) {
-        showToast('❌ فشل', 'danger');
+        console.error('Purchase logs error:', err);
     }
 }
 
@@ -329,7 +356,6 @@ async function deleteNews(id) {
     }
 }
 
-// ==== Edit News ====
 function openEditNews(id, content, duration) {
     document.getElementById('editNewsId').value = id;
     document.getElementById('editNewsContent').value = content;
@@ -342,26 +368,144 @@ function closeEditNews() {
 }
 
 // ==== Keys ====
+let allKeys = [];
+
 async function loadKeys() {
     try {
         const res = await fetch('/api/owner/keys', { credentials: 'include' });
         const data = await res.json();
         if (!data.success) return;
 
-        const monthly = data.data.monthly || [];
-        const yearly = data.data.yearly || [];
+        allKeys = [
+            ...(data.data.monthly || []).map(k => ({ ...k, type: 'monthly' })),
+            ...(data.data.yearly || []).map(k => ({ ...k, type: 'yearly' }))
+        ];
 
-        setText('monthlyAvailable', monthly.filter(k => !k.used).length);
-        setText('monthlyUsed', monthly.filter(k => k.used).length);
-        setText('yearlyAvailable', yearly.filter(k => !k.used).length);
-        setText('yearlyUsed', yearly.filter(k => k.used).length);
+        renderKeys();
     } catch (err) {
         console.error('Keys error:', err);
     }
 }
 
+function renderKeys() {
+    const container = document.getElementById('keysList');
+    if (!container) return;
+
+    if (allKeys.length === 0) {
+        container.innerHTML = '<p class="empty-state">لا توجد مفاتيح</p>';
+        return;
+    }
+
+    container.innerHTML = allKeys.map(k => `
+        <div class="coupon-item">
+            <h4>🔑 ${escapeHtml(k.key)}</h4>
+            <div class="item-meta">
+                <span>💎 ${k.type === 'monthly' ? '📅 شهري' : '📅 سنوي'}</span>
+                <span>⏳ ${k.duration || 30} يوم</span>
+                <span class="status-badge ${k.used ? 'rejected' : 'active'}">${k.used ? '❌ مستخدم' : '✅ متاح'}</span>
+            </div>
+            ${k.used ? `
+                <div class="item-meta" style="margin-top:0.5rem;">
+                    ${k.guildId ? `<span>🌐 السيرفر: ${k.guildId}</span>` : ''}
+                    ${k.ownerId ? `<span>👤 المالك: <@${k.ownerId}></span>` : ''}
+                    ${k.activatedAt ? `<span>📅 التفعيل: ${k.activatedAt}</span>` : ''}
+                </div>
+            ` : ''}
+            <div class="item-actions">
+                ${k.used ? `
+                    <button class="btn-small success" onclick="resetKey('${escapeHtml(k.key)}', '${k.type}')">🔄 إرجاع لمستخدم</button>
+                ` : ''}
+                <button class="btn-small danger" onclick="deleteKey('${escapeHtml(k.key)}', '${k.type}')">🗑️ حذف</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function filterKeys(query) {
+    const container = document.getElementById('keysList');
+    if (!container) return;
+
+    const filtered = allKeys.filter(k =>
+        k.key.toLowerCase().includes(query.toLowerCase())
+    );
+
+    if (filtered.length === 0) {
+        container.innerHTML = '<p class="empty-state">لا توجد مفاتيح مطابقة</p>';
+        return;
+    }
+
+    container.innerHTML = filtered.map(k => `
+        <div class="coupon-item">
+            <h4>🔑 ${escapeHtml(k.key)}</h4>
+            <div class="item-meta">
+                <span>💎 ${k.type === 'monthly' ? '📅 شهري' : '📅 سنوي'}</span>
+                <span>⏳ ${k.duration || 30} يوم</span>
+                <span class="status-badge ${k.used ? 'rejected' : 'active'}">${k.used ? '❌ مستخدم' : '✅ متاح'}</span>
+            </div>
+            ${k.used ? `
+                <div class="item-meta" style="margin-top:0.5rem;">
+                    ${k.guildId ? `<span>🌐 السيرفر: ${k.guildId}</span>` : ''}
+                    ${k.ownerId ? `<span>👤 المالك: <@${k.ownerId}></span>` : ''}
+                    ${k.activatedAt ? `<span>📅 التفعيل: ${k.activatedAt}</span>` : ''}
+                </div>
+            ` : ''}
+            <div class="item-actions">
+                ${k.used ? `
+                    <button class="btn-small success" onclick="resetKey('${escapeHtml(k.key)}', '${k.type}')">🔄 إرجاع لمستخدم</button>
+                ` : ''}
+                <button class="btn-small danger" onclick="deleteKey('${escapeHtml(k.key)}', '${k.type}')">🗑️ حذف</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+async function resetKey(key, type) {
+    if (!confirm(`هل أنت متأكد من إرجاع المفتاح "${key}" لمستخدم؟`)) return;
+
+    try {
+        const res = await fetch(`/api/owner/keys/${encodeURIComponent(key)}/reset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ type })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            showToast('✅ تم إرجاع المفتاح', 'success');
+            await loadKeys();
+        } else {
+            showToast(`❌ ${data.error}`, 'danger');
+        }
+    } catch (err) {
+        showToast('❌ فشل', 'danger');
+    }
+}
+
+async function deleteKey(key, type) {
+    if (!confirm(`هل أنت متأكد من حذف المفتاح "${key}"؟`)) return;
+
+    try {
+        const res = await fetch(`/api/owner/keys/${encodeURIComponent(key)}?type=${type}`, {
+            method: 'DELETE',
+            credentials: 'include'
+        });
+
+        const data = await res.json();
+        if (data.success) {
+            showToast('✅ تم الحذف', 'success');
+            await loadKeys();
+        } else {
+            showToast(`❌ ${data.error}`, 'danger');
+        }
+    } catch (err) {
+        showToast('❌ فشل', 'danger');
+    }
+}
+
 // ==== Forms ====
 document.addEventListener('DOMContentLoaded', () => {
+    // Coupon Form
     const couponForm = document.getElementById('createCouponForm');
     if (couponForm) {
         couponForm.addEventListener('submit', async (e) => {
@@ -391,6 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // News Form
     const newsForm = document.getElementById('createNewsForm');
     if (newsForm) {
         newsForm.addEventListener('submit', async (e) => {
@@ -420,6 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Edit News Form
     const editNewsForm = document.getElementById('editNewsForm');
     if (editNewsForm) {
         editNewsForm.addEventListener('submit', async (e) => {
@@ -442,6 +588,72 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast('✅ تم تعديل الخبر', 'success');
                     closeEditNews();
                     await loadNews();
+                } else {
+                    showToast(`❌ ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast('❌ فشل', 'danger');
+            }
+        });
+    }
+
+    // Create Key Form
+    const createKeyForm = document.getElementById('createKeyForm');
+    if (createKeyForm) {
+        createKeyForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(createKeyForm);
+            const body = Object.fromEntries(formData);
+
+            try {
+                const res = await fetch('/api/owner/keys', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    showToast('✅ تم إنشاء المفتاح', 'success');
+                    createKeyForm.reset();
+                    await loadKeys();
+                } else {
+                    showToast(`❌ ${data.error}`, 'danger');
+                }
+            } catch (err) {
+                showToast('❌ فشل', 'danger');
+            }
+        });
+    }
+
+    // Reject Purchase Form
+    const rejectPurchaseForm = document.getElementById('rejectPurchaseForm');
+    if (rejectPurchaseForm) {
+        rejectPurchaseForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('rejectPurchaseId').value;
+            const reason = document.getElementById('rejectPurchaseReason').value.trim();
+
+            if (!reason) {
+                showToast('❌ اكتب سبب الرفض', 'danger');
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/owner/purchases/${id}/reject`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ reason })
+                });
+
+                const data = await res.json();
+                if (data.success) {
+                    showToast('✅ تم الرفض', 'success');
+                    closeRejectPurchase();
+                    await loadPurchases();
                 } else {
                     showToast(`❌ ${data.error}`, 'danger');
                 }
