@@ -31,13 +31,14 @@ router.get('/stats', async (req, res) => {
         const yearlyAvailable = Object.values(yearly).filter(k => !k.used).length;
         const yearlyUsed = Object.values(yearly).filter(k => k.used).length;
 
+        // ==== السيرفرات المفعّلة بريميم (من MongoDB) ====
         const premiumServersList = await db.collection('kv_store').find({
             key: { $regex: '^guild_premium_' }
         }).toArray();
 
         const premiumServers = premiumServersList.filter(g => g.value?.active).length;
 
-        // ==== عدد سيرفرات البوت المجاني (من Discord API) ====
+        // ==== سيرفرات البوت المجاني (من Discord API) ====
         let freeServers = 0;
         try {
             const freeBotToken = process.env.FREE_BOT_TOKEN;
@@ -54,8 +55,8 @@ router.get('/stats', async (req, res) => {
             console.error('Free servers count error:', err.message);
         }
 
-        // ==== إجمالي السيرفرات (مجاني + بريميم) ====
-        const totalServers = freeServers + premiumServersList.length;
+        // ==== إجمالي السيرفرات ====
+        const totalServers = freeServers + premiumServers;
 
         const openTickets = await db.collection('kv_store').countDocuments({
             key: { $regex: '^channel_data_' }
