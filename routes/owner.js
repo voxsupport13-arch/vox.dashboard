@@ -37,6 +37,26 @@ router.get('/stats', async (req, res) => {
 
         const premiumServers = premiumServersList.filter(g => g.value?.active).length;
 
+        // ==== عدد سيرفرات البوت المجاني (من Discord API) ====
+        let freeServers = 0;
+        try {
+            const freeBotToken = process.env.FREE_BOT_TOKEN;
+            if (freeBotToken) {
+                const freeRes = await fetch('https://discord.com/api/v10/users/@me/guilds', {
+                    headers: { 'Authorization': `Bot ${freeBotToken}` }
+                });
+                const freeGuilds = await freeRes.json();
+                if (Array.isArray(freeGuilds)) {
+                    freeServers = freeGuilds.length;
+                }
+            }
+        } catch (err) {
+            console.error('Free servers count error:', err.message);
+        }
+
+        // ==== إجمالي السيرفرات (مجاني + بريميم) ====
+        const totalServers = freeServers + premiumServersList.length;
+
         const openTickets = await db.collection('kv_store').countDocuments({
             key: { $regex: '^channel_data_' }
         });
@@ -56,11 +76,19 @@ router.get('/stats', async (req, res) => {
             if (g.value?.memberCount) totalMembers += g.value.memberCount;
         });
 
+        // ==== إحصائيات الموقع ====
+        const totalUsers = await db.collection('vox_users').countDocuments();
+
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
+        const onlineUsers = await db.collection('vox_users').countDocuments({
+            lastSeen: { $gte: fiveMinutesAgo }
+        });
+
         res.json({
             success: true,
             data: {
-                totalServers: premiumServersList.length,
-                freeServers: 0,
+                totalServers,
+                freeServers,
                 premiumServers,
                 totalMembers,
                 openTickets,
@@ -72,7 +100,9 @@ router.get('/stats', async (req, res) => {
                 monthlyAvailable,
                 monthlyUsed,
                 yearlyAvailable,
-                yearlyUsed
+                yearlyUsed,
+                totalUsers,
+                onlineUsers
             }
         });
     } catch (err) {
@@ -176,6 +206,7 @@ router.post('/reports/:id/resolve', async (req, res) => {
             { $set: updateData }
         );
 
+        // ==== إرسال DM للعضو ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN || process.env.FREE_BOT_TOKEN;
 
@@ -301,6 +332,7 @@ router.post('/purchases/:id/approve', async (req, res) => {
             }
         );
 
+        // ==== إرسال DM للعضو ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN;
 
