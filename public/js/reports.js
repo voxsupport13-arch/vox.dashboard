@@ -113,7 +113,8 @@
                     type: formData.get('type'),
                     title: formData.get('title'),
                     description: formData.get('description'),
-                    imageUrl: formData.get('imageUrl') || null
+                    imageUrl: formData.get('imageUrl') || null,
+                    userLang: getCurrentLang()  // ✅ نبعت اللغة مع الإبلاغ
                 };
 
                 const submitBtn = reportForm.querySelector('button[type="submit"]');
