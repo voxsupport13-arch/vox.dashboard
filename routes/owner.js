@@ -31,14 +31,12 @@ router.get('/stats', async (req, res) => {
         const yearlyAvailable = Object.values(yearly).filter(k => !k.used).length;
         const yearlyUsed = Object.values(yearly).filter(k => k.used).length;
 
-        // ==== السيرفرات المفعّلة بريميم (من MongoDB) ====
         const premiumServersList = await db.collection('kv_store').find({
             key: { $regex: '^guild_premium_' }
         }).toArray();
 
         const premiumServers = premiumServersList.filter(g => g.value?.active).length;
 
-        // ==== سيرفرات البوت المجاني (من Discord API) ====
         let freeServers = 0;
         try {
             const freeBotToken = process.env.FREE_BOT_TOKEN;
@@ -55,7 +53,6 @@ router.get('/stats', async (req, res) => {
             console.error('Free servers count error:', err.message);
         }
 
-        // ==== إجمالي السيرفرات ====
         const totalServers = freeServers + premiumServers;
 
         const openTickets = await db.collection('kv_store').countDocuments({
@@ -77,7 +74,6 @@ router.get('/stats', async (req, res) => {
             if (g.value?.memberCount) totalMembers += g.value.memberCount;
         });
 
-        // ==== إحصائيات الموقع ====
         const totalUsers = await db.collection('vox_users').countDocuments();
 
         const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
@@ -207,11 +203,72 @@ router.post('/reports/:id/resolve', async (req, res) => {
             { $set: updateData }
         );
 
-        // ==== إرسال DM للعضو ====
+        // ==== إرسال DM للعضو (حسب لغته) ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN || process.env.FREE_BOT_TOKEN;
 
             if (botToken) {
+                // جيب لغة المستخدم
+                let userLang = 'en';
+                try {
+                    const langDoc = await db.collection('kv_store').findOne({
+                        key: `user_lang_${report.userId}`
+                    });
+                    if (langDoc?.value && ['en', 'ar', 'es', 'fr'].includes(langDoc.value)) {
+                        userLang = langDoc.value;
+                    }
+                } catch (langErr) {
+                    console.error('Lang fetch error:', langErr.message);
+                }
+
+                // نصوص الرسائل ب 4 لغات
+                const dmMessages = {
+                    en: {
+                        resolved: `✅ **Your problem has been resolved!**\n\n**Title:** ${report.title}\n**Category:** {type}\n\nThank you for contacting us.`,
+                        rejected: `❌ **Your problem was not resolved**\n\n**Title:** ${report.title}\n**Category:** {type}\n{reason}\n\nContact support for more details.`,
+                        reason: `**Reason:** {reason}`
+                    },
+                    ar: {
+                        resolved: `✅ **تم حل مشكلتك!**\n\n**العنوان:** ${report.title}\n**القسم:** {type}\n\nشكرًا لتواصلك معنا.`,
+                        rejected: `❌ **لم يتم حل مشكلتك**\n\n**العنوان:** ${report.title}\n**القسم:** {type}\n{reason}\n\nتواصل مع الدعم لمزيد من التفاصيل.`,
+                        reason: `**السبب:** {reason}`
+                    },
+                    es: {
+                        resolved: `✅ **¡Tu problema ha sido resuelto!**\n\n**Título:** ${report.title}\n**Categoría:** {type}\n\nGracias por contactarnos.`,
+                        rejected: `❌ **Tu problema no fue resuelto**\n\n**Título:** ${report.title}\n**Categoría:** {type}\n{reason}\n\nContacta al soporte para más detalles.`,
+                        reason: `**Razón:** {reason}`
+                    },
+                    fr: {
+                        resolved: `✅ **Votre problème a été résolu !**\n\n**Titre :** ${report.title}\n**Catégorie :** {type}\n\nMerci de nous avoir contactés.`,
+                        rejected: `❌ **Votre problème n'a pas été résolu**\n\n**Titre :** ${report.title}\n**Catégorie :** {type}\n{reason}\n\nContactez le support pour plus de détails.`,
+                        reason: `**Raison :** {reason}`
+                    }
+                };
+
+                const typeMap = {
+                    website: { en: 'Website issue', ar: 'مشكلة في الموقع', es: 'Problema en el sitio web', fr: 'Problème de site web' },
+                    bug: { en: 'Website issue', ar: 'مشكلة في الموقع', es: 'Problema en el sitio web', fr: 'Problème de site web' },
+                    ticket: { en: 'Ticket issue', ar: 'مشكلة في التذاكر', es: 'Problema con tickets', fr: 'Problème de ticket' },
+                    application: { en: 'Application issue', ar: 'مشكلة في التقديم', es: 'Problema con solicitudes', fr: 'Problème de candidature' },
+                    payment: { en: 'Payment issue', ar: 'مشكلة في الدفع', es: 'Problema de pago', fr: 'Problème de paiement' },
+                    other: { en: 'Other', ar: 'أخرى', es: 'Otro', fr: 'Autre' }
+                };
+
+                const typeText = typeMap[report.type]?.[userLang] || typeMap[report.type]?.en || 'Other';
+
+                let message = '';
+
+                if (status === 'resolved') {
+                    message = dmMessages[userLang].resolved.replace('{type}', typeText);
+                } else {
+                    const reasonText = reason
+                        ? dmMessages[userLang].reason.replace('{reason}', reason)
+                        : '';
+                    message = dmMessages[userLang].rejected
+                        .replace('{type}', typeText)
+                        .replace('{reason}', reasonText);
+                }
+
                 const dmRes = await fetch('https://discord.com/api/v10/users/@me/channels', {
                     method: 'POST',
                     headers: {
@@ -224,20 +281,6 @@ router.post('/reports/:id/resolve', async (req, res) => {
                 const dmChannel = await dmRes.json();
 
                 if (dmChannel.id) {
-                    const typeMap = {
-                        website: 'مشكلة في الموقع',
-                        bug: 'مشكلة في الموقع',
-                        ticket: 'مشكلة في التذاكر',
-                        application: 'مشكلة في التقديم',
-                        payment: 'مشكلة في الدفع',
-                        other: 'أخرى'
-                    };
-                    const typeText = typeMap[report.type] || 'أخرى';
-
-                    const message = status === 'resolved'
-                        ? `✅ **تم حل مشكلتك!**\n\n**العنوان:** ${report.title}\n**القسم:** ${typeText}\n\nشكرًا لتواصلك معنا.`
-                        : `❌ **لم يتم حل مشكلتك**\n\n**العنوان:** ${report.title}\n**القسم:** ${typeText}\n${reason ? `**السبب:** ${reason}` : ''}\n\nتواصل مع الدعم لمزيد من التفاصيل.`;
-
                     await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
                         method: 'POST',
                         headers: {
@@ -333,11 +376,79 @@ router.post('/purchases/:id/approve', async (req, res) => {
             }
         );
 
-        // ==== إرسال DM للعضو ====
+        // ==== إرسال DM للعضو (حسب لغته) ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN;
 
             if (botToken) {
+                // جيب لغة المستخدم
+                let userLang = 'en';
+                try {
+                    const langDoc = await db.collection('kv_store').findOne({
+                        key: `user_lang_${purchase.userId}`
+                    });
+                    if (langDoc?.value && ['en', 'ar', 'es', 'fr'].includes(langDoc.value)) {
+                        userLang = langDoc.value;
+                    }
+                } catch (langErr) {
+                    console.error('Lang fetch error:', langErr.message);
+                }
+
+                const approveMessages = {
+                    en: {
+                        title: '🎉 **Your payment has been confirmed!**',
+                        key: '🔑 **Key:**',
+                        plan: '💎 **Plan:**',
+                        monthly: 'Monthly',
+                        yearly: 'Yearly',
+                        howTo: '**How to activate:**',
+                        or: 'or',
+                        invite: '**Premium Bot Invite Link:**'
+                    },
+                    ar: {
+                        title: '🎉 **تم تأكيد دفعتك!**',
+                        key: '🔑 **المفتاح:**',
+                        plan: '💎 **الباقة:**',
+                        monthly: 'شهري',
+                        yearly: 'سنوي',
+                        howTo: '**طريقة التفعيل:**',
+                        or: 'أو',
+                        invite: '**رابط إضافة البوت البريميم:**'
+                    },
+                    es: {
+                        title: '🎉 **¡Tu pago ha sido confirmado!**',
+                        key: '🔑 **Clave:**',
+                        plan: '💎 **Plan:**',
+                        monthly: 'Mensual',
+                        yearly: 'Anual',
+                        howTo: '**Cómo activar:**',
+                        or: 'o',
+                        invite: '**Enlace de invitación del Bot Premium:**'
+                    },
+                    fr: {
+                        title: '🎉 **Votre paiement a été confirmé !**',
+                        key: '🔑 **Clé :**',
+                        plan: '💎 **Forfait :**',
+                        monthly: 'Mensuel',
+                        yearly: 'Annuel',
+                        howTo: '**Comment activer :**',
+                        or: 'ou',
+                        invite: '**Lien d\'invitation du Bot Premium :**'
+                    }
+                };
+
+                const m = approveMessages[userLang];
+                const planText = purchase.plan === 'monthly' ? m.monthly : m.yearly;
+
+                const message = `${m.title}\n\n` +
+                    `${m.key} \`${selectedKey}\`\n` +
+                    `${m.plan} ${planText}\n\n` +
+                    `${m.howTo}\n` +
+                    `\`/activate key:${selectedKey}\`\n` +
+                    `${m.or}\n` +
+                    `\`$activate ${selectedKey}\`\n\n` +
+                    `${m.invite}\n${process.env.PREMIUM_BOT_INVITE}`;
+
                 const dmRes = await fetch('https://discord.com/api/v10/users/@me/channels', {
                     method: 'POST',
                     headers: {
@@ -350,15 +461,6 @@ router.post('/purchases/:id/approve', async (req, res) => {
                 const dmChannel = await dmRes.json();
 
                 if (dmChannel.id) {
-                    const message = `🎉 **تم تأكيد دفعتك!**\n\n` +
-                        `🔑 **المفتاح:** \`${selectedKey}\`\n` +
-                        `💎 **الباقة:** ${purchase.plan === 'monthly' ? 'شهري' : 'سنوي'}\n\n` +
-                        `**طريقة التفعيل:**\n` +
-                        `\`/activate key:${selectedKey}\`\n` +
-                        `أو\n` +
-                        `\`$activate ${selectedKey}\`\n\n` +
-                        `**رابط إضافة البوت البريميم:**\n${process.env.PREMIUM_BOT_INVITE}`;
-
                     await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
                         method: 'POST',
                         headers: {
@@ -409,7 +511,6 @@ router.post('/purchases/:id/reject', async (req, res) => {
             }
         );
 
-        // ==== لوج الرفض ====
         await db.collection('vox_purchase_logs').insertOne({
             purchaseId: id,
             userId: purchase.userId,
@@ -424,11 +525,71 @@ router.post('/purchases/:id/reject', async (req, res) => {
             createdAt: new Date()
         });
 
-        // ==== إرسال DM للعضو ====
+        // ==== إرسال DM للعضو (حسب لغته) ====
         try {
             const botToken = process.env.PREMIUM_BOT_TOKEN;
 
             if (botToken) {
+                let userLang = 'en';
+                try {
+                    const langDoc = await db.collection('kv_store').findOne({
+                        key: `user_lang_${purchase.userId}`
+                    });
+                    if (langDoc?.value && ['en', 'ar', 'es', 'fr'].includes(langDoc.value)) {
+                        userLang = langDoc.value;
+                    }
+                } catch (langErr) {
+                    console.error('Lang fetch error:', langErr.message);
+                }
+
+                const rejectMessages = {
+                    en: {
+                        title: '❌ **Your purchase request has been rejected**',
+                        plan: '💎 **Plan:**',
+                        monthly: 'Monthly',
+                        yearly: 'Yearly',
+                        price: '💰 **Price:**',
+                        reason: '📝 **Reason:**',
+                        contact: 'For contact:'
+                    },
+                    ar: {
+                        title: '❌ **تم رفض طلب الشراء**',
+                        plan: '💎 **الباقة:**',
+                        monthly: 'شهري',
+                        yearly: 'سنوي',
+                        price: '💰 **السعر:**',
+                        reason: '📝 **سبب الرفض:**',
+                        contact: 'للتواصل:'
+                    },
+                    es: {
+                        title: '❌ **Tu solicitud de compra ha sido rechazada**',
+                        plan: '💎 **Plan:**',
+                        monthly: 'Mensual',
+                        yearly: 'Anual',
+                        price: '💰 **Precio:**',
+                        reason: '📝 **Razón:**',
+                        contact: 'Para contacto:'
+                    },
+                    fr: {
+                        title: '❌ **Votre demande d\'achat a été rejetée**',
+                        plan: '💎 **Forfait :**',
+                        monthly: 'Mensuel',
+                        yearly: 'Annuel',
+                        price: '💰 **Prix :**',
+                        reason: '📝 **Raison :**',
+                        contact: 'Pour contact :'
+                    }
+                };
+
+                const m = rejectMessages[userLang];
+                const planText = purchase.plan === 'monthly' ? m.monthly : m.yearly;
+
+                const message = `${m.title}\n\n` +
+                    `${m.plan} ${planText}\n` +
+                    `${m.price} ${purchase.finalPrice}\n` +
+                    `${m.reason} ${reason}\n\n` +
+                    `${m.contact} ${process.env.SUPPORT_SERVER}`;
+
                 const dmRes = await fetch('https://discord.com/api/v10/users/@me/channels', {
                     method: 'POST',
                     headers: {
@@ -441,12 +602,6 @@ router.post('/purchases/:id/reject', async (req, res) => {
                 const dmChannel = await dmRes.json();
 
                 if (dmChannel.id) {
-                    const message = `❌ **تم رفض طلب الشراء**\n\n` +
-                        `💎 **الباقة:** ${purchase.plan === 'monthly' ? 'شهري' : 'سنوي'}\n` +
-                        `💰 **السعر:** ${purchase.finalPrice}\n` +
-                        `📝 **سبب الرفض:** ${reason}\n\n` +
-                        `للتواصل: ${process.env.SUPPORT_SERVER}`;
-
                     await fetch(`https://discord.com/api/v10/channels/${dmChannel.id}/messages`, {
                         method: 'POST',
                         headers: {
@@ -627,10 +782,7 @@ router.delete('/news/:id', async (req, res) => {
     }
 });
 
-// ============================================
 // ==== المفاتيح ====
-// ============================================
-
 router.get('/keys', async (req, res) => {
     try {
         const db = mongoose.connection.db;
@@ -653,7 +805,6 @@ router.get('/keys', async (req, res) => {
     }
 });
 
-// ==== إنشاء مفتاح ====
 router.post('/keys', async (req, res) => {
     try {
         const db = mongoose.connection.db;
@@ -705,7 +856,6 @@ router.post('/keys', async (req, res) => {
     }
 });
 
-// ==== حذف مفتاح ====
 router.delete('/keys/:key', async (req, res) => {
     try {
         const db = mongoose.connection.db;
@@ -737,7 +887,6 @@ router.delete('/keys/:key', async (req, res) => {
     }
 });
 
-// ==== إرجاع مفتاح (مستخدم → غير مستخدم) ====
 router.post('/keys/:key/reset', async (req, res) => {
     try {
         const db = mongoose.connection.db;
