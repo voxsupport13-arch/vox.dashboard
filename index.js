@@ -133,13 +133,15 @@ function ensureAuth(req, res, next) {
     if (req.isAuthenticated()) return next();
 
     if (req.path.startsWith('/api/')) {
-        return res.status(401).json({ success: false, error: 'يجب تسجيل الدخول أولاً' });
+        return res.status(401).json({ success: false, error: 'You must login first' });
     }
 
     return res.status(401).render('login-required', {
         supportServer: process.env.SUPPORT_SERVER,
         message: 'يجب تسجيل الدخول أولاً للوصول إلى هذه الصفحة',
-        messageEn: 'You must login first to access this page'
+        messageEn: 'You must login first to access this page',
+        messageEs: 'Debes iniciar sesión primero para acceder a esta página',
+        messageFr: 'Vous devez d\'abord vous connecter pour accéder à cette page'
     });
 }
 
@@ -152,13 +154,15 @@ function ensureOwner(req, res, next) {
     }
 
     if (req.path.startsWith('/api/')) {
-        return res.status(403).json({ success: false, error: 'ليس لديك صلاحية' });
+        return res.status(403).json({ success: false, error: 'No permission' });
     }
 
     return res.status(403).render('login-required', {
         supportServer: process.env.SUPPORT_SERVER,
         message: 'هذه الصفحة للمطور فقط',
-        messageEn: 'This page is for the owner only'
+        messageEn: 'This page is for the owner only',
+        messageEs: 'Esta página es solo para el propietario',
+        messageFr: 'Cette page est réservée au propriétaire'
     });
 }
 
