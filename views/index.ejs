@@ -1,31 +1,41 @@
-<%- include('partials/header', { user, title: 'الرئيسية' }) %>
+<%- include('partials/header', { user, title: 'VOX' }) %>
 
 <section class="hero">
     <div class="hero-content">
         <div class="hero-badge">
             <span class="ar-text">✨ نظام تذاكر احترافي</span>
             <span class="en-text" style="display:none">✨ Professional Ticket System</span>
+            <span class="es-text" style="display:none">✨ Sistema Profesional de Tickets</span>
+            <span class="fr-text" style="display:none">✨ Système de Tickets Professionnel</span>
         </div>
 
         <h1 class="hero-title">
             <span class="gold-text">VOX</span>
             <span class="ar-text">نظام تذاكر متكامل</span>
             <span class="en-text" style="display:none">Complete Ticket System</span>
+            <span class="es-text" style="display:none">Sistema Completo de Tickets</span>
+            <span class="fr-text" style="display:none">Système Complet de Tickets</span>
         </h1>
 
         <p class="hero-desc">
             <span class="ar-text">نظام تذاكر احترافي بمميزات متقدمة لإدارة سيرفرك بكل سهولة واحترافية. يدعم أكثر من قسم، تقييمات، إحصائيات، وتقديمات إدارية.</span>
             <span class="en-text" style="display:none">Professional ticket system with advanced features to manage your server easily. Supports multi-categories, ratings, statistics, and staff applications.</span>
+            <span class="es-text" style="display:none">Sistema profesional de tickets con funciones avanzadas para gestionar tu servidor fácilmente. Soporta múltiples categorías, calificaciones, estadísticas y solicitudes de personal.</span>
+            <span class="fr-text" style="display:none">Système de tickets professionnel avec des fonctionnalités avancées pour gérer facilement votre serveur. Prend en charge plusieurs catégories, évaluations, statistiques et candidatures.</span>
         </p>
 
         <div class="hero-buttons">
             <a href="<%= freeBotInvite %>" target="_blank" class="btn btn-primary">
                 <span class="ar-text">➕ إضافة البوت</span>
                 <span class="en-text" style="display:none">➕ Add Bot</span>
+                <span class="es-text" style="display:none">➕ Añadir Bot</span>
+                <span class="fr-text" style="display:none">➕ Ajouter le Bot</span>
             </a>
             <a href="/dashboard" class="btn btn-secondary">
                 <span class="ar-text">🎛️ الداشبورد</span>
                 <span class="en-text" style="display:none">🎛️ Dashboard</span>
+                <span class="es-text" style="display:none">🎛️ Panel</span>
+                <span class="fr-text" style="display:none">🎛️ Tableau de bord</span>
             </a>
         </div>
     </div>
@@ -36,6 +46,8 @@
         <h2 class="section-title">
             <span class="ar-text">🎯 مميزات البوت</span>
             <span class="en-text" style="display:none">🎯 Bot Features</span>
+            <span class="es-text" style="display:none">🎯 Características del Bot</span>
+            <span class="fr-text" style="display:none">🎯 Fonctionnalités du Bot</span>
         </h2>
 
         <div class="features-grid">
@@ -44,10 +56,14 @@
                 <h3>
                     <span class="ar-text">نظام تذاكر متكامل</span>
                     <span class="en-text" style="display:none">Complete Ticket System</span>
+                    <span class="es-text" style="display:none">Sistema Completo de Tickets</span>
+                    <span class="fr-text" style="display:none">Système Complet de Tickets</span>
                 </h3>
                 <p>
                     <span class="ar-text">افتح تذاكر بسهولة مع دعم أكثر من قسم ولوحات متعددة.</span>
                     <span class="en-text" style="display:none">Open tickets easily with multi-category support.</span>
+                    <span class="es-text" style="display:none">Abre tickets fácilmente con soporte multicategoría.</span>
+                    <span class="fr-text" style="display:none">Ouvrez des tickets facilement avec le support multicatégorie.</span>
                 </p>
             </div>
 
@@ -56,10 +72,14 @@
                 <h3>
                     <span class="ar-text">نظام تقييمات</span>
                     <span class="en-text" style="display:none">Rating System</span>
+                    <span class="es-text" style="display:none">Sistema de Calificación</span>
+                    <span class="fr-text" style="display:none">Système d'Évaluation</span>
                 </h3>
                 <p>
                     <span class="ar-text">قيّم خدمة الفريق مع نظام نجوم متكامل ولوحة ترتيب الموظفين.</span>
                     <span class="en-text" style="display:none">Rate staff service with a complete star system.</span>
+                    <span class="es-text" style="display:none">Califica el servicio del personal con un sistema completo de estrellas.</span>
+                    <span class="fr-text" style="display:none">Évaluez le service du personnel avec un système complet d'étoiles.</span>
                 </p>
             </div>
 
@@ -68,10 +88,14 @@
                 <h3>
                     <span class="ar-text">نظام تقديمات</span>
                     <span class="en-text" style="display:none">Application System</span>
+                    <span class="es-text" style="display:none">Sistema de Solicitudes</span>
+                    <span class="fr-text" style="display:none">Système de Candidatures</span>
                 </h3>
                 <p>
                     <span class="ar-text">استقبل تقديمات إدارية بسهولة مع مراجعة تلقائية وقبول/رفض.</span>
                     <span class="en-text" style="display:none">Receive staff applications with auto review.</span>
+                    <span class="es-text" style="display:none">Recibe solicitudes de personal con revisión automática.</span>
+                    <span class="fr-text" style="display:none">Recevez des candidatures avec révision automatique.</span>
                 </p>
             </div>
 
@@ -80,10 +104,14 @@
                 <h3>
                     <span class="ar-text">إحصائيات متقدمة</span>
                     <span class="en-text" style="display:none">Advanced Statistics</span>
+                    <span class="es-text" style="display:none">Estadísticas Avanzadas</span>
+                    <span class="fr-text" style="display:none">Statistiques Avancées</span>
                 </h3>
                 <p>
                     <span class="ar-text">تتبع أداء الفريق مع لوحة ترتيب وإحصائيات كاملة.</span>
                     <span class="en-text" style="display:none">Track staff performance with leaderboard.</span>
+                    <span class="es-text" style="display:none">Sigue el rendimiento del personal con tabla de clasificación.</span>
+                    <span class="fr-text" style="display:none">Suivez les performances du personnel avec un classement.</span>
                 </p>
             </div>
 
@@ -92,22 +120,30 @@
                 <h3>
                     <span class="ar-text">حماية متقدمة</span>
                     <span class="en-text" style="display:none">Advanced Protection</span>
+                    <span class="es-text" style="display:none">Protección Avanzada</span>
+                    <span class="fr-text" style="display:none">Protection Avancée</span>
                 </h3>
                 <p>
                     <span class="ar-text">حماية ضد السبام + قائمة حظر + صلاحيات دقيقة.</span>
                     <span class="en-text" style="display:none">Anti-spam + blacklist + precise permissions.</span>
+                    <span class="es-text" style="display:none">Anti-spam + lista negra + permisos precisos.</span>
+                    <span class="fr-text" style="display:none">Anti-spam + liste noire + permissions précises.</span>
                 </p>
             </div>
 
             <div class="feature-card fade-in">
                 <div class="feature-icon">🌐</div>
                 <h3>
-                    <span class="ar-text">دعم عربي وإنجليزي</span>
-                    <span class="en-text" style="display:none">Arabic & English</span>
+                    <span class="ar-text">دعم 4 لغات</span>
+                    <span class="en-text" style="display:none">4 Languages Support</span>
+                    <span class="es-text" style="display:none">Soporte de 4 Idiomas</span>
+                    <span class="fr-text" style="display:none">Support de 4 Langues</span>
                 </h3>
                 <p>
-                    <span class="ar-text">البوت يدعم اللغتين ويمكن تغيير اللغة لكل سيرفر.</span>
-                    <span class="en-text" style="display:none">Bot supports both languages per server.</span>
+                    <span class="ar-text">البوت يدعم العربية، الإنجليزية، الإسبانية، والفرنسية ويمكن تغيير اللغة لكل سيرفر.</span>
+                    <span class="en-text" style="display:none">Bot supports Arabic, English, Spanish, and French — changeable per server.</span>
+                    <span class="es-text" style="display:none">El bot soporta árabe, inglés, español y francés — cambiable por servidor.</span>
+                    <span class="fr-text" style="display:none">Le bot prend en charge l'arabe, l'anglais, l'espagnol et le français — modifiable par serveur.</span>
                 </p>
             </div>
         </div>
@@ -120,14 +156,20 @@
             <h2>
                 <span class="ar-text">🚀 جاهز تبدأ؟</span>
                 <span class="en-text" style="display:none">🚀 Ready to start?</span>
+                <span class="es-text" style="display:none">🚀 ¿Listo para empezar?</span>
+                <span class="fr-text" style="display:none">🚀 Prêt à commencer ?</span>
             </h2>
             <p>
                 <span class="ar-text">أضف البوت الآن وابدأ في إدارة تذاكر سيرفرك باحترافية!</span>
                 <span class="en-text" style="display:none">Add the bot now and start managing your tickets professionally!</span>
+                <span class="es-text" style="display:none">¡Añade el bot ahora y gestiona tus tickets profesionalmente!</span>
+                <span class="fr-text" style="display:none">Ajoutez le bot maintenant et gérez vos tickets professionnellement !</span>
             </p>
             <a href="<%= freeBotInvite %>" target="_blank" class="btn btn-primary">
                 <span class="ar-text">➕ إضافة البوت</span>
                 <span class="en-text" style="display:none">➕ Add Bot</span>
+                <span class="es-text" style="display:none">➕ Añadir Bot</span>
+                <span class="fr-text" style="display:none">➕ Ajouter le Bot</span>
             </a>
         </div>
     </div>
