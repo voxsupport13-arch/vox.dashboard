@@ -1,5 +1,90 @@
-// ==== VOX Dashboard - Reports JS ====
+// ==== VOX Dashboard - Reports JS (4 Languages) ====
 
+const SUPPORTED_LANGS = ['en', 'ar', 'es', 'fr'];
+const DEFAULT_LANG = 'en';
+
+// ==== Get Current Language ====
+function getCurrentLang() {
+    const lang = localStorage.getItem('vox-lang') || DEFAULT_LANG;
+    return SUPPORTED_LANGS.includes(lang) ? lang : DEFAULT_LANG;
+}
+
+// ==== Translations ====
+const REPORTS_I18N = {
+    en: {
+        sending: '⏳ Sending...',
+        success: '✅ Report sent successfully!',
+        failed: '❌ Connection failed',
+        noReports: 'No previous reports',
+        viewImage: '📷 View image',
+        reason: '❌ Reason'
+    },
+    ar: {
+        sending: '⏳ جاري الإرسال...',
+        success: '✅ تم إرسال الإبلاغ بنجاح!',
+        failed: '❌ فشل الاتصال',
+        noReports: 'لا توجد إبلاغات سابقة',
+        viewImage: '📷 عرض الصورة',
+        reason: '❌ السبب'
+    },
+    es: {
+        sending: '⏳ Enviando...',
+        success: '✅ ¡Reporte enviado con éxito!',
+        failed: '❌ Error de conexión',
+        noReports: 'No hay reportes anteriores',
+        viewImage: '📷 Ver imagen',
+        reason: '❌ Razón'
+    },
+    fr: {
+        sending: '⏳ Envoi en cours...',
+        success: '✅ Signalement envoyé avec succès !',
+        failed: '❌ Échec de la connexion',
+        noReports: 'Aucun signalement précédent',
+        viewImage: '📷 Voir l\'image',
+        reason: '❌ Raison'
+    }
+};
+
+function t(key) {
+    const lang = getCurrentLang();
+    return REPORTS_I18N[lang]?.[key] || REPORTS_I18N.en[key] || key;
+}
+
+// ==== Type Icons & Names ====
+const TYPE_INFO = {
+    bug: { icon: '🐛', en: 'Bug', ar: 'خطأ برمجي', es: 'Error', fr: 'Bug' },
+    ticket: { icon: '🎫', en: 'Ticket', ar: 'تذكرة', es: 'Ticket', fr: 'Ticket' },
+    application: { icon: '📝', en: 'Application', ar: 'تقديم', es: 'Solicitud', fr: 'Candidature' },
+    payment: { icon: '💰', en: 'Payment', ar: 'دفع', es: 'Pago', fr: 'Paiement' },
+    website: { icon: '🌐', en: 'Website', ar: 'موقع', es: 'Sitio web', fr: 'Site web' },
+    other: { icon: '📌', en: 'Other', ar: 'أخرى', es: 'Otro', fr: 'Autre' }
+};
+
+function typeIcon(type) {
+    return TYPE_INFO[type]?.icon || '📌';
+}
+
+// ==== Status Text ====
+const STATUS_INFO = {
+    pending: { en: '⏳ Pending', ar: '⏳ معلق', es: '⏳ Pendiente', fr: '⏳ En attente' },
+    resolved: { en: '✅ Resolved', ar: '✅ تم الحل', es: '✅ Resuelto', fr: '✅ Résolu' },
+    rejected: { en: '❌ Rejected', ar: '❌ مرفوض', es: '❌ Rechazado', fr: '❌ Rejeté' }
+};
+
+function statusText(status) {
+    const lang = getCurrentLang();
+    return STATUS_INFO[status]?.[lang] || STATUS_INFO[status]?.en || status;
+}
+
+// ==== Escape HTML ====
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// ==== Submit Report ====
 document.addEventListener('DOMContentLoaded', () => {
     const reportForm = document.getElementById('reportForm');
 
@@ -18,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const submitBtn = reportForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.disabled = true;
-            submitBtn.innerHTML = '⏳ جاري الإرسال...';
+            submitBtn.innerHTML = t('sending');
 
             try {
                 const res = await fetch('/api/reports', {
@@ -31,14 +116,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 const data = await res.json();
 
                 if (data.success) {
-                    showToast('✅ تم إرسال الإبلاغ بنجاح!', 'success');
+                    showToast(t('success'), 'success');
                     reportForm.reset();
                     await loadMyReports();
                 } else {
                     showToast(`❌ ${data.error}`, 'danger');
                 }
             } catch (err) {
-                showToast('❌ فشل الاتصال', 'danger');
+                showToast(t('failed'), 'danger');
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalText;
@@ -49,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMyReports();
 });
 
+// ==== Load My Reports ====
 async function loadMyReports() {
     try {
         const res = await fetch('/api/reports/my', { credentials: 'include' });
@@ -58,7 +144,7 @@ async function loadMyReports() {
         if (!container) return;
 
         if (!data.success || data.data.length === 0) {
-            container.innerHTML = '<p class="empty-state">لا توجد إبلاغات سابقة</p>';
+            container.innerHTML = `<p class="empty-state">${t('noReports')}</p>`;
             return;
         }
 
@@ -66,12 +152,12 @@ async function loadMyReports() {
             <div class="report-item">
                 <h4>${typeIcon(r.type)} ${escapeHtml(r.title)}</h4>
                 <p style="color:var(--text-muted);margin:0.5rem 0;">${escapeHtml(r.description)}</p>
-                ${r.imageUrl ? `<a href="${r.imageUrl}" target="_blank" style="color:var(--gold);">📷 عرض الصورة</a>` : ''}
+                ${r.imageUrl ? `<a href="${r.imageUrl}" target="_blank" style="color:var(--gold);">${t('viewImage')}</a>` : ''}
                 <div class="item-meta">
                     <span>📅 ${new Date(r.createdAt).toLocaleString()}</span>
                     <span class="status-badge ${r.status}">${statusText(r.status)}</span>
                 </div>
-                ${r.rejectReason ? `<p style="color:var(--danger);margin-top:0.5rem;">❌ السبب: ${escapeHtml(r.rejectReason)}</p>` : ''}
+                ${r.rejectReason ? `<p style="color:var(--danger);margin-top:0.5rem;">${t('reason')}: ${escapeHtml(r.rejectReason)}</p>` : ''}
             </div>
         `).join('');
     } catch (err) {
@@ -79,23 +165,7 @@ async function loadMyReports() {
     }
 }
 
-function typeIcon(type) {
-    const map = { bug: '🐛', ticket: '🎫', application: '📝', payment: '💰', other: '📌' };
-    return map[type] || '📌';
-}
-
-function statusText(status) {
-    const map = { pending: '⏳ معلق', resolved: '✅ تم الحل', rejected: '❌ مرفوض' };
-    return map[status] || status;
-}
-
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
+// ==== Toast ====
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `toast toast-${type}`;
