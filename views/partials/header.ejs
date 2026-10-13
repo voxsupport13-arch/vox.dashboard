@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOX - <%= (typeof title !== 'undefined' && title) ? title : 'VOX' %></title>
+    <title>VOX | <%= (typeof title !== 'undefined' && title) ? title : 'Home' %></title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/images/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -58,20 +58,25 @@
 
             <div class="lang-switch">
                 <button class="lang-btn" onclick="toggleLangMenu(event)" title="Language">
-                    <span class="current-lang-flag" id="currentLangFlag">🇺🇸</span>
+                    <img 
+                        id="currentLangFlag" 
+                        src="https://flagcdn.com/w40/us.png" 
+                        alt="flag"
+                        class="lang-flag-img"
+                    >
                 </button>
                 <div class="lang-dropdown" id="langDropdown">
                     <div class="lang-option" data-lang="en" onclick="chooseLang('en')">
-                        <span class="flag">🇺🇸</span>
+                        <img src="https://flagcdn.com/w40/us.png" alt="US" class="lang-flag-img">
                     </div>
                     <div class="lang-option" data-lang="ar" onclick="chooseLang('ar')">
-                        <span class="flag">🇸🇦</span>
+                        <img src="https://flagcdn.com/w40/sa.png" alt="SA" class="lang-flag-img">
                     </div>
                     <div class="lang-option" data-lang="es" onclick="chooseLang('es')">
-                        <span class="flag">🇪🇸</span>
+                        <img src="https://flagcdn.com/w40/es.png" alt="ES" class="lang-flag-img">
                     </div>
                     <div class="lang-option" data-lang="fr" onclick="chooseLang('fr')">
-                        <span class="flag">🇫🇷</span>
+                        <img src="https://flagcdn.com/w40/fr.png" alt="FR" class="lang-flag-img">
                     </div>
                 </div>
             </div>
