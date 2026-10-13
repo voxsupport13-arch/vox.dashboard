@@ -1,111 +1,205 @@
-<%- include('partials/header', { user, title: 'تسطيب التقديم' }) %>
+<%- include('partials/header', { user, title: 'Setup Application' }) %>
 
 <div class="container page-content">
     <div class="page-header">
         <h1>
             <span class="ar-text">📝 تسطيب التقديم الإداري</span>
             <span class="en-text" style="display:none">📝 Setup Staff Application</span>
+            <span class="es-text" style="display:none">📝 Configurar Solicitud de Personal</span>
+            <span class="fr-text" style="display:none">📝 Configurer la Candidature</span>
         </h1>
         <p>
             <span class="ar-text">اختر السيرفر وابدأ التسطيب</span>
             <span class="en-text" style="display:none">Choose server and start setup</span>
+            <span class="es-text" style="display:none">Elige el servidor y comienza la configuración</span>
+            <span class="fr-text" style="display:none">Choisissez le serveur et commencez la configuration</span>
         </p>
     </div>
 
     <!-- Step 1: Choose Server -->
     <div id="appStep0" class="card">
-        <h3>🌐 اختر السيرفر</h3>
+        <h3>
+            🌐
+            <span class="ar-text">اختر السيرفر</span>
+            <span class="en-text" style="display:none">Choose Server</span>
+            <span class="es-text" style="display:none">Elegir Servidor</span>
+            <span class="fr-text" style="display:none">Choisir le Serveur</span>
+        </h3>
         <div class="form-group">
             <select id="appGuildSelect" onchange="loadAppGuildData()" required>
-                <option value="">-- اختر السيرفر --</option>
+                <option value="">-- Select Server --</option>
             </select>
             <input type="hidden" id="appGuildName">
             <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">
-                ⚠️ لازم تكون <strong>Admin</strong>
+                ⚠️
+                <span class="ar-text">لازم تكون <strong>Admin</strong></span>
+                <span class="en-text" style="display:none">You must be <strong>Admin</strong></span>
+                <span class="es-text" style="display:none">Debes ser <strong>Admin</strong></span>
+                <span class="fr-text" style="display:none">Vous devez être <strong>Admin</strong></span>
             </small>
         </div>
     </div>
 
     <div id="appStep1" style="display:none;">
         <div class="card">
-            <h3>📋 معلومات التقديم</h3>
+            <h3>
+                📋
+                <span class="ar-text">معلومات التقديم</span>
+                <span class="en-text" style="display:none">Application Information</span>
+                <span class="es-text" style="display:none">Información de la Solicitud</span>
+                <span class="fr-text" style="display:none">Informations de la Candidature</span>
+            </h3>
             <div class="form-group">
-                <label>اسم التقديم</label>
-                <input type="text" id="appName" placeholder="مثال: تقديم إداري" required>
+                <label>
+                    <span class="ar-text">اسم التقديم</span>
+                    <span class="en-text" style="display:none">Application Name</span>
+                    <span class="es-text" style="display:none">Nombre de la Solicitud</span>
+                    <span class="fr-text" style="display:none">Nom de la Candidature</span>
+                </label>
+                <input type="text" id="appName" placeholder="..." required>
             </div>
             <div class="form-group">
-                <label>وصف التقديم (اختياري)</label>
-                <textarea id="appDescription" rows="2" placeholder="وصف مختصر..."></textarea>
+                <label>
+                    <span class="ar-text">وصف التقديم (اختياري)</span>
+                    <span class="en-text" style="display:none">Application Description (Optional)</span>
+                    <span class="es-text" style="display:none">Descripción de la Solicitud (Opcional)</span>
+                    <span class="fr-text" style="display:none">Description de la Candidature (Optionnel)</span>
+                </label>
+                <textarea id="appDescription" rows="2" placeholder="..."></textarea>
             </div>
             <div class="form-group">
-                <label>رابط صورة البانر (اختياري)</label>
+                <label>
+                    <span class="ar-text">رابط صورة البانر (اختياري)</span>
+                    <span class="en-text" style="display:none">Banner Image URL (Optional)</span>
+                    <span class="es-text" style="display:none">URL de la Imagen del Banner (Opcional)</span>
+                    <span class="fr-text" style="display:none">URL de l'Image de Bannière (Optionnel)</span>
+                </label>
                 <input type="url" id="appBannerImage" placeholder="https://i.imgur.com/...">
             </div>
         </div>
 
         <div class="card">
-            <h3>📢 القنوات والرتب</h3>
+            <h3>
+                📢
+                <span class="ar-text">القنوات والرتب</span>
+                <span class="en-text" style="display:none">Channels & Roles</span>
+                <span class="es-text" style="display:none">Canales y Roles</span>
+                <span class="fr-text" style="display:none">Canaux et Rôles</span>
+            </h3>
             <div class="form-group">
-                <label>قناة البانل</label>
+                <label>
+                    <span class="ar-text">قناة البانل</span>
+                    <span class="en-text" style="display:none">Panel Channel</span>
+                    <span class="es-text" style="display:none">Canal del Panel</span>
+                    <span class="fr-text" style="display:none">Canal du Panneau</span>
+                </label>
                 <select id="appPanelChannel" required>
-                    <option value="">-- اختر قناة البانل --</option>
+                    <option value="">-- Select Channel --</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>قناة الإجابات (اللوق)</label>
+                <label>
+                    <span class="ar-text">قناة الإجابات (اللوق)</span>
+                    <span class="en-text" style="display:none">Answers Log Channel</span>
+                    <span class="es-text" style="display:none">Canal de Registro de Respuestas</span>
+                    <span class="fr-text" style="display:none">Canal de Journal des Réponses</span>
+                </label>
                 <select id="appLogChannel" required>
-                    <option value="">-- اختر قناة الإجابات --</option>
+                    <option value="">-- Select Channel --</option>
                 </select>
             </div>
 
             <div class="form-group premium-only" style="display:none;">
-                <label>قناة لوق المراجعة (اختياري - بريميم)</label>
+                <label>
+                    <span class="ar-text">قناة لوق المراجعة (اختياري - بريميم)</span>
+                    <span class="en-text" style="display:none">Review Log Channel (Optional - Premium)</span>
+                    <span class="es-text" style="display:none">Canal de Registro de Revisión (Opcional - Premium)</span>
+                    <span class="fr-text" style="display:none">Canal de Journal de Révision (Optionnel - Premium)</span>
+                </label>
                 <select id="appReviewLogChannel">
-                    <option value="">-- بدون قناة --</option>
+                    <option value="">-- No Channel --</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>رتبة مسؤولة</label>
+                <label>
+                    <span class="ar-text">رتبة مسؤولة</span>
+                    <span class="en-text" style="display:none">Responsible Role</span>
+                    <span class="es-text" style="display:none">Rol Responsable</span>
+                    <span class="fr-text" style="display:none">Rôle Responsable</span>
+                </label>
                 <select id="appRoleSelect" required>
-                    <option value="">-- اختر رتبة مسؤولة --</option>
+                    <option value="">-- Select Role --</option>
                 </select>
             </div>
             <div class="form-group">
-                <label>رول القبول</label>
+                <label>
+                    <span class="ar-text">رول القبول</span>
+                    <span class="en-text" style="display:none">Accept Role</span>
+                    <span class="es-text" style="display:none">Rol de Aceptación</span>
+                    <span class="fr-text" style="display:none">Rôle d'Acceptation</span>
+                </label>
                 <select id="appAcceptRoleSelect" required>
-                    <option value="">-- اختر رول القبول --</option>
+                    <option value="">-- Select Role --</option>
                 </select>
             </div>
 
             <div class="form-group premium-only" style="display:none;">
-                <label>رول الرفض (اختياري - بريميم)</label>
+                <label>
+                    <span class="ar-text">رول الرفض (اختياري - بريميم)</span>
+                    <span class="en-text" style="display:none">Reject Role (Optional - Premium)</span>
+                    <span class="es-text" style="display:none">Rol de Rechazo (Opcional - Premium)</span>
+                    <span class="fr-text" style="display:none">Rôle de Rejet (Optionnel - Premium)</span>
+                </label>
                 <select id="appRejectRoleSelect">
-                    <option value="">-- بدون رول --</option>
+                    <option value="">-- No Role --</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>رسالة القبول (اختياري)</label>
-                <textarea id="appAcceptMessage" rows="2" placeholder="🎉 مبروك! تم قبولك..."></textarea>
+                <label>
+                    <span class="ar-text">رسالة القبول (اختياري)</span>
+                    <span class="en-text" style="display:none">Accept Message (Optional)</span>
+                    <span class="es-text" style="display:none">Mensaje de Aceptación (Opcional)</span>
+                    <span class="fr-text" style="display:none">Message d'Acceptation (Optionnel)</span>
+                </label>
+                <textarea id="appAcceptMessage" rows="2" placeholder="..."></textarea>
             </div>
 
             <div class="form-group premium-only" style="display:none;">
-                <label>رسالة الرفض (اختياري - بريميم)</label>
-                <textarea id="appRejectMessage" rows="2" placeholder="😔 نأسف، لم يتم قبولك..."></textarea>
+                <label>
+                    <span class="ar-text">رسالة الرفض (اختياري - بريميم)</span>
+                    <span class="en-text" style="display:none">Reject Message (Optional - Premium)</span>
+                    <span class="es-text" style="display:none">Mensaje de Rechazo (Opcional - Premium)</span>
+                    <span class="fr-text" style="display:none">Message de Rejet (Optionnel - Premium)</span>
+                </label>
+                <textarea id="appRejectMessage" rows="2" placeholder="..."></textarea>
             </div>
         </div>
 
         <div class="card">
-            <h3>❓ الأسئلة <span id="appQuestionsHint">(1-5)</span></h3>
+            <h3>
+                ❓
+                <span class="ar-text">الأسئلة</span>
+                <span class="en-text" style="display:none">Questions</span>
+                <span class="es-text" style="display:none">Preguntas</span>
+                <span class="fr-text" style="display:none">Questions</span>
+                <span id="appQuestionsHint">(1-5)</span>
+            </h3>
             <div id="appQuestionsContainer"></div>
             <button type="button" class="btn btn-secondary btn-full" onclick="addQuestion()" style="margin-top:1rem;">
-                ➕ إضافة سؤال
+                <span class="ar-text">➕ إضافة سؤال</span>
+                <span class="en-text" style="display:none">➕ Add Question</span>
+                <span class="es-text" style="display:none">➕ Añadir Pregunta</span>
+                <span class="fr-text" style="display:none">➕ Ajouter une Question</span>
             </button>
         </div>
 
         <button type="button" id="appSubmitBtn" class="btn btn-primary btn-full" onclick="submitApp()">
-            🚀 حفظ ونشر التقديم
+            <span class="ar-text">🚀 حفظ ونشر التقديم</span>
+            <span class="en-text" style="display:none">🚀 Save & Publish Application</span>
+            <span class="es-text" style="display:none">🚀 Guardar y Publicar Solicitud</span>
+            <span class="fr-text" style="display:none">🚀 Enregistrer et Publier la Candidature</span>
         </button>
     </div>
 </div>
