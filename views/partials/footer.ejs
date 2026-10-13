@@ -74,5 +74,9 @@
 </footer>
 
 <script src="/js/main.js"></script>
+<script>
+    // ✅ Show page after JS loaded (fixes FOUC)
+    document.documentElement.style.visibility = 'visible';
+</script>
 </body>
 </html>
