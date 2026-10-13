@@ -1,4 +1,4 @@
-<%- include('partials/header', { user, title: 'يجب التسجيل' }) %>
+<%- include('partials/header', { user, title: 'Login Required' }) %>
 
 <div class="container page-content">
     <div class="login-required-box">
@@ -6,16 +6,22 @@
         <h1>
             <span class="ar-text">يجب التسجيل أولاً</span>
             <span class="en-text" style="display:none">Login Required</span>
+            <span class="es-text" style="display:none">Inicio de Sesión Requerido</span>
+            <span class="fr-text" style="display:none">Connexion Requise</span>
         </h1>
         <p>
             <span class="ar-text"><%= message || 'يجب تسجيل الدخول أولاً للوصول إلى هذه الصفحة' %></span>
             <span class="en-text" style="display:none"><%= messageEn || 'You must login first to access this page' %></span>
+            <span class="es-text" style="display:none"><%= messageEs || 'Debes iniciar sesión primero para acceder a esta página' %></span>
+            <span class="fr-text" style="display:none"><%= messageFr || 'Vous devez d\'abord vous connecter pour accéder à cette page' %></span>
         </p>
 
         <div class="login-buttons">
             <a href="/auth/free" class="btn btn-primary">
                 <span class="ar-text">تسجيل دخول</span>
                 <span class="en-text" style="display:none">Login</span>
+                <span class="es-text" style="display:none">Iniciar sesión</span>
+                <span class="fr-text" style="display:none">Connexion</span>
             </a>
         </div>
     </div>
