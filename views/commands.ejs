@@ -1,14 +1,18 @@
-<%- include('partials/header', { user, title: 'الأوامر' }) %>
+<%- include('partials/header', { user, title: 'Commands' }) %>
 
 <div class="container page-content">
     <div class="page-header">
         <h1>
             <span class="ar-text">📚 قائمة الأوامر</span>
             <span class="en-text" style="display:none">📚 Commands List</span>
+            <span class="es-text" style="display:none">📚 Lista de Comandos</span>
+            <span class="fr-text" style="display:none">📚 Liste des Commandes</span>
         </h1>
         <p>
             <span class="ar-text">كل أوامر بوت VOX</span>
             <span class="en-text" style="display:none">All VOX Bot Commands</span>
+            <span class="es-text" style="display:none">Todos los Comandos del Bot VOX</span>
+            <span class="fr-text" style="display:none">Toutes les Commandes du Bot VOX</span>
         </p>
     </div>
 
@@ -17,28 +21,55 @@
         <h2 class="section-subtitle">
             <span class="ar-text">📌 أوامر عامة</span>
             <span class="en-text" style="display:none">📌 General Commands</span>
+            <span class="es-text" style="display:none">📌 Comandos Generales</span>
+            <span class="fr-text" style="display:none">📌 Commandes Générales</span>
         </h2>
 
         <div class="commands-grid">
             <div class="command-card">
                 <div class="command-name">/help</div>
-                <p><span class="ar-text">عرض قائمة الأوامر</span><span class="en-text" style="display:none">Show commands list</span></p>
+                <p>
+                    <span class="ar-text">عرض قائمة الأوامر</span>
+                    <span class="en-text" style="display:none">Show commands list</span>
+                    <span class="es-text" style="display:none">Mostrar lista de comandos</span>
+                    <span class="fr-text" style="display:none">Afficher la liste des commandes</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/tickets</div>
-                <p><span class="ar-text">عرض التذاكر النشطة</span><span class="en-text" style="display:none">Show active tickets</span></p>
+                <p>
+                    <span class="ar-text">عرض التذاكر النشطة</span>
+                    <span class="en-text" style="display:none">Show active tickets</span>
+                    <span class="es-text" style="display:none">Mostrar tickets activos</span>
+                    <span class="fr-text" style="display:none">Afficher les tickets actifs</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/set-language</div>
-                <p><span class="ar-text">تغيير لغة البوت في السيرفر</span><span class="en-text" style="display:none">Change bot language in server</span></p>
+                <p>
+                    <span class="ar-text">تغيير لغة البوت في السيرفر</span>
+                    <span class="en-text" style="display:none">Change bot language in server</span>
+                    <span class="es-text" style="display:none">Cambiar el idioma del bot en el servidor</span>
+                    <span class="fr-text" style="display:none">Changer la langue du bot sur le serveur</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/activate</div>
-                <p><span class="ar-text">تفعيل البريميم بمفتاح</span><span class="en-text" style="display:none">Activate premium with key</span></p>
+                <p>
+                    <span class="ar-text">تفعيل البريميم بمفتاح</span>
+                    <span class="en-text" style="display:none">Activate premium with key</span>
+                    <span class="es-text" style="display:none">Activar premium con clave</span>
+                    <span class="fr-text" style="display:none">Activer premium avec une clé</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/my-subscription</div>
-                <p><span class="ar-text">عرض حالة الاشتراك في السيرفر</span><span class="en-text" style="display:none">Show subscription status</span></p>
+                <p>
+                    <span class="ar-text">عرض حالة الاشتراك في السيرفر</span>
+                    <span class="en-text" style="display:none">Show subscription status</span>
+                    <span class="es-text" style="display:none">Mostrar estado de suscripción</span>
+                    <span class="fr-text" style="display:none">Afficher l'état d'abonnement</span>
+                </p>
             </div>
         </div>
     </div>
@@ -48,44 +79,91 @@
         <h2 class="section-subtitle">
             <span class="ar-text">🎫 أوامر التذاكر</span>
             <span class="en-text" style="display:none">🎫 Ticket Commands</span>
+            <span class="es-text" style="display:none">🎫 Comandos de Tickets</span>
+            <span class="fr-text" style="display:none">🎫 Commandes de Tickets</span>
         </h2>
 
         <div class="commands-grid">
             <div class="command-card">
                 <div class="command-name">/setup-ticket</div>
-                <p><span class="ar-text">إنشاء لوحة تذاكر جديدة</span><span class="en-text" style="display:none">Create new ticket panel</span></p>
+                <p>
+                    <span class="ar-text">إنشاء لوحة تذاكر جديدة</span>
+                    <span class="en-text" style="display:none">Create new ticket panel</span>
+                    <span class="es-text" style="display:none">Crear nuevo panel de tickets</span>
+                    <span class="fr-text" style="display:none">Créer un nouveau panneau de tickets</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/close</div>
-                <p><span class="ar-text">إغلاق التذكرة الحالية</span><span class="en-text" style="display:none">Close current ticket</span></p>
+                <p>
+                    <span class="ar-text">إغلاق التذكرة الحالية</span>
+                    <span class="en-text" style="display:none">Close current ticket</span>
+                    <span class="es-text" style="display:none">Cerrar el ticket actual</span>
+                    <span class="fr-text" style="display:none">Fermer le ticket actuel</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/delete</div>
-                <p><span class="ar-text">حذف التذكرة الحالية</span><span class="en-text" style="display:none">Delete current ticket</span></p>
+                <p>
+                    <span class="ar-text">حذف التذكرة الحالية</span>
+                    <span class="en-text" style="display:none">Delete current ticket</span>
+                    <span class="es-text" style="display:none">Eliminar el ticket actual</span>
+                    <span class="fr-text" style="display:none">Supprimer le ticket actuel</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/rename</div>
-                <p><span class="ar-text">تغيير اسم التذكرة</span><span class="en-text" style="display:none">Rename ticket</span></p>
+                <p>
+                    <span class="ar-text">تغيير اسم التذكرة</span>
+                    <span class="en-text" style="display:none">Rename ticket</span>
+                    <span class="es-text" style="display:none">Renombrar el ticket</span>
+                    <span class="fr-text" style="display:none">Renommer le ticket</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/add</div>
-                <p><span class="ar-text">إضافة عضو للتذكرة</span><span class="en-text" style="display:none">Add user to ticket</span></p>
+                <p>
+                    <span class="ar-text">إضافة عضو للتذكرة</span>
+                    <span class="en-text" style="display:none">Add user to ticket</span>
+                    <span class="es-text" style="display:none">Añadir usuario al ticket</span>
+                    <span class="fr-text" style="display:none">Ajouter un utilisateur au ticket</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/remove</div>
-                <p><span class="ar-text">إزالة عضو من التذكرة</span><span class="en-text" style="display:none">Remove user from ticket</span></p>
+                <p>
+                    <span class="ar-text">إزالة عضو من التذكرة</span>
+                    <span class="en-text" style="display:none">Remove user from ticket</span>
+                    <span class="es-text" style="display:none">Eliminar usuario del ticket</span>
+                    <span class="fr-text" style="display:none">Retirer un utilisateur du ticket</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/reset-user</div>
-                <p><span class="ar-text">إعادة تعيين حالة عضو</span><span class="en-text" style="display:none">Reset user status</span></p>
+                <p>
+                    <span class="ar-text">إعادة تعيين حالة عضو</span>
+                    <span class="en-text" style="display:none">Reset user status</span>
+                    <span class="es-text" style="display:none">Restablecer estado del usuario</span>
+                    <span class="fr-text" style="display:none">Réinitialiser le statut de l'utilisateur</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/reset-ticket</div>
-                <p><span class="ar-text">مسح كل التذاكر في السيرفر</span><span class="en-text" style="display:none">Delete all tickets</span></p>
+                <p>
+                    <span class="ar-text">مسح كل التذاكر في السيرفر</span>
+                    <span class="en-text" style="display:none">Delete all tickets</span>
+                    <span class="es-text" style="display:none">Eliminar todos los tickets</span>
+                    <span class="fr-text" style="display:none">Supprimer tous les tickets</span>
+                </p>
             </div>
             <div class="command-card">
                 <div class="command-name">/blacklist</div>
-                <p><span class="ar-text">حظر / فك حظر عضو من التذاكر</span><span class="en-text" style="display:none">Block / unblock user</span></p>
+                <p>
+                    <span class="ar-text">حظر / فك حظر عضو من التذاكر</span>
+                    <span class="en-text" style="display:none">Block / unblock user</span>
+                    <span class="es-text" style="display:none">Bloquear / desbloquear usuario</span>
+                    <span class="fr-text" style="display:none">Bloquer / débloquer un utilisateur</span>
+                </p>
             </div>
         </div>
     </div>
@@ -95,97 +173,33 @@
         <h2 class="section-subtitle premium">
             <span class="ar-text">💎 أوامر الإدارة (بريميم)</span>
             <span class="en-text" style="display:none">💎 Admin Commands (Premium)</span>
+            <span class="es-text" style="display:none">💎 Comandos de Admin (Premium)</span>
+            <span class="fr-text" style="display:none">💎 Commandes Admin (Premium)</span>
         </h2>
 
         <div class="commands-grid">
             <div class="command-card premium-card">
                 <div class="command-name">/setup-application</div>
-                <p><span class="ar-text">إنشاء نظام تقديم إداري</span><span class="en-text" style="display:none">Create staff application system</span></p>
+                <p>
+                    <span class="ar-text">إنشاء نظام تقديم إداري</span>
+                    <span class="en-text" style="display:none">Create staff application system</span>
+                    <span class="es-text" style="display:none">Crear sistema de solicitudes de personal</span>
+                    <span class="fr-text" style="display:none">Créer un système de candidatures</span>
+                </p>
             </div>
             <div class="command-card premium-card">
                 <div class="command-name">/accept</div>
-                <p><span class="ar-text">قبول تقديم عضو</span><span class="en-text" style="display:none">Accept member application</span></p>
+                <p>
+                    <span class="ar-text">قبول تقديم عضو</span>
+                    <span class="en-text" style="display:none">Accept member application</span>
+                    <span class="es-text" style="display:none">Aceptar solicitud del miembro</span>
+                    <span class="fr-text" style="display:none">Accepter la candidature du membre</span>
+                </p>
             </div>
             <div class="command-card premium-card">
                 <div class="command-name">/reject</div>
-                <p><span class="ar-text">رفض تقديم عضو</span><span class="en-text" style="display:none">Reject member application</span></p>
-            </div>
-            <div class="command-card premium-card">
-                <div class="command-name">/backup</div>
-                <p><span class="ar-text">إنشاء نسخة احتياطية</span><span class="en-text" style="display:none">Create a backup</span></p>
-            </div>
-            <div class="command-card premium-card">
-                <div class="command-name">/restore</div>
-                <p><span class="ar-text">استرجاع نسخة احتياطية</span><span class="en-text" style="display:none">Restore a backup</span></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==== أوامر الإعدادات (البريميم) ==== -->
-    <div class="commands-section">
-        <h2 class="section-subtitle premium">
-            <span class="ar-text">⚙️ أوامر الإعدادات (بريميم)</span>
-            <span class="en-text" style="display:none">⚙️ Settings Commands (Premium)</span>
-        </h2>
-
-        <div class="commands-grid">
-            <div class="command-card premium-card">
-                <div class="command-name">/set-ticket-limit</div>
-                <p><span class="ar-text">تحديد حد التذاكر لكل عضو (1-10)</span><span class="en-text" style="display:none">Set ticket limit per user (1-10)</span></p>
-            </div>
-            <div class="command-card premium-card">
-                <div class="command-name">/set-auto-close</div>
-                <p><span class="ar-text">تحديد الإغلاق التلقائي بالساعات (1-10)</span><span class="en-text" style="display:none">Set auto-close in hours (1-10)</span></p>
-            </div>
-            <div class="command-card premium-card">
-                <div class="command-name">/set-anti-spam</div>
-                <p><span class="ar-text">تحديد الحماية ضد السبام بالدقائق (1-60)</span><span class="en-text" style="display:none">Set anti-spam in minutes (1-60)</span></p>
-            </div>
-            <div class="command-card premium-card">
-                <div class="command-name">/set-farewell</div>
-                <p><span class="ar-text">تحديد رسالة الوداع</span><span class="en-text" style="display:none">Set farewell message</span></p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==== أوامر البريفكس ($) ==== -->
-    <div class="commands-section">
-        <h2 class="section-subtitle">
-            <span class="ar-text">💬 أوامر البريفكس ($)</span>
-            <span class="en-text" style="display:none">💬 Prefix Commands ($)</span>
-        </h2>
-
-        <div class="commands-grid">
-            <div class="command-card">
-                <div class="command-name">$help</div>
-                <p><span class="ar-text">عرض قائمة الأوامر</span><span class="en-text" style="display:none">Show commands list</span></p>
-            </div>
-            <div class="command-card">
-                <div class="command-name">$activate</div>
-                <p><span class="ar-text">تفعيل البريميم بمفتاح</span><span class="en-text" style="display:none">Activate premium with key</span></p>
-            </div>
-            <div class="command-card">
-                <div class="command-name">$close</div>
-                <p><span class="ar-text">إغلاق التذكرة الحالية</span><span class="en-text" style="display:none">Close current ticket</span></p>
-            </div>
-            <div class="command-card">
-                <div class="command-name">$delete</div>
-                <p><span class="ar-text">حذف التذكرة الحالية</span><span class="en-text" style="display:none">Delete current ticket</span></p>
-            </div>
-            <div class="command-card">
-                <div class="command-name">$rename</div>
-                <p><span class="ar-text">تغيير اسم التذكرة</span><span class="en-text" style="display:none">Rename ticket</span></p>
-            </div>
-            <div class="command-card">
-                <div class="command-name">$add</div>
-                <p><span class="ar-text">إضافة عضو للتذكرة</span><span class="en-text" style="display:none">Add user to ticket</span></p>
-            </div>
-            <div class="command-card">
-                <div class="command-name">$remove</div>
-                <p><span class="ar-text">إزالة عضو من التذكرة</span><span class="en-text" style="display:none">Remove user from ticket</span></p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<%- include('partials/footer') %>
+                <p>
+                    <span class="ar-text">رفض تقديم عضو</span>
+                    <span class="en-text" style="display:none">Reject member application</span>
+                    <span class="es-text" style="display:none">Rechazar solicitud del miembro</span>
+                    <span class="fr-text" style="display:none">Rejeter
