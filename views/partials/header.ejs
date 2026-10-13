@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VOX - <%= (typeof title !== 'undefined' && title) ? title : 'الرئيسية' %></title>
+    <title>VOX - <%= (typeof title !== 'undefined' && title) ? title : 'VOX' %></title>
     <link rel="stylesheet" href="/css/style.css">
     <link rel="icon" href="/images/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -21,22 +21,32 @@
             <a href="/" class="nav-link">
                 <span class="ar-text">الرئيسية</span>
                 <span class="en-text" style="display:none">Home</span>
+                <span class="es-text" style="display:none">Inicio</span>
+                <span class="fr-text" style="display:none">Accueil</span>
             </a>
             <a href="/about" class="nav-link">
                 <span class="ar-text">عن البوت</span>
                 <span class="en-text" style="display:none">About</span>
+                <span class="es-text" style="display:none">Acerca de</span>
+                <span class="fr-text" style="display:none">À propos</span>
             </a>
             <a href="/commands" class="nav-link">
                 <span class="ar-text">الأوامر</span>
                 <span class="en-text" style="display:none">Commands</span>
+                <span class="es-text" style="display:none">Comandos</span>
+                <span class="fr-text" style="display:none">Commandes</span>
             </a>
             <a href="/pricing" class="nav-link">
                 <span class="ar-text">الأسعار</span>
                 <span class="en-text" style="display:none">Pricing</span>
+                <span class="es-text" style="display:none">Precios</span>
+                <span class="fr-text" style="display:none">Tarifs</span>
             </a>
             <a href="/reports" class="nav-link">
                 <span class="ar-text">الإبلاغ</span>
                 <span class="en-text" style="display:none">Report</span>
+                <span class="es-text" style="display:none">Reportar</span>
+                <span class="fr-text" style="display:none">Signaler</span>
             </a>
         </div>
 
@@ -46,46 +56,32 @@
                 <span class="theme-icon-dark">🌙</span>
             </button>
 
-            <button class="lang-toggle" onclick="toggleLang()" title="Language">
-                <svg id="langFlagUS" class="flag-icon" viewBox="0 0 640 480" width="24" height="18">
-                    <path fill="#bd3d44" d="M0 0h640v480H0"/>
-                    <path stroke="#fff" stroke-width="37" d="M0 55.4h640M0 129.3h640M0 203.2h640M0 277.1h640M0 351h640M0 424.9h640"/>
-                    <path fill="#192f5d" d="M0 0h364.8v259.4H0"/>
-                    <g fill="#fff">
-                        <g id="us-stars">
-                            <circle cx="30" cy="30" r="6"/>
-                            <circle cx="90" cy="30" r="6"/>
-                            <circle cx="150" cy="30" r="6"/>
-                            <circle cx="210" cy="30" r="6"/>
-                            <circle cx="270" cy="30" r="6"/>
-                            <circle cx="330" cy="30" r="6"/>
-                            <circle cx="60" cy="60" r="6"/>
-                            <circle cx="120" cy="60" r="6"/>
-                            <circle cx="180" cy="60" r="6"/>
-                            <circle cx="240" cy="60" r="6"/>
-                            <circle cx="300" cy="60" r="6"/>
-                        </g>
-                        <use href="#us-stars" y="60"/>
-                        <use href="#us-stars" y="120"/>
-                        <use href="#us-stars" y="180"/>
-                        <use href="#us-stars" y="60"/>
-                        <use href="#us-stars" y="120"/>
-                        <use href="#us-stars" y="180"/>
-                    </g>
-                </svg>
-
-                <svg id="langFlagSA" class="flag-icon" viewBox="0 0 640 480" width="24" height="18" style="display:none;">
-                    <path fill="#006c35" d="M0 0h640v480H0z"/>
-                    <path fill="#fff" d="M110 290c50-20 100-20 150 0s100 20 150 0 100-20 150 0" stroke="#fff" stroke-width="15" fill="none"/>
-                    <path fill="#fff" d="M130 210h380M130 180h380M130 150h380M130 120h380" stroke="#fff" stroke-width="10"/>
-                    <path fill="#fff" d="M400 290c20-15 40-15 60 0s40 15 60 0" stroke="#fff" stroke-width="8" fill="none"/>
-                </svg>
-            </button>
+            <div class="lang-switch">
+                <button class="lang-btn" onclick="toggleLangMenu(event)" title="Language">
+                    <span class="current-lang-flag" id="currentLangFlag">🇺🇸</span>
+                </button>
+                <div class="lang-dropdown" id="langDropdown">
+                    <div class="lang-option" data-lang="en" onclick="chooseLang('en')">
+                        <span class="flag">🇺🇸</span>
+                    </div>
+                    <div class="lang-option" data-lang="ar" onclick="chooseLang('ar')">
+                        <span class="flag">🇸🇦</span>
+                    </div>
+                    <div class="lang-option" data-lang="es" onclick="chooseLang('es')">
+                        <span class="flag">🇪🇸</span>
+                    </div>
+                    <div class="lang-option" data-lang="fr" onclick="chooseLang('fr')">
+                        <span class="flag">🇫🇷</span>
+                    </div>
+                </div>
+            </div>
 
             <% if (typeof user !== 'undefined' && user) { %>
                 <a href="/purchase" class="btn-login premium">
                     <span class="ar-text">💎 اشتراك</span>
                     <span class="en-text" style="display:none">💎 Subscribe</span>
+                    <span class="es-text" style="display:none">💎 Suscribirse</span>
+                    <span class="fr-text" style="display:none">💎 S'abonner</span>
                 </a>
                 <div class="user-menu">
                     <button class="user-avatar-btn" onclick="toggleUserMenu(event)">
@@ -96,16 +92,22 @@
                         <a href="/dashboard/<%= user.botType || 'free' %>" class="dropdown-link">
                             <span class="ar-text">لوحة التحكم</span>
                             <span class="en-text" style="display:none">Dashboard</span>
+                            <span class="es-text" style="display:none">Panel</span>
+                            <span class="fr-text" style="display:none">Tableau de bord</span>
                         </a>
                         <% if (typeof isOwner !== 'undefined' && isOwner) { %>
                             <a href="/owner" class="dropdown-link">
                                 <span class="ar-text">لوحة الأونر</span>
                                 <span class="en-text" style="display:none">Owner Panel</span>
+                                <span class="es-text" style="display:none">Panel de Propietario</span>
+                                <span class="fr-text" style="display:none">Panneau Propriétaire</span>
                             </a>
                         <% } %>
                         <a href="/logout" class="dropdown-link logout">
                             <span class="ar-text">تسجيل خروج</span>
                             <span class="en-text" style="display:none">Logout</span>
+                            <span class="es-text" style="display:none">Cerrar sesión</span>
+                            <span class="fr-text" style="display:none">Déconnexion</span>
                         </a>
                     </div>
                 </div>
@@ -113,11 +115,12 @@
                 <a href="/auth/free" class="btn-login">
                     <span class="ar-text">الدخول</span>
                     <span class="en-text" style="display:none">Login</span>
+                    <span class="es-text" style="display:none">Iniciar sesión</span>
+                    <span class="fr-text" style="display:none">Connexion</span>
                 </a>
             <% } %>
         </div>
     </div>
 </nav>
 
-<!-- ⚠️ News Ticker — من فوق -->
-<%- include('news-ticker') %>
+<%- include('../news-ticker') %>
