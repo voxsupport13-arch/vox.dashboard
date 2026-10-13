@@ -5,10 +5,10 @@ const SUPPORTED_LANGS = ['en', 'ar', 'es', 'fr'];
 const DEFAULT_LANG = 'en';
 
 const LANG_FLAGS = {
-    en: '🇺🇸',
-    ar: '🇸🇦',
-    es: '🇪🇸',
-    fr: '🇫🇷'
+    en: 'https://flagcdn.com/w40/us.png',
+    ar: 'https://flagcdn.com/w40/sa.png',
+    es: 'https://flagcdn.com/w40/es.png',
+    fr: 'https://flagcdn.com/w40/fr.png'
 };
 
 // ==== Theme Toggle ====
@@ -47,7 +47,7 @@ function applyLang(lang) {
 
     // تحديث العلم الحالي
     const flagEl = document.getElementById('currentLangFlag');
-    if (flagEl) flagEl.textContent = LANG_FLAGS[lang] || LANG_FLAGS.en;
+    if (flagEl) flagEl.src = LANG_FLAGS[lang] || LANG_FLAGS.en;
 
     // تحديث الـ dropdown
     document.querySelectorAll('.lang-option').forEach(el => {
@@ -172,7 +172,6 @@ function confirmAction(message, callback) {
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 VOX Dashboard Loaded');
 
-    // تطبيق اللغة الافتراضية لو مفيش محفوظة
     const saved = localStorage.getItem('vox-lang');
     if (!saved) {
         localStorage.setItem('vox-lang', DEFAULT_LANG);
