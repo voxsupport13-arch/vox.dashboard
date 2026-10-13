@@ -11,6 +11,20 @@ const LANG_FLAGS = {
     fr: 'https://flagcdn.com/w40/fr.png'
 };
 
+// ==== Get Current Language ====
+function getCurrentLang() {
+    const saved = localStorage.getItem('vox-lang');
+    if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
+    return DEFAULT_LANG;
+}
+
+// ==== IMMEDIATE Apply (before DOM ready) ====
+(function applyLangImmediately() {
+    const lang = getCurrentLang();
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+})();
+
 // ==== Theme Toggle ====
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
@@ -73,13 +87,7 @@ function chooseLang(lang) {
     if (dropdown) dropdown.classList.remove('active');
 }
 
-// Load Saved Language
-(function loadLang() {
-    const saved = localStorage.getItem('vox-lang') || DEFAULT_LANG;
-    applyLang(saved);
-})();
-
-// ==== User Menu (Click) ====
+// ==== User Menu ====
 function toggleUserMenu(event) {
     event.stopPropagation();
     const dropdown = document.getElementById('userDropdown');
@@ -90,14 +98,12 @@ function toggleUserMenu(event) {
 
 // ==== Close dropdowns on outside click ====
 document.addEventListener('click', (event) => {
-    // User menu
     const userDropdown = document.getElementById('userDropdown');
     const userMenu = document.querySelector('.user-menu');
     if (userDropdown && userMenu && !userMenu.contains(event.target)) {
         userDropdown.classList.remove('active');
     }
 
-    // Language menu
     const langDropdown = document.getElementById('langDropdown');
     const langSwitch = document.querySelector('.lang-switch');
     if (langDropdown && langSwitch && !langSwitch.contains(event.target)) {
@@ -116,7 +122,7 @@ function copyToClipboard(text) {
 
 // ==== Toast Messages ====
 function getToastMessage(key) {
-    const lang = localStorage.getItem('vox-lang') || DEFAULT_LANG;
+    const lang = getCurrentLang();
     const messages = {
         copied: {
             en: '✅ Copied!',
@@ -168,13 +174,14 @@ function confirmAction(message, callback) {
     }
 }
 
-// ==== Loaded ====
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 VOX Dashboard Loaded');
+// ==== Apply Language on DOM Ready ====
+function initLang() {
+    const lang = getCurrentLang();
+    applyLang(lang);
+}
 
-    const saved = localStorage.getItem('vox-lang');
-    if (!saved) {
-        localStorage.setItem('vox-lang', DEFAULT_LANG);
-        applyLang(DEFAULT_LANG);
-    }
-});
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLang);
+} else {
+    initLang();
+}
