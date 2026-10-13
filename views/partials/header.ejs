@@ -8,14 +8,32 @@
     <link rel="icon" href="/images/favicon.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     
-    <!-- ✅ Apply saved language IMMEDIATELY before page renders -->
+    <!-- ✅ Apply saved language + flag immediately -->
     <script>
         (function() {
             const lang = localStorage.getItem('vox-lang') || 'en';
             document.documentElement.setAttribute('lang', lang);
             document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-            document.documentElement.style.visibility = 'hidden';
         })();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const lang = localStorage.getItem('vox-lang') || 'en';
+            const flags = {
+                en: 'https://flagcdn.com/w40/us.png',
+                ar: 'https://flagcdn.com/w40/sa.png',
+                es: 'https://flagcdn.com/w40/es.png',
+                fr: 'https://flagcdn.com/w40/fr.png'
+            };
+
+            const flagEl = document.getElementById('currentLangFlag');
+            if (flagEl && flags[lang]) {
+                flagEl.src = flags[lang];
+            }
+
+            document.querySelectorAll('.lang-option').forEach(el => {
+                el.classList.toggle('active', el.dataset.lang === lang);
+            });
+        });
     </script>
 </head>
 <body>
