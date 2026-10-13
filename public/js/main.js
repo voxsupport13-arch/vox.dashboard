@@ -1,5 +1,16 @@
 // ==== VOX Dashboard - Main JS ====
 
+// ==== Supported Languages ====
+const SUPPORTED_LANGS = ['en', 'ar', 'es', 'fr'];
+const DEFAULT_LANG = 'en';
+
+const LANG_FLAGS = {
+    en: '🇺🇸',
+    ar: '🇸🇦',
+    es: '🇪🇸',
+    fr: '🇫🇷'
+};
+
 // ==== Theme Toggle ====
 function toggleTheme() {
     const current = document.documentElement.getAttribute('data-theme');
@@ -16,40 +27,55 @@ function toggleTheme() {
     }
 })();
 
-// ==== Language Toggle (SVG Flags) ====
-function toggleLang() {
-    const current = localStorage.getItem('vox-lang') || 'ar';
-    const newLang = current === 'ar' ? 'en' : 'ar';
-
-    localStorage.setItem('vox-lang', newLang);
-    applyLang(newLang);
-}
-
+// ==== Language System ====
 function applyLang(lang) {
-    const arTexts = document.querySelectorAll('.ar-text');
-    const enTexts = document.querySelectorAll('.en-text');
-    const flagUS = document.getElementById('langFlagUS');
-    const flagSA = document.getElementById('langFlagSA');
+    if (!SUPPORTED_LANGS.includes(lang)) lang = DEFAULT_LANG;
 
-    if (lang === 'en') {
-        document.documentElement.setAttribute('lang', 'en');
-        document.documentElement.setAttribute('dir', 'ltr');
-        arTexts.forEach(el => el.style.display = 'none');
-        enTexts.forEach(el => el.style.display = 'inline');
-        if (flagUS) flagUS.style.display = 'none';
-        if (flagSA) flagSA.style.display = 'inline';
-    } else {
-        document.documentElement.setAttribute('lang', 'ar');
-        document.documentElement.setAttribute('dir', 'rtl');
-        arTexts.forEach(el => el.style.display = 'inline');
-        enTexts.forEach(el => el.style.display = 'none');
-        if (flagUS) flagUS.style.display = 'inline';
-        if (flagSA) flagSA.style.display = 'none';
-    }
+    const rtlLangs = ['ar'];
+    const dir = rtlLangs.includes(lang) ? 'rtl' : 'ltr';
+
+    document.documentElement.setAttribute('lang', lang);
+    document.documentElement.setAttribute('dir', dir);
+
+    // إخفاء كل النصوص
+    document.querySelectorAll('.en-text, .ar-text, .es-text, .fr-text')
+        .forEach(el => el.style.display = 'none');
+
+    // إظهار نصوص اللغة الحالية
+    document.querySelectorAll(`.${lang}-text`)
+        .forEach(el => el.style.display = 'inline');
+
+    // تحديث العلم الحالي
+    const flagEl = document.getElementById('currentLangFlag');
+    if (flagEl) flagEl.textContent = LANG_FLAGS[lang] || LANG_FLAGS.en;
+
+    // تحديث الـ dropdown
+    document.querySelectorAll('.lang-option').forEach(el => {
+        el.classList.toggle('active', el.dataset.lang === lang);
+    });
 }
 
+function setLang(lang) {
+    if (!SUPPORTED_LANGS.includes(lang)) lang = DEFAULT_LANG;
+    localStorage.setItem('vox-lang', lang);
+    applyLang(lang);
+}
+
+function toggleLangMenu(event) {
+    event.stopPropagation();
+    const dropdown = document.getElementById('langDropdown');
+    if (dropdown) dropdown.classList.toggle('active');
+}
+
+function chooseLang(lang) {
+    setLang(lang);
+    const dropdown = document.getElementById('langDropdown');
+    if (dropdown) dropdown.classList.remove('active');
+}
+
+// Load Saved Language
 (function loadLang() {
-    const saved = localStorage.getItem('vox-lang') || 'ar';
+    const saved = localStorage.getItem('vox-lang') || DEFAULT_LANG;
     applyLang(saved);
 })();
 
@@ -62,24 +88,50 @@ function toggleUserMenu(event) {
     }
 }
 
+// ==== Close dropdowns on outside click ====
 document.addEventListener('click', (event) => {
-    const dropdown = document.getElementById('userDropdown');
+    // User menu
+    const userDropdown = document.getElementById('userDropdown');
     const userMenu = document.querySelector('.user-menu');
+    if (userDropdown && userMenu && !userMenu.contains(event.target)) {
+        userDropdown.classList.remove('active');
+    }
 
-    if (dropdown && userMenu) {
-        if (!userMenu.contains(event.target)) {
-            dropdown.classList.remove('active');
-        }
+    // Language menu
+    const langDropdown = document.getElementById('langDropdown');
+    const langSwitch = document.querySelector('.lang-switch');
+    if (langDropdown && langSwitch && !langSwitch.contains(event.target)) {
+        langDropdown.classList.remove('active');
     }
 });
 
 // ==== Copy to Clipboard ====
 function copyToClipboard(text) {
     navigator.clipboard.writeText(text).then(() => {
-        showToast('✅ تم النسخ', 'success');
+        showToast(getToastMessage('copied'), 'success');
     }).catch(() => {
-        showToast('❌ فشل النسخ', 'danger');
+        showToast(getToastMessage('copyFailed'), 'danger');
     });
+}
+
+// ==== Toast Messages ====
+function getToastMessage(key) {
+    const lang = localStorage.getItem('vox-lang') || DEFAULT_LANG;
+    const messages = {
+        copied: {
+            en: '✅ Copied!',
+            ar: '✅ تم النسخ',
+            es: '✅ ¡Copiado!',
+            fr: '✅ Copié !'
+        },
+        copyFailed: {
+            en: '❌ Copy failed',
+            ar: '❌ فشل النسخ',
+            es: '❌ Error al copiar',
+            fr: '❌ Échec de la copie'
+        }
+    };
+    return messages[key]?.[lang] || messages[key]?.en || key;
 }
 
 // ==== Toast ====
@@ -119,4 +171,11 @@ function confirmAction(message, callback) {
 // ==== Loaded ====
 document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 VOX Dashboard Loaded');
+
+    // تطبيق اللغة الافتراضية لو مفيش محفوظة
+    const saved = localStorage.getItem('vox-lang');
+    if (!saved) {
+        localStorage.setItem('vox-lang', DEFAULT_LANG);
+        applyLang(DEFAULT_LANG);
+    }
 });
