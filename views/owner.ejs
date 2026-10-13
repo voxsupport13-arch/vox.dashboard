@@ -1,4 +1,4 @@
-<%- include('partials/header', { user, title: 'لوحة الأونر' }) %>
+<%- include('partials/header', { user, title: 'Owner Panel' }) %>
 
 <div class="dashboard-container">
     <aside class="sidebar">
@@ -6,6 +6,8 @@
             <h3>
                 <span class="ar-text">👑 لوحة الأونر</span>
                 <span class="en-text" style="display:none">👑 Owner Panel</span>
+                <span class="es-text" style="display:none">👑 Panel de Propietario</span>
+                <span class="fr-text" style="display:none">👑 Panneau Propriétaire</span>
             </h3>
             <span class="bot-badge owner">OWNER</span>
         </div>
@@ -15,41 +17,57 @@
                 <span class="icon">📊</span>
                 <span class="ar-text">إحصائيات البوت</span>
                 <span class="en-text" style="display:none">Bot Stats</span>
+                <span class="es-text" style="display:none">Estadísticas del Bot</span>
+                <span class="fr-text" style="display:none">Statistiques du Bot</span>
             </a>
             <a href="#ownerSiteStats" class="sidebar-link" onclick="switchTab(event, 'ownerSiteStats')">
                 <span class="icon">🌐</span>
                 <span class="ar-text">إحصائيات الموقع</span>
                 <span class="en-text" style="display:none">Site Stats</span>
+                <span class="es-text" style="display:none">Estadísticas del Sitio</span>
+                <span class="fr-text" style="display:none">Statistiques du Site</span>
             </a>
             <a href="#ownerReports" class="sidebar-link" onclick="switchTab(event, 'ownerReports')">
                 <span class="icon">🚨</span>
                 <span class="ar-text">الإبلاغات</span>
                 <span class="en-text" style="display:none">Reports</span>
+                <span class="es-text" style="display:none">Reportes</span>
+                <span class="fr-text" style="display:none">Signalements</span>
             </a>
             <a href="#ownerPurchases" class="sidebar-link" onclick="switchTab(event, 'ownerPurchases')">
                 <span class="icon">💰</span>
                 <span class="ar-text">طلبات الشراء</span>
                 <span class="en-text" style="display:none">Purchases</span>
+                <span class="es-text" style="display:none">Compras</span>
+                <span class="fr-text" style="display:none">Achats</span>
             </a>
             <a href="#ownerPurchaseLogs" class="sidebar-link" onclick="switchTab(event, 'ownerPurchaseLogs')">
                 <span class="icon">📋</span>
                 <span class="ar-text">لوج الرفض</span>
                 <span class="en-text" style="display:none">Reject Logs</span>
+                <span class="es-text" style="display:none">Registros de Rechazo</span>
+                <span class="fr-text" style="display:none">Journaux de Rejet</span>
             </a>
             <a href="#ownerCoupons" class="sidebar-link" onclick="switchTab(event, 'ownerCoupons')">
                 <span class="icon">🎟️</span>
                 <span class="ar-text">الأكواد</span>
                 <span class="en-text" style="display:none">Coupons</span>
+                <span class="es-text" style="display:none">Cupones</span>
+                <span class="fr-text" style="display:none">Coupons</span>
             </a>
             <a href="#ownerNews" class="sidebar-link" onclick="switchTab(event, 'ownerNews')">
                 <span class="icon">📢</span>
                 <span class="ar-text">الأخبار</span>
                 <span class="en-text" style="display:none">News</span>
+                <span class="es-text" style="display:none">Noticias</span>
+                <span class="fr-text" style="display:none">Actualités</span>
             </a>
             <a href="#ownerKeys" class="sidebar-link" onclick="switchTab(event, 'ownerKeys')">
                 <span class="icon">🔑</span>
                 <span class="ar-text">المفاتيح</span>
                 <span class="en-text" style="display:none">Keys</span>
+                <span class="es-text" style="display:none">Claves</span>
+                <span class="fr-text" style="display:none">Clés</span>
             </a>
         </nav>
     </aside>
@@ -60,6 +78,8 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">📊 إحصائيات البوت</span>
                 <span class="en-text" style="display:none">📊 Bot Statistics</span>
+                <span class="es-text" style="display:none">📊 Estadísticas del Bot</span>
+                <span class="fr-text" style="display:none">📊 Statistiques du Bot</span>
             </h1>
 
             <div class="stats-grid">
@@ -68,6 +88,8 @@
                     <div class="stat-label">
                         <span class="ar-text">إجمالي السيرفرات</span>
                         <span class="en-text" style="display:none">Total Servers</span>
+                        <span class="es-text" style="display:none">Total de Servidores</span>
+                        <span class="fr-text" style="display:none">Total des Serveurs</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -75,6 +97,8 @@
                     <div class="stat-label">
                         <span class="ar-text">سيرفرات المجاني</span>
                         <span class="en-text" style="display:none">Free Servers</span>
+                        <span class="es-text" style="display:none">Servidores Gratuitos</span>
+                        <span class="fr-text" style="display:none">Serveurs Gratuits</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -82,6 +106,8 @@
                     <div class="stat-label">
                         <span class="ar-text">سيرفرات البريميم</span>
                         <span class="en-text" style="display:none">Premium Servers</span>
+                        <span class="es-text" style="display:none">Servidores Premium</span>
+                        <span class="fr-text" style="display:none">Serveurs Premium</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -89,6 +115,8 @@
                     <div class="stat-label">
                         <span class="ar-text">إجمالي الأعضاء</span>
                         <span class="en-text" style="display:none">Total Members</span>
+                        <span class="es-text" style="display:none">Total de Miembros</span>
+                        <span class="fr-text" style="display:none">Total des Membres</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -96,6 +124,8 @@
                     <div class="stat-label">
                         <span class="ar-text">تذاكر مفتوحة</span>
                         <span class="en-text" style="display:none">Open Tickets</span>
+                        <span class="es-text" style="display:none">Tickets Abiertos</span>
+                        <span class="fr-text" style="display:none">Tickets Ouverts</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -103,6 +133,8 @@
                     <div class="stat-label">
                         <span class="ar-text">تذاكر مغلقة</span>
                         <span class="en-text" style="display:none">Closed Tickets</span>
+                        <span class="es-text" style="display:none">Tickets Cerrados</span>
+                        <span class="fr-text" style="display:none">Tickets Fermés</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -110,6 +142,8 @@
                     <div class="stat-label">
                         <span class="ar-text">عمليات شراء</span>
                         <span class="en-text" style="display:none">Purchases</span>
+                        <span class="es-text" style="display:none">Compras</span>
+                        <span class="fr-text" style="display:none">Achats</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -117,6 +151,8 @@
                     <div class="stat-label">
                         <span class="ar-text">إبلاغات معلقة</span>
                         <span class="en-text" style="display:none">Pending Reports</span>
+                        <span class="es-text" style="display:none">Reportes Pendientes</span>
+                        <span class="fr-text" style="display:none">Signalements en Attente</span>
                     </div>
                 </div>
             </div>
@@ -127,6 +163,8 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">🌐 إحصائيات الموقع</span>
                 <span class="en-text" style="display:none">🌐 Site Statistics</span>
+                <span class="es-text" style="display:none">🌐 Estadísticas del Sitio</span>
+                <span class="fr-text" style="display:none">🌐 Statistiques du Site</span>
             </h1>
 
             <div class="stats-grid">
@@ -135,6 +173,8 @@
                     <div class="stat-label">
                         <span class="ar-text">إجمالي المستخدمين</span>
                         <span class="en-text" style="display:none">Total Users</span>
+                        <span class="es-text" style="display:none">Total de Usuarios</span>
+                        <span class="fr-text" style="display:none">Total des Utilisateurs</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -142,6 +182,8 @@
                     <div class="stat-label">
                         <span class="ar-text">أونلاين حاليًا</span>
                         <span class="en-text" style="display:none">Online Now</span>
+                        <span class="es-text" style="display:none">En Línea Ahora</span>
+                        <span class="fr-text" style="display:none">En Ligne Maintenant</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -149,6 +191,8 @@
                     <div class="stat-label">
                         <span class="ar-text">دخلوا اليوم</span>
                         <span class="en-text" style="display:none">Today's Visits</span>
+                        <span class="es-text" style="display:none">Visitas de Hoy</span>
+                        <span class="fr-text" style="display:none">Visites d'Aujourd'hui</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -156,6 +200,8 @@
                     <div class="stat-label">
                         <span class="ar-text">دخلوا آخر أسبوع</span>
                         <span class="en-text" style="display:none">This Week</span>
+                        <span class="es-text" style="display:none">Esta Semana</span>
+                        <span class="fr-text" style="display:none">Cette Semaine</span>
                     </div>
                 </div>
             </div>
@@ -164,9 +210,11 @@
                 <h3>
                     <span class="ar-text">📋 آخر المستخدمين</span>
                     <span class="en-text" style="display:none">📋 Recent Users</span>
+                    <span class="es-text" style="display:none">📋 Usuarios Recientes</span>
+                    <span class="fr-text" style="display:none">📋 Utilisateurs Récents</span>
                 </h3>
                 <div id="recentUsers" class="users-list">
-                    <p class="loading">⏳ جاري التحميل...</p>
+                    <p class="loading">⏳</p>
                 </div>
             </div>
         </div>
@@ -176,9 +224,11 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">🚨 الإبلاغات</span>
                 <span class="en-text" style="display:none">🚨 Reports</span>
+                <span class="es-text" style="display:none">🚨 Reportes</span>
+                <span class="fr-text" style="display:none">🚨 Signalements</span>
             </h1>
             <div id="reportsList" class="reports-list">
-                <p class="loading">⏳ جاري التحميل...</p>
+                <p class="loading">⏳</p>
             </div>
         </div>
 
@@ -187,9 +237,11 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">💰 طلبات الشراء</span>
                 <span class="en-text" style="display:none">💰 Purchase Requests</span>
+                <span class="es-text" style="display:none">💰 Solicitudes de Compra</span>
+                <span class="fr-text" style="display:none">💰 Demandes d'Achat</span>
             </h1>
             <div id="purchasesList" class="purchases-list">
-                <p class="loading">⏳ جاري التحميل...</p>
+                <p class="loading">⏳</p>
             </div>
         </div>
 
@@ -198,9 +250,11 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">📋 لوج رفض الشراء</span>
                 <span class="en-text" style="display:none">📋 Purchase Reject Logs</span>
+                <span class="es-text" style="display:none">📋 Registros de Rechazo de Compra</span>
+                <span class="fr-text" style="display:none">📋 Journaux de Rejet d'Achat</span>
             </h1>
             <div id="purchaseLogsList" class="purchases-list">
-                <p class="loading">⏳ جاري التحميل...</p>
+                <p class="loading">⏳</p>
             </div>
         </div>
 
@@ -209,36 +263,70 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">🎟️ أكواد الخصم</span>
                 <span class="en-text" style="display:none">🎟️ Coupons</span>
+                <span class="es-text" style="display:none">🎟️ Cupones</span>
+                <span class="fr-text" style="display:none">🎟️ Coupons</span>
             </h1>
 
             <div class="card">
                 <h3>
                     <span class="ar-text">➕ إنشاء كود جديد</span>
                     <span class="en-text" style="display:none">➕ Create New Coupon</span>
+                    <span class="es-text" style="display:none">➕ Crear Nuevo Cupón</span>
+                    <span class="fr-text" style="display:none">➕ Créer un Nouveau Coupon</span>
                 </h3>
 
                 <form id="createCouponForm" class="coupon-form">
                     <div class="form-group">
-                        <label>الكود</label>
+                        <label>
+                            <span class="ar-text">الكود</span>
+                            <span class="en-text" style="display:none">Code</span>
+                            <span class="es-text" style="display:none">Código</span>
+                            <span class="fr-text" style="display:none">Code</span>
+                        </label>
                         <input type="text" name="code" placeholder="VOX50" required>
                     </div>
                     <div class="form-group">
-                        <label>نسبة الخصم (%)</label>
+                        <label>
+                            <span class="ar-text">نسبة الخصم (%)</span>
+                            <span class="en-text" style="display:none">Discount (%)</span>
+                            <span class="es-text" style="display:none">Descuento (%)</span>
+                            <span class="fr-text" style="display:none">Réduction (%)</span>
+                        </label>
                         <input type="number" name="discount" min="1" max="100" placeholder="50" required>
                     </div>
                     <div class="form-group">
-                        <label>عدد الاستخدامات</label>
+                        <label>
+                            <span class="ar-text">عدد الاستخدامات</span>
+                            <span class="en-text" style="display:none">Max Uses</span>
+                            <span class="es-text" style="display:none">Usos Máximos</span>
+                            <span class="fr-text" style="display:none">Utilisations Max</span>
+                        </label>
                         <input type="number" name="maxUses" min="1" placeholder="10" required>
                     </div>
                     <div class="form-group">
-                        <label>تاريخ البدء</label>
+                        <label>
+                            <span class="ar-text">تاريخ البدء</span>
+                            <span class="en-text" style="display:none">Start Date</span>
+                            <span class="es-text" style="display:none">Fecha de Inicio</span>
+                            <span class="fr-text" style="display:none">Date de Début</span>
+                        </label>
                         <input type="date" name="startDate" required>
                     </div>
                     <div class="form-group">
-                        <label>تاريخ الانتهاء</label>
+                        <label>
+                            <span class="ar-text">تاريخ الانتهاء</span>
+                            <span class="en-text" style="display:none">End Date</span>
+                            <span class="es-text" style="display:none">Fecha de Fin</span>
+                            <span class="fr-text" style="display:none">Date de Fin</span>
+                        </label>
                         <input type="date" name="endDate" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">🎟️ إنشاء الكود</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="ar-text">🎟️ إنشاء الكود</span>
+                        <span class="en-text" style="display:none">🎟️ Create Coupon</span>
+                        <span class="es-text" style="display:none">🎟️ Crear Cupón</span>
+                        <span class="fr-text" style="display:none">🎟️ Créer le Coupon</span>
+                    </button>
                 </form>
             </div>
 
@@ -250,24 +338,43 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">📢 الأخبار</span>
                 <span class="en-text" style="display:none">📢 News</span>
+                <span class="es-text" style="display:none">📢 Noticias</span>
+                <span class="fr-text" style="display:none">📢 Actualités</span>
             </h1>
 
             <div class="card">
                 <h3>
                     <span class="ar-text">➕ إرسال خبر جديد</span>
                     <span class="en-text" style="display:none">➕ Send New News</span>
+                    <span class="es-text" style="display:none">➕ Enviar Nueva Noticia</span>
+                    <span class="fr-text" style="display:none">➕ Envoyer une Nouvelle Actualité</span>
                 </h3>
 
                 <form id="createNewsForm" class="news-form">
                     <div class="form-group">
-                        <label>الخبر</label>
+                        <label>
+                            <span class="ar-text">الخبر</span>
+                            <span class="en-text" style="display:none">News</span>
+                            <span class="es-text" style="display:none">Noticia</span>
+                            <span class="fr-text" style="display:none">Actualité</span>
+                        </label>
                         <textarea name="content" rows="4" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label>المدة (بالساعات)</label>
+                        <label>
+                            <span class="ar-text">المدة (بالساعات)</span>
+                            <span class="en-text" style="display:none">Duration (hours)</span>
+                            <span class="es-text" style="display:none">Duración (horas)</span>
+                            <span class="fr-text" style="display:none">Durée (heures)</span>
+                        </label>
                         <input type="number" name="duration" min="1" max="720" placeholder="24" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">📢 نشر الخبر</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="ar-text">📢 نشر الخبر</span>
+                        <span class="en-text" style="display:none">📢 Publish News</span>
+                        <span class="es-text" style="display:none">📢 Publicar Noticia</span>
+                        <span class="fr-text" style="display:none">📢 Publier l'Actualité</span>
+                    </button>
                 </form>
             </div>
 
@@ -279,15 +386,18 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">🔑 إدارة المفاتيح</span>
                 <span class="en-text" style="display:none">🔑 Keys Management</span>
+                <span class="es-text" style="display:none">🔑 Gestión de Claves</span>
+                <span class="fr-text" style="display:none">🔑 Gestion des Clés</span>
             </h1>
 
-            <!-- ==== إحصائيات المفاتيح ==== -->
             <div class="stats-grid" style="margin-bottom:2rem;">
                 <div class="stat-card gold">
                     <div class="stat-value" id="monthlyAvailable">-</div>
                     <div class="stat-label">
                         <span class="ar-text">مفاتيح شهرية متاحة</span>
                         <span class="en-text" style="display:none">Monthly Available</span>
+                        <span class="es-text" style="display:none">Mensuales Disponibles</span>
+                        <span class="fr-text" style="display:none">Mensuelles Disponibles</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -295,6 +405,8 @@
                     <div class="stat-label">
                         <span class="ar-text">مفاتيح شهرية مستخدمة</span>
                         <span class="en-text" style="display:none">Monthly Used</span>
+                        <span class="es-text" style="display:none">Mensuales Usadas</span>
+                        <span class="fr-text" style="display:none">Mensuelles Utilisées</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -302,6 +414,8 @@
                     <div class="stat-label">
                         <span class="ar-text">مفاتيح سنوية متاحة</span>
                         <span class="en-text" style="display:none">Yearly Available</span>
+                        <span class="es-text" style="display:none">Anuales Disponibles</span>
+                        <span class="fr-text" style="display:none">Annuelles Disponibles</span>
                     </div>
                 </div>
                 <div class="stat-card gold">
@@ -309,42 +423,69 @@
                     <div class="stat-label">
                         <span class="ar-text">مفاتيح سنوية مستخدمة</span>
                         <span class="en-text" style="display:none">Yearly Used</span>
+                        <span class="es-text" style="display:none">Anuales Usadas</span>
+                        <span class="fr-text" style="display:none">Annuelles Utilisées</span>
                     </div>
                 </div>
             </div>
 
-            <!-- ==== إنشاء مفتاح ==== -->
             <div class="card">
                 <h3>
                     <span class="ar-text">➕ إنشاء مفتاح جديد</span>
                     <span class="en-text" style="display:none">➕ Create New Key</span>
+                    <span class="es-text" style="display:none">➕ Crear Nueva Clave</span>
+                    <span class="fr-text" style="display:none">➕ Créer une Nouvelle Clé</span>
                 </h3>
 
                 <form id="createKeyForm" class="coupon-form">
                     <div class="form-group">
-                        <label>اسم المفتاح</label>
+                        <label>
+                            <span class="ar-text">اسم المفتاح</span>
+                            <span class="en-text" style="display:none">Key Name</span>
+                            <span class="es-text" style="display:none">Nombre de la Clave</span>
+                            <span class="fr-text" style="display:none">Nom de la Clé</span>
+                        </label>
                         <input type="text" name="key" placeholder="FIRST_SERVER" required>
                     </div>
                     <div class="form-group">
-                        <label>النوع</label>
+                        <label>
+                            <span class="ar-text">النوع</span>
+                            <span class="en-text" style="display:none">Type</span>
+                            <span class="es-text" style="display:none">Tipo</span>
+                            <span class="fr-text" style="display:none">Type</span>
+                        </label>
                         <select name="type" required>
                             <option value="monthly">📅 شهري</option>
                             <option value="yearly">📅 سنوي</option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>المدة (بالأيام)</label>
+                        <label>
+                            <span class="ar-text">المدة (بالأيام)</span>
+                            <span class="en-text" style="display:none">Duration (days)</span>
+                            <span class="es-text" style="display:none">Duración (días)</span>
+                            <span class="fr-text" style="display:none">Durée (jours)</span>
+                        </label>
                         <input type="number" name="duration" min="1" placeholder="30" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">🔑 إنشاء المفتاح</button>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="ar-text">🔑 إنشاء المفتاح</span>
+                        <span class="en-text" style="display:none">🔑 Create Key</span>
+                        <span class="es-text" style="display:none">🔑 Crear Clave</span>
+                        <span class="fr-text" style="display:none">🔑 Créer la Clé</span>
+                    </button>
                 </form>
             </div>
 
-            <!-- ==== الفلتر ==== -->
             <div class="card" style="margin-top:1rem;">
                 <div class="form-group">
-                    <label>🔍 فلتر المفاتيح</label>
-                    <input type="text" id="keysFilter" placeholder="اكتب للبحث..." oninput="filterKeys(this.value)">
+                    <label>
+                        <span class="ar-text">🔍 فلتر المفاتيح</span>
+                        <span class="en-text" style="display:none">🔍 Filter Keys</span>
+                        <span class="es-text" style="display:none">🔍 Filtrar Claves</span>
+                        <span class="fr-text" style="display:none">🔍 Filtrer les Clés</span>
+                    </label>
+                    <input type="text" id="keysFilter" placeholder="Search..." oninput="filterKeys(this.value)">
                 </div>
             </div>
 
@@ -354,46 +495,85 @@
 </div>
 
 <!-- ==== Modal تعديل الأخبار ==== -->
-<div id="editNewsModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
-    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--gold);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+<div id="editNewsModal" class="modal" style="display:none;">
+    <div class="modal-content">
         <h3 style="color:var(--gold);margin-bottom:1rem;">
             <span class="ar-text">✏️ تعديل الخبر</span>
             <span class="en-text" style="display:none">✏️ Edit News</span>
+            <span class="es-text" style="display:none">✏️ Editar Noticia</span>
+            <span class="fr-text" style="display:none">✏️ Modifier l'Actualité</span>
         </h3>
         <form id="editNewsForm">
             <input type="hidden" id="editNewsId">
             <div class="form-group">
-                <label>الخبر</label>
+                <label>
+                    <span class="ar-text">الخبر</span>
+                    <span class="en-text" style="display:none">News</span>
+                    <span class="es-text" style="display:none">Noticia</span>
+                    <span class="fr-text" style="display:none">Actualité</span>
+                </label>
                 <textarea id="editNewsContent" rows="4" required></textarea>
             </div>
             <div class="form-group">
-                <label>المدة (بالساعات)</label>
+                <label>
+                    <span class="ar-text">المدة (بالساعات)</span>
+                    <span class="en-text" style="display:none">Duration (hours)</span>
+                    <span class="es-text" style="display:none">Duración (horas)</span>
+                    <span class="fr-text" style="display:none">Durée (heures)</span>
+                </label>
                 <input type="number" id="editNewsDuration" min="1" max="720" required>
             </div>
             <div style="display:flex;gap:0.5rem;margin-top:1rem;">
-                <button type="submit" class="btn btn-primary" style="flex:1;">💾 حفظ</button>
-                <button type="button" class="btn btn-secondary" onclick="closeEditNews()" style="flex:1;">❌ إلغاء</button>
+                <button type="submit" class="btn btn-primary" style="flex:1;">
+                    <span class="ar-text">💾 حفظ</span>
+                    <span class="en-text" style="display:none">💾 Save</span>
+                    <span class="es-text" style="display:none">💾 Guardar</span>
+                    <span class="fr-text" style="display:none">💾 Enregistrer</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeEditNews()" style="flex:1;">
+                    <span class="ar-text">❌ إلغاء</span>
+                    <span class="en-text" style="display:none">❌ Cancel</span>
+                    <span class="es-text" style="display:none">❌ Cancelar</span>
+                    <span class="fr-text" style="display:none">❌ Annuler</span>
+                </button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- ==== Modal سبب رفض الشراء ==== -->
-<div id="rejectPurchaseModal" class="modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;align-items:center;justify-content:center;">
-    <div class="modal-content" style="background:var(--black-light);border:2px solid var(--danger);border-radius:20px;padding:2rem;max-width:500px;width:90%;">
+<div id="rejectPurchaseModal" class="modal" style="display:none;">
+    <div class="modal-content" style="border-color:var(--danger);">
         <h3 style="color:var(--danger);margin-bottom:1rem;">
             <span class="ar-text">❌ سبب رفض الشراء</span>
             <span class="en-text" style="display:none">❌ Reject Reason</span>
+            <span class="es-text" style="display:none">❌ Razón del Rechazo</span>
+            <span class="fr-text" style="display:none">❌ Raison du Rejet</span>
         </h3>
         <form id="rejectPurchaseForm">
             <input type="hidden" id="rejectPurchaseId">
             <div class="form-group">
-                <label>سبب الرفض</label>
-                <textarea id="rejectPurchaseReason" rows="3" placeholder="اكتب سبب الرفض..." required></textarea>
+                <label>
+                    <span class="ar-text">سبب الرفض</span>
+                    <span class="en-text" style="display:none">Reject Reason</span>
+                    <span class="es-text" style="display:none">Razón del Rechazo</span>
+                    <span class="fr-text" style="display:none">Raison du Rejet</span>
+                </label>
+                <textarea id="rejectPurchaseReason" rows="3" required></textarea>
             </div>
             <div style="display:flex;gap:0.5rem;margin-top:1rem;">
-                <button type="submit" class="btn btn-danger" style="flex:1;">❌ رفض</button>
-                <button type="button" class="btn btn-secondary" onclick="closeRejectPurchase()" style="flex:1;">إلغاء</button>
+                <button type="submit" class="btn btn-danger" style="flex:1;">
+                    <span class="ar-text">❌ رفض</span>
+                    <span class="en-text" style="display:none">❌ Reject</span>
+                    <span class="es-text" style="display:none">❌ Rechazar</span>
+                    <span class="fr-text" style="display:none">❌ Rejeter</span>
+                </button>
+                <button type="button" class="btn btn-secondary" onclick="closeRejectPurchase()" style="flex:1;">
+                    <span class="ar-text">إلغاء</span>
+                    <span class="en-text" style="display:none">Cancel</span>
+                    <span class="es-text" style="display:none">Cancelar</span>
+                    <span class="fr-text" style="display:none">Annuler</span>
+                </button>
             </div>
         </form>
     </div>
