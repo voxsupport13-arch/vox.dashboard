@@ -152,7 +152,7 @@ body {
 :root:not([data-theme="light"]) .theme-icon-light { display: inline !important; }
 :root:not([data-theme="light"]) .theme-icon-dark { display: none !important; }
 
-/* ==== Language Switcher (Flags Only) ==== */
+/* ==== Language Switcher (Image Flags) ==== */
 .lang-switch {
     position: relative;
 }
@@ -167,10 +167,8 @@ body {
     padding: 0.4rem 0.7rem;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 1.4rem;
     transition: all 0.3s;
-    line-height: 1;
-    min-width: 44px;
+    min-width: 50px;
     height: 38px;
 }
 
@@ -179,10 +177,13 @@ body {
     transform: scale(1.05);
 }
 
-.current-lang-flag {
-    display: inline-block;
-    font-size: 1.4rem;
-    line-height: 1;
+.lang-flag-img {
+    width: 28px;
+    height: 20px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    object-fit: cover;
+    display: block;
 }
 
 .lang-dropdown {
@@ -195,7 +196,7 @@ body {
     border: 2px solid var(--gold);
     border-radius: 10px;
     padding: 0.5rem;
-    min-width: 70px;
+    min-width: 80px;
     box-shadow: 0 8px 20px var(--shadow);
     z-index: 9999;
 }
@@ -218,8 +219,6 @@ body {
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s;
-    font-size: 1.5rem;
-    line-height: 1;
 }
 
 .lang-option:hover {
@@ -1375,270 +1374,4 @@ body {
     background: var(--black-light);
     border: 2px solid var(--border);
     border-radius: 16px;
-    padding: 2rem;
-    margin-bottom: 1.5rem;
-}
-
-.card h3 {
-    color: var(--gold);
-    margin-bottom: 1rem;
-}
-
-/* ==== Loading ==== */
-.loading {
-    text-align: center;
-    color: var(--text-muted);
-    padding: 2rem;
-}
-
-/* ==== Empty State ==== */
-.empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: var(--text-muted);
-}
-
-/* ==== Login Required ==== */
-.login-required-box {
-    max-width: 600px;
-    margin: 4rem auto;
-    text-align: center;
-    background: var(--black-light);
-    border: 2px solid var(--gold);
-    border-radius: 20px;
-    padding: 4rem 2rem;
-}
-
-.login-icon {
-    font-size: 5rem;
-    margin-bottom: 1.5rem;
-}
-
-.login-required-box h1 {
-    color: var(--gold);
-    font-size: 2rem;
-    margin-bottom: 1rem;
-}
-
-.login-required-box p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
-
-.login-buttons {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* ==== Coupon Result ==== */
-.coupon-result {
-    margin-top: 1rem;
-    padding: 1.5rem;
-    border-radius: 12px;
-    border: 2px solid;
-}
-
-.coupon-result.success {
-    background: rgba(87, 242, 135, 0.1);
-    border-color: var(--success);
-}
-
-.coupon-result.error {
-    background: rgba(237, 66, 69, 0.1);
-    border-color: var(--danger);
-    color: var(--danger);
-}
-
-.coupon-result h4 {
-    color: var(--gold);
-    margin-bottom: 1rem;
-}
-
-.coupon-info {
-    background: var(--black);
-    border-radius: 10px;
-    padding: 1rem;
-    margin: 1rem 0;
-}
-
-.coupon-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 0.6rem 0;
-    border-bottom: 1px solid var(--border);
-}
-
-.coupon-row:last-child {
-    border-bottom: none;
-}
-
-.coupon-row.highlight {
-    background: rgba(218, 165, 32, 0.1);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 0.5rem;
-    font-size: 1.1rem;
-}
-
-.coupon-result code {
-    background: var(--black);
-    color: var(--gold);
-    padding: 0.2rem 0.6rem;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-}
-
-/* ==== Purchase ==== */
-.purchase-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-}
-
-.purchase-box {
-    background: var(--black-light);
-    border: 2px solid var(--gold);
-    border-radius: 20px;
-    padding: 2rem;
-}
-
-.purchase-box h2 {
-    color: var(--gold);
-    margin-bottom: 1.5rem;
-}
-
-.purchase-form .form-group {
-    margin-bottom: 1.5rem;
-}
-
-/* ==== Toast ==== */
-.toast {
-    position: fixed;
-    bottom: 30px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 1rem 2rem;
-    border-radius: 10px;
-    font-weight: 700;
-    z-index: 9999;
-    animation: fadeIn 0.3s ease;
-}
-
-/* ==== Modal ==== */
-.modal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    z-index: 9999;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-content {
-    background: var(--black-light);
-    border: 2px solid var(--gold);
-    border-radius: 20px;
-    padding: 2rem;
-    max-width: 500px;
-    width: 90%;
-}
-
-/* ==== Responsive ==== */
-@media (max-width: 968px) {
-    .nav-container {
-        flex-wrap: wrap;
-        padding: 1rem;
-    }
-
-    .nav-links {
-        order: 3;
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: flex-start;
-        gap: 0.5rem;
-    }
-
-    .nav-link {
-        padding: 0.4rem 0.8rem;
-        font-size: 0.9rem;
-    }
-
-    .hero-title {
-        font-size: 2.5rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .section-subtitle {
-        font-size: 1.4rem;
-    }
-
-    .container {
-        padding: 1rem;
-    }
-
-    .page-header h1 {
-        font-size: 2rem;
-    }
-
-    .dashboard-container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        position: relative;
-        top: 0;
-        height: auto;
-        border-left: none;
-        border-right: none;
-        border-bottom: 2px solid var(--gold);
-    }
-
-    .sidebar-nav {
-        flex-direction: row;
-        overflow-x: auto;
-    }
-
-    .sidebar-link {
-        white-space: nowrap;
-    }
-}
-
-/* ==== Animations ==== */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.fade-in {
-    animation: fadeIn 0.5s ease-out;
-}
-
-/* ==== Scrollbar ==== */
-::-webkit-scrollbar {
-    width: 10px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--black);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--gold);
-    border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--gold-light);
-}
+    padding: 2
