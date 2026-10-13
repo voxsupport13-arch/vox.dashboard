@@ -87,29 +87,4 @@
 </div>
 
 <script src="/js/reports.js"></script>
-<script>
-// ==== Translate <option> based on current language ====
-function translateReportOptions() {
-    const lang = localStorage.getItem('vox-lang') || 'en';
-    const select = document.getElementById('reportType');
-    if (!select) return;
-
-    const options = select.querySelectorAll('option');
-    options.forEach(opt => {
-        const text = opt.dataset[lang] || opt.dataset.en;
-        if (text) opt.textContent = text;
-    });
-}
-
-// Apply on load
-document.addEventListener('DOMContentLoaded', () => {
-    translateReportOptions();
-});
-
-// Re-apply when language changes (listen to clicks on lang options)
-document.addEventListener('click', (e) => {
-    if (e.target.closest('.lang-option')) {
-        setTimeout(translateReportOptions, 50);
-    }
-});
-</script>
+<%- include('partials/footer') %>
