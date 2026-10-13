@@ -13,11 +13,24 @@ router.use(ensureAuth);
 router.post('/', async (req, res) => {
     try {
         const db = mongoose.connection.db;
-        const { plan, paymentMethod, transferUser, proofImage, couponCode, guildId, guildName } = req.body;
+        const {
+            plan,
+            paymentMethod,
+            transferUser,
+            proofImage,
+            couponCode,
+            guildId,
+            guildName,
+            userLang
+        } = req.body;
 
         if (!plan || !paymentMethod || !transferUser || !guildId) {
             return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
         }
+
+        // ✅ تحقق من اللغة المدعومة
+        const SUPPORTED_LANGS = ['en', 'ar', 'es', 'fr'];
+        const finalLang = SUPPORTED_LANGS.includes(userLang) ? userLang : 'en';
 
         const prices = {
             monthly: {
@@ -77,6 +90,7 @@ router.post('/', async (req, res) => {
             couponDiscount,
             transferUser,
             proofImage: proofImage || null,
+            userLang: finalLang, // ✅ حفظ اللغة
             status: 'pending',
             reviewedBy: null,
             reviewedAt: null,
