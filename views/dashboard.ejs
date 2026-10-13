@@ -1,4 +1,4 @@
-<%- include('partials/header', { user, title: 'لوحة التحكم' }) %>
+<%- include('partials/header', { user, title: 'Dashboard' }) %>
 
 <div class="dashboard-container">
     <aside class="sidebar">
@@ -6,6 +6,8 @@
             <h3>
                 <span class="ar-text">لوحة التحكم</span>
                 <span class="en-text" style="display:none">Dashboard</span>
+                <span class="es-text" style="display:none">Panel</span>
+                <span class="fr-text" style="display:none">Tableau de bord</span>
             </h3>
 
             <% if (hasPremium) { %>
@@ -13,6 +15,8 @@
                 <label>
                     <span class="ar-text">🤖 البوت:</span>
                     <span class="en-text" style="display:none">🤖 Bot:</span>
+                    <span class="es-text" style="display:none">🤖 Bot:</span>
+                    <span class="fr-text" style="display:none">🤖 Bot :</span>
                 </label>
                 <select id="botTypeSwitcher" onchange="switchBotType()">
                     <option value="free" <%= botType === 'free' ? 'selected' : '' %>>🆓 المجاني</option>
@@ -29,28 +33,38 @@
                 <span class="icon">📊</span>
                 <span class="ar-text">نظرة عامة</span>
                 <span class="en-text" style="display:none">Overview</span>
+                <span class="es-text" style="display:none">Resumen</span>
+                <span class="fr-text" style="display:none">Aperçu</span>
             </a>
             <a href="#servers" class="sidebar-link" onclick="switchTab(event, 'servers')">
                 <span class="icon">🌐</span>
                 <span class="ar-text">السيرفرات</span>
                 <span class="en-text" style="display:none">Servers</span>
+                <span class="es-text" style="display:none">Servidores</span>
+                <span class="fr-text" style="display:none">Serveurs</span>
             </a>
             <a href="#tickets" class="sidebar-link" onclick="switchTab(event, 'tickets')">
                 <span class="icon">🎫</span>
                 <span class="ar-text">التذاكر</span>
                 <span class="en-text" style="display:none">Tickets</span>
+                <span class="es-text" style="display:none">Tickets</span>
+                <span class="fr-text" style="display:none">Tickets</span>
             </a>
             <% if (botType === 'premium') { %>
             <a href="#subscription" class="sidebar-link" onclick="switchTab(event, 'subscription')">
                 <span class="icon">💎</span>
                 <span class="ar-text">الاشتراك</span>
                 <span class="en-text" style="display:none">Subscription</span>
+                <span class="es-text" style="display:none">Suscripción</span>
+                <span class="fr-text" style="display:none">Abonnement</span>
             </a>
             <% } %>
             <a href="/reports" class="sidebar-link">
                 <span class="icon">🚨</span>
                 <span class="ar-text">الإبلاغ</span>
                 <span class="en-text" style="display:none">Reports</span>
+                <span class="es-text" style="display:none">Reportes</span>
+                <span class="fr-text" style="display:none">Signalements</span>
             </a>
         </nav>
     </aside>
@@ -61,6 +75,8 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">📊 نظرة عامة</span>
                 <span class="en-text" style="display:none">📊 Overview</span>
+                <span class="es-text" style="display:none">📊 Resumen</span>
+                <span class="fr-text" style="display:none">📊 Aperçu</span>
             </h1>
 
             <div class="stats-grid">
@@ -69,6 +85,8 @@
                     <div class="stat-label">
                         <span class="ar-text">سيرفراتك</span>
                         <span class="en-text" style="display:none">Your Servers</span>
+                        <span class="es-text" style="display:none">Tus Servidores</span>
+                        <span class="fr-text" style="display:none">Vos Serveurs</span>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -76,6 +94,8 @@
                     <div class="stat-label">
                         <span class="ar-text">السيرفرات المشتركة</span>
                         <span class="en-text" style="display:none">Bot Servers</span>
+                        <span class="es-text" style="display:none">Servidores del Bot</span>
+                        <span class="fr-text" style="display:none">Serveurs du Bot</span>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -83,6 +103,8 @@
                     <div class="stat-label">
                         <span class="ar-text">تذاكر مفتوحة</span>
                         <span class="en-text" style="display:none">Open Tickets</span>
+                        <span class="es-text" style="display:none">Tickets Abiertos</span>
+                        <span class="fr-text" style="display:none">Tickets Ouverts</span>
                     </div>
                 </div>
                 <div class="stat-card">
@@ -90,6 +112,8 @@
                     <div class="stat-label">
                         <span class="ar-text">تذاكر مغلقة</span>
                         <span class="en-text" style="display:none">Closed Tickets</span>
+                        <span class="es-text" style="display:none">Tickets Cerrados</span>
+                        <span class="fr-text" style="display:none">Tickets Fermés</span>
                     </div>
                 </div>
             </div>
@@ -100,13 +124,17 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">🌐 سيرفراتك</span>
                 <span class="en-text" style="display:none">🌐 Your Servers</span>
+                <span class="es-text" style="display:none">🌐 Tus Servidores</span>
+                <span class="fr-text" style="display:none">🌐 Vos Serveurs</span>
             </h1>
             <p style="color:var(--text-muted);margin-bottom:1rem;">
                 <span class="ar-text">اضغط على السيرفر عشان تسطبه</span>
                 <span class="en-text" style="display:none">Click on the server to set it up</span>
+                <span class="es-text" style="display:none">Haz clic en el servidor para configurarlo</span>
+                <span class="fr-text" style="display:none">Cliquez sur le serveur pour le configurer</span>
             </p>
             <div id="serversList" class="servers-list">
-                <p class="loading">⏳ جاري التحميل...</p>
+                <p class="loading">⏳</p>
             </div>
         </div>
 
@@ -115,9 +143,11 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">🎫 التذاكر النشطة</span>
                 <span class="en-text" style="display:none">🎫 Active Tickets</span>
+                <span class="es-text" style="display:none">🎫 Tickets Activos</span>
+                <span class="fr-text" style="display:none">🎫 Tickets Actifs</span>
             </h1>
             <div id="ticketsList" class="tickets-list">
-                <p class="loading">⏳ جاري التحميل...</p>
+                <p class="loading">⏳</p>
             </div>
         </div>
 
@@ -127,11 +157,15 @@
             <h1 class="dashboard-title">
                 <span class="ar-text">💎 الاشتراك</span>
                 <span class="en-text" style="display:none">💎 Subscription</span>
+                <span class="es-text" style="display:none">💎 Suscripción</span>
+                <span class="fr-text" style="display:none">💎 Abonnement</span>
             </h1>
             <div class="card">
                 <p>
                     <span class="ar-text">استخدم الأمر <code>/my-subscription</code> في البوت لعرض اشتراكك.</span>
-                    <span class="en-text" style="display:none">Use <code>/my-subscription</code> in the bot.</span>
+                    <span class="en-text" style="display:none">Use <code>/my-subscription</code> in the bot to view your subscription.</span>
+                    <span class="es-text" style="display:none">Usa <code>/my-subscription</code> en el bot para ver tu suscripción.</span>
+                    <span class="fr-text" style="display:none">Utilisez <code>/my-subscription</code> dans le bot pour voir votre abonnement.</span>
                 </p>
             </div>
         </div>
