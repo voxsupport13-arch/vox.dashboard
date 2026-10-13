@@ -50,14 +50,14 @@ function t(key) {
     return REPORTS_I18N[lang]?.[key] || REPORTS_I18N.en[key] || key;
 }
 
-// ==== Type Icons & Names ====
+// ==== Type Icons ====
 const TYPE_INFO = {
-    bug: { icon: '🐛', en: 'Bug', ar: 'خطأ برمجي', es: 'Error', fr: 'Bug' },
-    ticket: { icon: '🎫', en: 'Ticket', ar: 'تذكرة', es: 'Ticket', fr: 'Ticket' },
-    application: { icon: '📝', en: 'Application', ar: 'تقديم', es: 'Solicitud', fr: 'Candidature' },
-    payment: { icon: '💰', en: 'Payment', ar: 'دفع', es: 'Pago', fr: 'Paiement' },
-    website: { icon: '🌐', en: 'Website', ar: 'موقع', es: 'Sitio web', fr: 'Site web' },
-    other: { icon: '📌', en: 'Other', ar: 'أخرى', es: 'Otro', fr: 'Autre' }
+    bug: { icon: '🐛' },
+    ticket: { icon: '🎫' },
+    application: { icon: '📝' },
+    payment: { icon: '💰' },
+    website: { icon: '🌐' },
+    other: { icon: '📌' }
 };
 
 function typeIcon(type) {
@@ -84,8 +84,27 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+// ============================================
+// ==== Translate <option> for Report Type ====
+// ============================================
+function translateReportOptions() {
+    const lang = getCurrentLang();
+    const select = document.getElementById('reportType');
+    if (!select) return;
+
+    select.querySelectorAll('option').forEach(opt => {
+        const text = opt.dataset[lang] || opt.dataset.en;
+        if (text) opt.textContent = text;
+    });
+}
+
+// ============================================
 // ==== Submit Report ====
+// ============================================
 document.addEventListener('DOMContentLoaded', () => {
+    // Translate options on load
+    translateReportOptions();
+
     const reportForm = document.getElementById('reportForm');
 
     if (reportForm) {
@@ -118,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.success) {
                     showToast(t('success'), 'success');
                     reportForm.reset();
+                    translateReportOptions();
                     await loadMyReports();
                 } else {
                     showToast(`❌ ${data.error}`, 'danger');
@@ -134,7 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
     loadMyReports();
 });
 
+// ==== Re-translate options when language changes ====
+document.addEventListener('click', (e) => {
+    if (e.target.closest('.lang-option')) {
+        setTimeout(translateReportOptions, 100);
+    }
+});
+
+// ============================================
 // ==== Load My Reports ====
+// ============================================
 async function loadMyReports() {
     try {
         const res = await fetch('/api/reports/my', { credentials: 'include' });
