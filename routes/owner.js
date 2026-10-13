@@ -646,4 +646,304 @@ router.post('/purchases/:id/reject', async (req, res) => {
 });
 
 // ==== لوج الرفض ====
-router.get('/purchase-logs
+router.get('/purchase-logs', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+
+        const logs = await db.collection('vox_purchase_logs')
+            .find({})
+            .sort({ createdAt: -1 })
+            .limit(100)
+            .toArray();
+
+        res.json({ success: true, data: logs });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== الأكواد ====
+router.get('/coupons', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const coupons = await db.collection('vox_coupons').find({}).sort({ createdAt: -1 }).toArray();
+        res.json({ success: true, data: coupons });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/coupons', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { code, discount, maxUses, startDate, endDate } = req.body;
+
+        if (!code || !discount || !maxUses || !startDate || !endDate) {
+            return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
+        }
+
+        const existing = await db.collection('vox_coupons').findOne({ code: code.toUpperCase() });
+        if (existing) {
+            return res.status(400).json({ success: false, error: 'هذا الكود موجود بالفعل' });
+        }
+
+        await db.collection('vox_coupons').insertOne({
+            code: code.toUpperCase(),
+            discount: parseInt(discount),
+            maxUses: parseInt(maxUses),
+            usedCount: 0,
+            usedBy: [],
+            startDate: new Date(startDate),
+            endDate: new Date(endDate),
+            active: true,
+            createdBy: req.user.id,
+            createdAt: new Date()
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.delete('/coupons/:id', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { ObjectId } = require('mongodb');
+        await db.collection('vox_coupons').deleteOne({ _id: new ObjectId(req.params.id) });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== الأخبار ====
+router.get('/news', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const news = await db.collection('vox_news').find({}).sort({ createdAt: -1 }).toArray();
+        res.json({ success: true, data: news });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/news', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { content, duration, type } = req.body;
+
+        if (!content || !duration) {
+            return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
+        }
+
+        const now = new Date();
+        const endDate = new Date(now.getTime() + (parseInt(duration) * 60 * 60 * 1000));
+
+        await db.collection('vox_news').insertOne({
+            content,
+            type: type || 'info',
+            duration: parseInt(duration),
+            startDate: now,
+            endDate,
+            active: true,
+            createdBy: req.user.id,
+            createdAt: now
+        });
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.put('/news/:id', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { id } = req.params;
+        const { content, duration } = req.body;
+        const { ObjectId } = require('mongodb');
+
+        if (!content || !duration) {
+            return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
+        }
+
+        const news = await db.collection('vox_news').findOne({ _id: new ObjectId(id) });
+        if (!news) {
+            return res.status(404).json({ success: false, error: 'الخبر غير موجود' });
+        }
+
+        const startDate = new Date(news.startDate);
+        const endDate = new Date(startDate.getTime() + (parseInt(duration) * 60 * 60 * 1000));
+
+        await db.collection('vox_news').updateOne(
+            { _id: new ObjectId(id) },
+            {
+                $set: {
+                    content,
+                    duration: parseInt(duration),
+                    endDate,
+                    updatedAt: new Date()
+                }
+            }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.delete('/news/:id', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { ObjectId } = require('mongodb');
+        await db.collection('vox_news').deleteOne({ _id: new ObjectId(req.params.id) });
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+// ==== المفاتيح ====
+router.get('/keys', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+
+        const monthly = (await db.collection('kv_store').findOne({ key: 'keys_monthly' }))?.value || {};
+        const yearly = (await db.collection('kv_store').findOne({ key: 'keys_yearly' }))?.value || {};
+
+        const monthlyList = Object.entries(monthly).map(([key, data]) => ({ key, type: 'monthly', ...data }));
+        const yearlyList = Object.entries(yearly).map(([key, data]) => ({ key, type: 'yearly', ...data }));
+
+        res.json({
+            success: true,
+            data: {
+                monthly: monthlyList,
+                yearly: yearlyList
+            }
+        });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/keys', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { key, type, duration } = req.body;
+
+        if (!key || !type || !duration) {
+            return res.status(400).json({ success: false, error: 'كل الحقول مطلوبة' });
+        }
+
+        if (type !== 'monthly' && type !== 'yearly') {
+            return res.status(400).json({ success: false, error: 'النوع غير صحيح' });
+        }
+
+        const keyType = type === 'monthly' ? 'keys_monthly' : 'keys_yearly';
+        const keysDoc = await db.collection('kv_store').findOne({ key: keyType });
+        const keys = keysDoc?.value || {};
+
+        if (keys[key]) {
+            return res.status(400).json({ success: false, error: 'هذا المفتاح موجود بالفعل' });
+        }
+
+        keys[key] = {
+            used: false,
+            guildId: null,
+            activatedAt: null,
+            expiresAt: null,
+            duration: parseInt(duration),
+            ownerId: null,
+            warned3Days: false,
+            createdAt: new Date().toISOString()
+        };
+
+        if (keysDoc) {
+            await db.collection('kv_store').updateOne(
+                { key: keyType },
+                { $set: { value: keys, updatedAt: new Date() } }
+            );
+        } else {
+            await db.collection('kv_store').insertOne({
+                key: keyType,
+                value: keys,
+                updatedAt: new Date()
+            });
+        }
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.delete('/keys/:key', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { key } = req.params;
+        const { type } = req.query;
+
+        if (!type) {
+            return res.status(400).json({ success: false, error: 'النوع مطلوب' });
+        }
+
+        const keyType = type === 'monthly' ? 'keys_monthly' : 'keys_yearly';
+        const keysDoc = await db.collection('kv_store').findOne({ key: keyType });
+        const keys = keysDoc?.value || {};
+
+        if (!keys[key]) {
+            return res.status(404).json({ success: false, error: 'المفتاح غير موجود' });
+        }
+
+        delete keys[key];
+
+        await db.collection('kv_store').updateOne(
+            { key: keyType },
+            { $set: { value: keys, updatedAt: new Date() } }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+router.post('/keys/:key/reset', async (req, res) => {
+    try {
+        const db = mongoose.connection.db;
+        const { key } = req.params;
+        const { type } = req.body;
+
+        if (!type) {
+            return res.status(400).json({ success: false, error: 'النوع مطلوب' });
+        }
+
+        const keyType = type === 'monthly' ? 'keys_monthly' : 'keys_yearly';
+        const keysDoc = await db.collection('kv_store').findOne({ key: keyType });
+        const keys = keysDoc?.value || {};
+
+        if (!keys[key]) {
+            return res.status(404).json({ success: false, error: 'المفتاح غير موجود' });
+        }
+
+        keys[key].used = false;
+        keys[key].guildId = null;
+        keys[key].activatedAt = null;
+        keys[key].expiresAt = null;
+        keys[key].ownerId = null;
+        keys[key].warned3Days = false;
+
+        await db.collection('kv_store').updateOne(
+            { key: keyType },
+            { $set: { value: keys, updatedAt: new Date() } }
+        );
+
+        res.json({ success: true });
+    } catch (err) {
+        res.status(500).json({ success: false, error: err.message });
+    }
+});
+
+module.exports = router;
