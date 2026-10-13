@@ -1,113 +1,205 @@
-<%- include('partials/header', { user, title: 'تسطيب التكت' }) %>
+<%- include('partials/header', { user, title: 'Setup Ticket' }) %>
 
 <div class="container page-content">
     <div class="page-header">
         <h1>
             <span class="ar-text">🎫 تسطيب التكت</span>
             <span class="en-text" style="display:none">🎫 Setup Ticket</span>
+            <span class="es-text" style="display:none">🎫 Configurar Ticket</span>
+            <span class="fr-text" style="display:none">🎫 Configurer le Ticket</span>
         </h1>
         <p>
             <span class="ar-text">اختر السيرفر وابدأ التسطيب</span>
             <span class="en-text" style="display:none">Choose server and start setup</span>
+            <span class="es-text" style="display:none">Elige el servidor y comienza la configuración</span>
+            <span class="fr-text" style="display:none">Choisissez le serveur et commencez la configuration</span>
         </p>
     </div>
 
     <!-- Step 1: Choose Server -->
     <div id="setupPanelStep0" class="card">
-        <h3>🌐 اختر السيرفر</h3>
+        <h3>
+            🌐
+            <span class="ar-text">اختر السيرفر</span>
+            <span class="en-text" style="display:none">Choose Server</span>
+            <span class="es-text" style="display:none">Elegir Servidor</span>
+            <span class="fr-text" style="display:none">Choisir le Serveur</span>
+        </h3>
         <div class="form-group">
             <select id="setupGuildSelect" onchange="loadGuildData()" required>
-                <option value="">-- اختر السيرفر --</option>
+                <option value="">-- Select Server --</option>
             </select>
             <input type="hidden" id="setupGuildName">
             <small style="color:var(--text-muted);display:block;margin-top:0.5rem;">
-                ⚠️ لازم تكون <strong>Admin</strong> في السيرفر
+                ⚠️
+                <span class="ar-text">لازم تكون <strong>Admin</strong> في السيرفر</span>
+                <span class="en-text" style="display:none">You must be <strong>Admin</strong> in the server</span>
+                <span class="es-text" style="display:none">Debes ser <strong>Admin</strong> en el servidor</span>
+                <span class="fr-text" style="display:none">Vous devez être <strong>Admin</strong> sur le serveur</span>
             </small>
         </div>
     </div>
 
     <!-- Step 1.5: Choose Bot Type -->
     <div id="setupBotTypeGroup" class="card" style="display:none;">
-        <h3>🤖 اختر البوت</h3>
+        <h3>
+            🤖
+            <span class="ar-text">اختر البوت</span>
+            <span class="en-text" style="display:none">Choose Bot</span>
+            <span class="es-text" style="display:none">Elegir Bot</span>
+            <span class="fr-text" style="display:none">Choisir le Bot</span>
+        </h3>
         <div class="form-group">
-            <label>البوت اللي هينشر البانل</label>
+            <label>
+                <span class="ar-text">البوت اللي هينشر البانل</span>
+                <span class="en-text" style="display:none">The bot that will publish the panel</span>
+                <span class="es-text" style="display:none">El bot que publicará el panel</span>
+                <span class="fr-text" style="display:none">Le bot qui publiera le panneau</span>
+            </label>
             <select id="setupBotType" required>
-                <option value="free">🆓 البوت المجاني</option>
+                <option value="free">🆓 Free Bot</option>
             </select>
         </div>
     </div>
 
     <!-- Step 2: Panel Info -->
     <div id="setupPanelStep1" class="card" style="display:none;">
-        <h3>📋 معلومات البانل</h3>
+        <h3>
+            📋
+            <span class="ar-text">معلومات البانل</span>
+            <span class="en-text" style="display:none">Panel Information</span>
+            <span class="es-text" style="display:none">Información del Panel</span>
+            <span class="fr-text" style="display:none">Informations du Panneau</span>
+        </h3>
 
         <div class="form-group">
-            <label>اسم البانل</label>
-            <input type="text" id="setupTitle" placeholder="مثال: تذاكر الدعم الفني" required>
+            <label>
+                <span class="ar-text">اسم البانل</span>
+                <span class="en-text" style="display:none">Panel Name</span>
+                <span class="es-text" style="display:none">Nombre del Panel</span>
+                <span class="fr-text" style="display:none">Nom du Panneau</span>
+            </label>
+            <input type="text" id="setupTitle" placeholder="..." required>
         </div>
 
         <div class="form-group">
-            <label>وصف البانل</label>
-            <textarea id="setupDescription" rows="3" placeholder="وصف مختصر للبانل..." required></textarea>
+            <label>
+                <span class="ar-text">وصف البانل</span>
+                <span class="en-text" style="display:none">Panel Description</span>
+                <span class="es-text" style="display:none">Descripción del Panel</span>
+                <span class="fr-text" style="display:none">Description du Panneau</span>
+            </label>
+            <textarea id="setupDescription" rows="3" placeholder="..." required></textarea>
         </div>
 
         <div class="form-group">
-            <label>رابط صورة البانر (اختياري)</label>
+            <label>
+                <span class="ar-text">رابط صورة البانر (اختياري)</span>
+                <span class="en-text" style="display:none">Banner Image URL (Optional)</span>
+                <span class="es-text" style="display:none">URL de la Imagen del Banner (Opcional)</span>
+                <span class="fr-text" style="display:none">URL de l'Image de Bannière (Optionnel)</span>
+            </label>
             <input type="url" id="setupBannerImage" placeholder="https://i.imgur.com/...">
         </div>
 
         <div class="form-group">
-            <label>رابط الصورة المصغرة (اختياري)</label>
+            <label>
+                <span class="ar-text">رابط الصورة المصغرة (اختياري)</span>
+                <span class="en-text" style="display:none">Thumbnail Image URL (Optional)</span>
+                <span class="es-text" style="display:none">URL de la Miniatura (Opcional)</span>
+                <span class="fr-text" style="display:none">URL de la Miniature (Optionnel)</span>
+            </label>
             <input type="url" id="setupImage" placeholder="https://i.imgur.com/...">
         </div>
 
         <div class="form-group">
-            <label>روم البانل</label>
-            <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupTargetChannel', this.value)">
+            <label>
+                <span class="ar-text">روم البانل</span>
+                <span class="en-text" style="display:none">Panel Channel</span>
+                <span class="es-text" style="display:none">Canal del Panel</span>
+                <span class="fr-text" style="display:none">Canal du Panneau</span>
+            </label>
+            <input type="text" placeholder="🔍" oninput="filterChannels('setupTargetChannel', this.value)">
             <select id="setupTargetChannel" required>
-                <option value="">-- اختر روم البانل --</option>
+                <option value="">-- Select Channel --</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>روم اللوق (اختياري)</label>
-            <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupLogChannel', this.value)">
+            <label>
+                <span class="ar-text">روم اللوق (اختياري)</span>
+                <span class="en-text" style="display:none">Log Channel (Optional)</span>
+                <span class="es-text" style="display:none">Canal de Registro (Opcional)</span>
+                <span class="fr-text" style="display:none">Canal de Journal (Optionnel)</span>
+            </label>
+            <input type="text" placeholder="🔍" oninput="filterChannels('setupLogChannel', this.value)">
             <select id="setupLogChannel">
-                <option value="">-- اختر روم اللوق --</option>
+                <option value="">-- Select Log Channel --</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>روم التقييمات (اختياري)</label>
-            <input type="text" placeholder="🔍 فلتر الرومات..." oninput="filterChannels('setupRatingChannel', this.value)">
+            <label>
+                <span class="ar-text">روم التقييمات (اختياري)</span>
+                <span class="en-text" style="display:none">Rating Channel (Optional)</span>
+                <span class="es-text" style="display:none">Canal de Calificaciones (Opcional)</span>
+                <span class="fr-text" style="display:none">Canal d'Évaluations (Optionnel)</span>
+            </label>
+            <input type="text" placeholder="🔍" oninput="filterChannels('setupRatingChannel', this.value)">
             <select id="setupRatingChannel">
-                <option value="">-- اختر روم التقييمات --</option>
+                <option value="">-- Select Rating Channel --</option>
             </select>
         </div>
 
         <button type="button" class="btn btn-primary btn-full" onclick="goToStep2()">
-            التالي: الأقسام ➡️
+            <span class="ar-text">التالي: الأقسام ➡️</span>
+            <span class="en-text" style="display:none">Next: Categories ➡️</span>
+            <span class="es-text" style="display:none">Siguiente: Categorías ➡️</span>
+            <span class="fr-text" style="display:none">Suivant : Catégories ➡️</span>
         </button>
     </div>
 
     <!-- Step 3: Categories Count -->
     <div id="setupPanelStep2" class="card" style="display:none;">
-        <h3>📁 عدد الأقسام</h3>
+        <h3>
+            📁
+            <span class="ar-text">عدد الأقسام</span>
+            <span class="en-text" style="display:none">Categories Count</span>
+            <span class="es-text" style="display:none">Número de Categorías</span>
+            <span class="fr-text" style="display:none">Nombre de Catégories</span>
+        </h3>
         <div class="form-group">
-            <label>اختر عدد الأقسام (1-10)</label>
+            <label>
+                <span class="ar-text">اختر عدد الأقسام (1-10)</span>
+                <span class="en-text" style="display:none">Choose categories count (1-10)</span>
+                <span class="es-text" style="display:none">Elige el número de categorías (1-10)</span>
+                <span class="fr-text" style="display:none">Choisissez le nombre de catégories (1-10)</span>
+            </label>
             <input type="number" id="categoriesCountInput" min="1" max="10" value="1" required>
         </div>
         <button type="button" class="btn btn-primary btn-full" onclick="startCategories()">
-            تأكيد ومتابعة ➡️
+            <span class="ar-text">تأكيد ومتابعة ➡️</span>
+            <span class="en-text" style="display:none">Confirm & Continue ➡️</span>
+            <span class="es-text" style="display:none">Confirmar y Continuar ➡️</span>
+            <span class="fr-text" style="display:none">Confirmer et Continuer ➡️</span>
         </button>
     </div>
 
     <!-- Step 4: Category Forms -->
     <div id="setupPanelStep3" style="display:none;">
-        <h3 class="dashboard-title">📁 إعداد الأقسام</h3>
+        <h3 class="dashboard-title">
+            📁
+            <span class="ar-text">إعداد الأقسام</span>
+            <span class="en-text" style="display:none">Categories Setup</span>
+            <span class="es-text" style="display:none">Configuración de Categorías</span>
+            <span class="fr-text" style="display:none">Configuration des Catégories</span>
+        </h3>
         <div id="categoriesFormContainer"></div>
         <button type="button" id="setupSubmitBtn" class="btn btn-primary btn-full" onclick="submitPanel()">
-            🚀 حفظ ونشر البانل
+            <span class="ar-text">🚀 حفظ ونشر البانل</span>
+            <span class="en-text" style="display:none">🚀 Save & Publish Panel</span>
+            <span class="es-text" style="display:none">🚀 Guardar y Publicar Panel</span>
+            <span class="fr-text" style="display:none">🚀 Enregistrer et Publier le Panneau</span>
         </button>
     </div>
 </div>
