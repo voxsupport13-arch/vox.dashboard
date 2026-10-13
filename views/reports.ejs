@@ -1,14 +1,18 @@
-<%- include('partials/header', { user, title: 'الإبلاغ' }) %>
+<%- include('partials/header', { user, title: 'Reports' }) %>
 
 <div class="container page-content">
     <div class="page-header">
         <h1>
             <span class="ar-text">🚨 الإبلاغ عن مشكلة</span>
             <span class="en-text" style="display:none">🚨 Report a Problem</span>
+            <span class="es-text" style="display:none">🚨 Reportar un Problema</span>
+            <span class="fr-text" style="display:none">🚨 Signaler un Problème</span>
         </h1>
         <p>
             <span class="ar-text">ساعدنا نحسن الخدمة — أبلغنا عن أي مشكلة</span>
             <span class="en-text" style="display:none">Help us improve — report any issue</span>
+            <span class="es-text" style="display:none">Ayúdanos a mejorar — reporta cualquier problema</span>
+            <span class="fr-text" style="display:none">Aidez-nous à nous améliorer — signalez tout problème</span>
         </p>
     </div>
 
@@ -18,13 +22,45 @@
                 <label>
                     <span class="ar-text">نوع المشكلة</span>
                     <span class="en-text" style="display:none">Problem Type</span>
+                    <span class="es-text" style="display:none">Tipo de Problema</span>
+                    <span class="fr-text" style="display:none">Type de Problème</span>
                 </label>
                 <select name="type" required>
-                    <option value="website">🌐 مشكلة في الموقع</option>
-                    <option value="ticket">🎫 مشكلة في التذاكر</option>
-                    <option value="application">📝 مشكلة في التقديم</option>
-                    <option value="payment">💰 مشكلة في الدفع</option>
-                    <option value="other">📌 أخرى</option>
+                    <option value="website">
+                        🌐
+                        <span class="ar-text">مشكلة في الموقع</span>
+                        <span class="en-text" style="display:none">Website issue</span>
+                        <span class="es-text" style="display:none">Problema en el sitio web</span>
+                        <span class="fr-text" style="display:none">Problème de site web</span>
+                    </option>
+                    <option value="ticket">
+                        🎫
+                        <span class="ar-text">مشكلة في التذاكر</span>
+                        <span class="en-text" style="display:none">Ticket issue</span>
+                        <span class="es-text" style="display:none">Problema con tickets</span>
+                        <span class="fr-text" style="display:none">Problème de ticket</span>
+                    </option>
+                    <option value="application">
+                        📝
+                        <span class="ar-text">مشكلة في التقديم</span>
+                        <span class="en-text" style="display:none">Application issue</span>
+                        <span class="es-text" style="display:none">Problema con solicitudes</span>
+                        <span class="fr-text" style="display:none">Problème de candidature</span>
+                    </option>
+                    <option value="payment">
+                        💰
+                        <span class="ar-text">مشكلة في الدفع</span>
+                        <span class="en-text" style="display:none">Payment issue</span>
+                        <span class="es-text" style="display:none">Problema de pago</span>
+                        <span class="fr-text" style="display:none">Problème de paiement</span>
+                    </option>
+                    <option value="other">
+                        📌
+                        <span class="ar-text">أخرى</span>
+                        <span class="en-text" style="display:none">Other</span>
+                        <span class="es-text" style="display:none">Otro</span>
+                        <span class="fr-text" style="display:none">Autre</span>
+                    </option>
                 </select>
             </div>
 
@@ -32,22 +68,28 @@
                 <label>
                     <span class="ar-text">عنوان المشكلة</span>
                     <span class="en-text" style="display:none">Problem Title</span>
+                    <span class="es-text" style="display:none">Título del Problema</span>
+                    <span class="fr-text" style="display:none">Titre du Problème</span>
                 </label>
-                <input type="text" name="title" placeholder="اكتب عنوان مختصر..." required maxlength="100">
+                <input type="text" name="title" placeholder="Title" required maxlength="100">
             </div>
 
             <div class="form-group">
                 <label>
                     <span class="ar-text">تفاصيل المشكلة</span>
                     <span class="en-text" style="display:none">Problem Details</span>
+                    <span class="es-text" style="display:none">Detalles del Problema</span>
+                    <span class="fr-text" style="display:none">Détails du Problème</span>
                 </label>
-                <textarea name="description" rows="6" placeholder="اشرح المشكلة بالتفصيل..." required maxlength="2000"></textarea>
+                <textarea name="description" rows="6" placeholder="..." required maxlength="2000"></textarea>
             </div>
 
             <div class="form-group">
                 <label>
                     <span class="ar-text">صور (اختياري - رابط Imgur)</span>
                     <span class="en-text" style="display:none">Images (optional - Imgur link)</span>
+                    <span class="es-text" style="display:none">Imágenes (opcional - enlace Imgur)</span>
+                    <span class="fr-text" style="display:none">Images (optionnel - lien Imgur)</span>
                 </label>
                 <input type="url" name="imageUrl" placeholder="https://i.imgur.com/...">
             </div>
@@ -55,6 +97,8 @@
             <button type="submit" class="btn btn-primary btn-full">
                 <span class="ar-text">🚨 إرسال الإبلاغ</span>
                 <span class="en-text" style="display:none">🚨 Send Report</span>
+                <span class="es-text" style="display:none">🚨 Enviar Reporte</span>
+                <span class="fr-text" style="display:none">🚨 Envoyer le Signalement</span>
             </button>
         </form>
     </div>
@@ -63,12 +107,11 @@
         <h3>
             <span class="ar-text">📋 إبلاغاتك السابقة</span>
             <span class="en-text" style="display:none">📋 Your Previous Reports</span>
+            <span class="es-text" style="display:none">📋 Tus Reportes Anteriores</span>
+            <span class="fr-text" style="display:none">📋 Vos Signalements Précédents</span>
         </h3>
         <div id="myReports" class="my-reports">
-            <p class="loading">
-                <span class="ar-text">⏳ جاري التحميل...</span>
-                <span class="en-text" style="display:none">⏳ Loading...</span>
-            </p>
+            <p class="loading">⏳</p>
         </div>
     </div>
 </div>
